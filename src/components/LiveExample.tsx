@@ -985,7 +985,114 @@ function FollowDemo() {
   );
 }
 
+function CollapseDemo() {
+  const [o, setO] = useState(false);
+  return (
+    <div className="w-full max-w-xs">
+      <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <button onClick={() => setO(!o)} className="flex w-full items-center justify-between px-3 py-2 text-sm font-bold text-slate-700">
+          <span>くわしい説明</span>
+          <span className="text-xs text-slate-400">{o ? "▲" : "▼"}</span>
+        </button>
+        {o && <div className="border-t border-slate-100 px-3 py-2 text-xs text-slate-500">押すと開いて中身が見える、たたむ表示です。</div>}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">出したり隠したり＝折りたたみ</p>
+    </div>
+  );
+}
+
+function MultiSelectDemo() {
+  const opts = ["React", "Vue", "CSS", "TS"];
+  const [sel, setSel] = useState<string[]>(["React", "CSS"]);
+  const toggle = (o: string) => setSel(sel.includes(o) ? sel.filter((x) => x !== o) : [...sel, o]);
+  return (
+    <div className="w-full max-w-xs">
+      <div className="space-y-1 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        {opts.map((o) => (
+          <button key={o} onClick={() => toggle(o)} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-50">
+            <span className={`flex h-4 w-4 items-center justify-center rounded border ${sel.includes(o) ? "border-brand-500 bg-brand-500 text-white" : "border-slate-300"}`}>
+              {sel.includes(o) && <Icon name="check" className="h-3 w-3" strokeWidth={4} />}
+            </span>
+            <span className="text-slate-600">{o}</span>
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">複数を同時に選ぶ＝複数選択</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（入力・表示 2026-07-18f） ----
+  collapse: () => <CollapseDemo />,
+  "multi-select": () => <MultiSelectDemo />,
+  "transition-effect": () => (
+    <div className="text-center">
+      <div className="mx-auto w-40 cursor-pointer overflow-hidden rounded-full bg-slate-100 p-1">
+        <div className="h-6 w-1/3 rounded-full bg-brand-500 transition-all duration-500 hover:w-full" />
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">なめらかに変化させる＝トランジション（乗せてみて）</p>
+    </div>
+  ),
+  watermark: () => (
+    <div className="text-center">
+      <div className="relative mx-auto h-24 w-40 overflow-hidden rounded-lg bg-gradient-to-br from-slate-200 to-slate-300">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="rotate-[-20deg] text-2xl font-extrabold text-white/40">SAMPLE</span>
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">薄く重ねる印＝透かし</p>
+    </div>
+  ),
+  "time-picker": () => (
+    <div className="w-full max-w-[10rem] text-center">
+      <div className="flex items-center justify-center gap-1 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <span className="rounded bg-slate-100 px-3 py-2 font-mono text-lg font-bold text-slate-700">10</span>
+        <span className="text-lg font-bold text-slate-400">:</span>
+        <span className="rounded bg-slate-100 px-3 py-2 font-mono text-lg font-bold text-slate-700">30</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">時・分を選ぶ＝時刻ピッカー</p>
+    </div>
+  ),
+  scrollbar: () => (
+    <div className="w-full max-w-[12rem]">
+      <div className="h-28 overflow-y-scroll rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="border-b border-slate-50 py-1.5 text-xs text-slate-500">項目 {i + 1}</div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">動かして隠れた部分を見る帯＝スクロールバー</p>
+    </div>
+  ),
+  "speed-dial": () => (
+    <div className="text-center">
+      <div className="flex flex-col items-center gap-2">
+        {[
+          ["写真", "image"],
+          ["メモ", "pencil"],
+          ["お気に入り", "heart"],
+        ].map(([label, ic]) => (
+          <span key={label as string} className="flex items-center gap-1.5">
+            <span className="text-[10px] text-slate-400">{label}</span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-600 shadow ring-1 ring-slate-200">
+              <Icon name={ic as IconName} className="h-4 w-4" />
+            </span>
+          </span>
+        ))}
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-500 text-xl text-white shadow-lg">＋</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">押すと複数操作が開く＝スピードダイヤル</p>
+    </div>
+  ),
+  paragraph: () => (
+    <div className="w-full max-w-xs">
+      <div className="space-y-2 rounded-lg bg-white p-3 text-[11px] leading-relaxed text-slate-600 shadow-sm ring-1 ring-slate-200">
+        <p>これはひとつの段落です。意味のまとまりごとに区切ると、文章がぐっと読みやすくなります。</p>
+        <p>段落の間に少しすき間をあけるのがコツ。ぎっしり詰めると読む気が失せてしまいます。</p>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">読みやすく区切った本文＝段落</p>
+    </div>
+  ),
   // ---- UI部品 追加（オーバーレイ・ボタン類 2026-07-18e） ----
   "bookmark-button": () => <BookmarkDemo />,
   "follow-button": () => <FollowDemo />,

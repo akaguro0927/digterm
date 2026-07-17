@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ZukanBrowser from "@/components/ZukanBrowser";
 import AdSlot from "@/components/AdSlot";
+import { Icon } from "@/components/icons";
 import { CATEGORY_LABELS, type Category } from "@/data/terms";
 
 export const metadata: Metadata = {
@@ -26,7 +28,24 @@ export default async function ZukanPage({
           名前がうろ覚えでもOK。ひらがな・カタカナ・英語・「見た目の記憶」どれでも検索できます。No.001から順にめくるのもおすすめ。
         </p>
       </div>
-      <AdSlot className="mt-6" />
+      <Link
+        href="/flashcards"
+        className="group mt-6 flex items-center gap-3 rounded-2xl border-2 border-violet-100 bg-violet-50/50 p-4 transition hover:border-violet-200"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-violet-500">
+          <Icon name="book" className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-sm font-extrabold text-slate-800">フラッシュカードで暗記する</p>
+          <p className="text-[11px] text-slate-500">表で名前、めくって意味。「覚えた／まだ」でサクサク確認</p>
+        </div>
+        <span className="flex shrink-0 items-center gap-1 rounded-full bg-violet-500 px-4 py-2 text-xs font-bold text-white transition group-hover:brightness-105">
+          はじめる
+          <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
+        </span>
+      </Link>
+
+      <AdSlot className="mt-4" />
       <ZukanBrowser initialCategory={initialCategory} />
     </div>
   );

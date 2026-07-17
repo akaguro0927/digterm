@@ -1,0 +1,2181 @@
+// 用語シードデータ（プロトタイプ用）
+// 本番では Supabase の terms テーブルに移行する（docs/04_データ設計.md 参照）
+
+export type Category = "ui" | "layout" | "htmlcss" | "dev" | "backend";
+
+export const CATEGORY_LABELS: Record<Category, string> = {
+  ui: "UI部品",
+  layout: "レイアウト",
+  htmlcss: "HTML/CSS",
+  dev: "開発用語",
+  backend: "バックエンド",
+};
+
+export const LEVEL_LABELS: Record<number, string> = {
+  1: "初級",
+  2: "中級",
+  3: "上級",
+};
+
+export interface Term {
+  slug: string;
+  nameJa: string;
+  nameEn: string;
+  reading: string; // ひらがな（表記ゆれ検索用）
+  aliases?: string[];
+  category: Category;
+  level: 1 | 2 | 3;
+  summary: string;
+  description: string;
+  useCase: string;
+  sampleCode?: string;
+  related?: string[];
+  isPremium?: boolean;
+}
+
+export const terms: Term[] = [
+  // ============ UI部品 ============
+  {
+    slug: "button",
+    nameJa: "ボタン",
+    nameEn: "Button",
+    reading: "ぼたん",
+    category: "ui",
+    level: 1,
+    summary: "クリック（タップ）して操作を実行するUIの基本部品。",
+    description:
+      "「送信」「購入」「ログイン」など、ユーザーの操作のきっかけになる最も基本的な部品。HTMLでは button 要素で作り、見た目はCSSで整える。リンク（a要素）との使い分けが初心者のつまずきポイントで、「ページ移動はリンク、処理の実行はボタン」が原則。",
+    useCase: "フォームの送信、モーダルを開く、カートに追加するなど、あらゆる操作の起点。",
+    sampleCode: `<button type="submit" class="btn">送信する</button>`,
+    related: ["cta", "fab", "form"],
+  },
+  {
+    slug: "modal",
+    nameJa: "モーダル",
+    nameEn: "Modal",
+    reading: "もーだる",
+    aliases: ["モーダルウィンドウ", "ダイアログ", "ポップアップ"],
+    category: "ui",
+    level: 1,
+    summary: "画面の上に重なって表示され、閉じるまで他の操作をブロックする小窓。",
+    description:
+      "背景が暗くなり、中央に小さなウィンドウが表示されるアレ。ユーザーの注意を1つのことに集中させたいときに使う。「モーダル＝操作をブロックする」が語源で、ブロックしないものはモードレスと呼ぶ。閉じるボタンや背景クリックで閉じられるようにするのがマナー。",
+    useCase: "削除の確認、ログインフォームの表示、画像の拡大表示など。",
+    sampleCode: `<dialog open>
+  <p>本当に削除しますか？</p>
+  <button>キャンセル</button>
+  <button>削除する</button>
+</dialog>`,
+    related: ["toast", "drawer", "tooltip"],
+  },
+  {
+    slug: "toast",
+    nameJa: "トースト",
+    nameEn: "Toast",
+    reading: "とーすと",
+    aliases: ["スナックバー", "通知バー"],
+    category: "ui",
+    level: 1,
+    summary: "画面の端にシュッと現れて数秒で消える小さな通知。",
+    description:
+      "「保存しました」「コピーしました」のように、操作の結果をさりげなく伝える通知。トースターからパンが飛び出す様子が名前の由来。ユーザーの操作を邪魔しない（クリック不要で勝手に消える）のがモーダルとの大きな違い。Android界隈ではスナックバーとも呼ぶ。",
+    useCase: "保存完了・送信完了・エラーなど、操作結果のフィードバック表示。",
+    related: ["modal", "badge", "spinner"],
+  },
+  {
+    slug: "accordion",
+    nameJa: "アコーディオン",
+    nameEn: "Accordion",
+    reading: "あこーでぃおん",
+    aliases: ["開閉パネル", "折りたたみ"],
+    category: "ui",
+    level: 1,
+    summary: "クリックすると下に開いて中身が見える、折りたたみ式のパネル。",
+    description:
+      "見出しをクリックすると中身が伸び縮みする部品。楽器のアコーディオンの蛇腹が名前の由来。限られたスペースに多くの情報を整理でき、よくある質問（FAQ）ページの定番。HTMLの details / summary 要素だけでも作れる。",
+    useCase: "FAQ、スマホでの長いメニュー、商品詳細の折りたたみ表示。",
+    sampleCode: `<details>
+  <summary>送料はいくらですか？</summary>
+  <p>全国一律500円です。</p>
+</details>`,
+    related: ["tab", "dropdown", "hamburger-menu"],
+  },
+  {
+    slug: "carousel",
+    nameJa: "カルーセル",
+    nameEn: "Carousel",
+    reading: "かるーせる",
+    aliases: ["スライダー", "スライドショー"],
+    category: "ui",
+    level: 1,
+    summary: "画像やカードが横にスライドして切り替わる表示領域。",
+    description:
+      "複数の画像・バナーを同じ場所で順番に見せる部品。メリーゴーラウンド（carousel）が名前の由来。ECサイトのトップやヒーローセクションでよく使われる。自動で切り替わるものはユーザーが読み終わる前に動いてしまう問題もあり、使いどころには賛否がある。",
+    useCase: "トップページのバナー、商品画像ギャラリー、おすすめ一覧。",
+    related: ["hero-section", "pagination", "card"],
+  },
+  {
+    slug: "hamburger-menu",
+    nameJa: "ハンバーガーメニュー",
+    nameEn: "Hamburger Menu",
+    reading: "はんばーがーめにゅー",
+    aliases: ["三本線メニュー"],
+    category: "ui",
+    level: 1,
+    summary: "三本線（≡）のアイコンをタップするとナビが開くメニュー。",
+    description:
+      "スマホ画面の右上や左上にある三本線のアイコン。バンズに挟まれたハンバーガーに見えることが名前の由来。画面の狭いスマホでナビゲーションを隠しておくための定番部品で、タップするとドロワー（横からのスライドメニュー）が開くことが多い。",
+    useCase: "スマホ表示でのグローバルナビゲーションの格納。",
+    related: ["drawer", "global-navigation", "accordion"],
+  },
+  {
+    slug: "breadcrumb",
+    nameJa: "パンくずリスト",
+    nameEn: "Breadcrumb",
+    reading: "ぱんくずりすと",
+    aliases: ["ぱんくず"],
+    category: "ui",
+    level: 1,
+    summary: "「ホーム > 商品一覧 > 詳細」のように現在地を示すナビゲーション。",
+    description:
+      "サイト内のどこにいるかを階層で示すリンクの列。童話『ヘンゼルとグレーテル』で帰り道にパンくずを落としたことが名前の由来。ユーザーが迷子にならないためだけでなく、検索エンジンにサイト構造を伝えるSEO効果もある。",
+    useCase: "ECサイトやブログなど、階層が深いサイトのページ上部。",
+    sampleCode: `<nav aria-label="パンくず">
+  <ol>
+    <li><a href="/">ホーム</a></li>
+    <li><a href="/zukan">図鑑</a></li>
+    <li>ボタン</li>
+  </ol>
+</nav>`,
+    related: ["global-navigation", "pagination"],
+  },
+  {
+    slug: "tab",
+    nameJa: "タブ",
+    nameEn: "Tab",
+    reading: "たぶ",
+    category: "ui",
+    level: 1,
+    summary: "見出しをクリックして同じ場所の表示内容を切り替える部品。",
+    description:
+      "書類のインデックス（見出しタブ）が名前の由来。同じ領域で複数のコンテンツを切り替えられるため、スペースの節約になる。選択中のタブがどれか一目でわかるデザインにするのが鉄則。",
+    useCase: "商品ページの「詳細/レビュー/Q&A」切り替え、設定画面の分類。",
+    related: ["accordion", "carousel"],
+  },
+  {
+    slug: "dropdown",
+    nameJa: "ドロップダウンメニュー",
+    nameEn: "Dropdown Menu",
+    reading: "どろっぷだうんめにゅー",
+    aliases: ["プルダウン", "セレクトボックス"],
+    category: "ui",
+    level: 1,
+    summary: "クリックすると下に選択肢のリストが垂れ下がって出るメニュー。",
+    description:
+      "「垂れ下がる（drop down）」が名前の由来。日本では「プルダウン」とも呼ばれるが同じもの。フォームの選択肢（select要素）と、ナビゲーションのサブメニューの2つの文脈で使われる。選択肢が多すぎると探しにくくなるので7±2個程度が目安。",
+    useCase: "都道府県の選択、並び替え順の選択、ナビのサブメニュー。",
+    sampleCode: `<select>
+  <option>新しい順</option>
+  <option>人気順</option>
+  <option>価格が安い順</option>
+</select>`,
+    related: ["accordion", "hamburger-menu"],
+  },
+  {
+    slug: "pagination",
+    nameJa: "ページネーション",
+    nameEn: "Pagination",
+    reading: "ぺーじねーしょん",
+    aliases: ["ページ送り", "ページャー"],
+    category: "ui",
+    level: 1,
+    summary: "「1 2 3 … 次へ」のように一覧を複数ページに分けるナビ。",
+    description:
+      "検索結果や記事一覧を複数ページに分割し、番号で移動できるようにする部品。1ページの表示件数を絞ることで読み込みを速くする役割もある。スマホでは「もっと見る」ボタンや無限スクロールが代わりに使われることも多い。",
+    useCase: "検索結果、商品一覧、ブログ記事一覧の下部。",
+    related: ["breadcrumb", "carousel"],
+  },
+  {
+    slug: "tooltip",
+    nameJa: "ツールチップ",
+    nameEn: "Tooltip",
+    reading: "つーるちっぷ",
+    aliases: ["ポップヒント"],
+    category: "ui",
+    level: 2,
+    summary: "マウスを乗せると出てくる小さな補足説明の吹き出し。",
+    description:
+      "アイコンやボタンにカーソルを合わせたときに「これは何か」を短く説明する吹き出し。クリック不要で表示され、カーソルを外すと消える。スマホにはホバーがないため、タップで表示するなど代替手段が必要になる点に注意。",
+    useCase: "アイコンだけのボタンの説明、入力欄の補足、専門用語の注釈。",
+    related: ["modal", "hover", "badge"],
+  },
+  {
+    slug: "checkbox",
+    nameJa: "チェックボックス",
+    nameEn: "Checkbox",
+    reading: "ちぇっくぼっくす",
+    category: "ui",
+    level: 1,
+    summary: "複数選択できる四角いチェック欄。",
+    description:
+      "クリックでオン/オフを切り替えられる四角い入力部品。複数選択できるのが特徴で、1つだけ選ばせたい場合はラジオボタンを使う——この使い分けがフォーム設計の基本。「利用規約に同意する」のような単独のオン/オフにも使われる。",
+    useCase: "興味のあるジャンルの複数選択、利用規約への同意。",
+    sampleCode: `<label>
+  <input type="checkbox" /> 利用規約に同意する
+</label>`,
+    related: ["radio-button", "toggle-switch", "form"],
+  },
+  {
+    slug: "radio-button",
+    nameJa: "ラジオボタン",
+    nameEn: "Radio Button",
+    reading: "らじおぼたん",
+    category: "ui",
+    level: 1,
+    summary: "複数の選択肢から1つだけ選べる丸いボタン。",
+    description:
+      "丸い選択部品で、グループの中から必ず1つだけを選ばせたいときに使う。昔のカーラジオの選局ボタン（1つ押すと他が戻る）が名前の由来。複数選択ならチェックボックス、選択肢が多いならドロップダウン、と使い分ける。",
+    useCase: "性別・支払い方法・配送方法など、二者択一〜数個から1つ選ぶ場面。",
+    sampleCode: `<label><input type="radio" name="pay" /> クレジットカード</label>
+<label><input type="radio" name="pay" /> コンビニ払い</label>`,
+    related: ["checkbox", "dropdown", "form"],
+  },
+  {
+    slug: "toggle-switch",
+    nameJa: "トグルスイッチ",
+    nameEn: "Toggle Switch",
+    reading: "とぐるすいっち",
+    aliases: ["スイッチ", "トグル"],
+    category: "ui",
+    level: 1,
+    summary: "左右にスライドしてオン/オフを切り替えるスイッチ。",
+    description:
+      "スマホの設定画面でおなじみの、つまみが左右に動くスイッチ。チェックボックスと役割は似ているが、トグルは「切り替えた瞬間に即反映される」場面で使うのが原則（チェックボックスは送信ボタンとセット）。",
+    useCase: "ダークモードの切り替え、通知のオン/オフなど設定画面。",
+    related: ["checkbox", "button"],
+  },
+  {
+    slug: "badge",
+    nameJa: "バッジ",
+    nameEn: "Badge",
+    reading: "ばっじ",
+    category: "ui",
+    level: 2,
+    summary: "アイコンの角に付く未読数などの小さな丸いラベル。",
+    description:
+      "通知アイコンの右上に付く赤い数字のアレ。未読件数や新着を知らせる小さな表示で、ユーザーの注意を引く効果が高い。「NEW」「SALE」のような文字ラベルもバッジと呼ばれる。多用すると通知疲れを起こすので節度が大事。",
+    useCase: "未読メッセージ数、カート内の商品数、新着マーク。",
+    related: ["toast", "tag", "avatar"],
+  },
+  {
+    slug: "spinner",
+    nameJa: "スピナー",
+    nameEn: "Spinner",
+    reading: "すぴなー",
+    aliases: ["ローディング", "くるくる"],
+    category: "ui",
+    level: 1,
+    summary: "読み込み中にくるくる回るアイコン。",
+    description:
+      "処理や読み込みの待ち時間に表示する回転アニメーション。「今動いています」と伝えるだけでユーザーの体感ストレスが大きく下がる。待ち時間が長い場合は、進捗がわかるプログレスバーやスケルトンスクリーンの方が適している。",
+    useCase: "データ取得中、送信処理中、ページ読み込み中の表示。",
+    related: ["progress-bar", "skeleton-screen"],
+  },
+  {
+    slug: "skeleton-screen",
+    nameJa: "スケルトンスクリーン",
+    nameEn: "Skeleton Screen",
+    reading: "すけるとんすくりーん",
+    aliases: ["スケルトン"],
+    category: "ui",
+    level: 2,
+    summary: "読み込み中にコンテンツの形だけ灰色で見せておくプレースホルダー。",
+    description:
+      "本物のコンテンツが来る前に、その「骨組み（skeleton）」をグレーの箱で表示しておく手法。スピナーより体感速度が速く感じられるため、SNSや動画サイトで主流になった。キラッと光るアニメーション（シマー）を付けることが多い。",
+    useCase: "SNSのタイムライン、カード一覧など、レイアウトが決まっている画面の読み込み中。",
+    related: ["spinner", "placeholder", "card"],
+    isPremium: true,
+  },
+  {
+    slug: "placeholder",
+    nameJa: "プレースホルダー",
+    nameEn: "Placeholder",
+    reading: "ぷれーすほるだー",
+    category: "ui",
+    level: 1,
+    summary: "入力欄にうっすら表示される「例: yamada@example.com」のような仮テキスト。",
+    description:
+      "入力欄が空のときに表示される薄いグレーの案内文。入力を始めると消える。「場所（place）を確保しておくもの（holder）」が語源で、仮画像の意味でも使われる。消えてしまうため、項目名の代わりにしてはいけない（ラベルは別に置く）のが鉄則。",
+    useCase: "入力例の提示、検索バーのヒント文。",
+    sampleCode: `<input type="email" placeholder="例: yamada@example.com" />`,
+    related: ["form", "search-bar", "skeleton-screen"],
+  },
+  {
+    slug: "fab",
+    nameJa: "FAB（フローティングアクションボタン）",
+    nameEn: "Floating Action Button",
+    reading: "ふろーてぃんぐあくしょんぼたん",
+    aliases: ["FAB", "浮遊ボタン"],
+    category: "ui",
+    level: 2,
+    summary: "画面右下に浮いている丸いボタン。最重要アクション専用。",
+    description:
+      "スクロールしても画面右下に浮かび続ける円形ボタン。Googleのマテリアルデザインで広まった。「新規作成」「メッセージを書く」など、その画面で最も重要な1つのアクションだけに使うのがルール。",
+    useCase: "メール作成ボタン、地図アプリの現在地ボタン、チャットの開始。",
+    related: ["button", "cta"],
+    isPremium: true,
+  },
+  {
+    slug: "avatar",
+    nameJa: "アバター",
+    nameEn: "Avatar",
+    reading: "あばたー",
+    aliases: ["プロフィール画像"],
+    category: "ui",
+    level: 1,
+    summary: "ユーザーを表す丸いプロフィール画像。",
+    description:
+      "SNSやコメント欄でユーザーを表す小さな画像。円形に切り抜くのが近年の主流。画像が未設定のユーザーにはイニシャルやデフォルトアイコンを表示する配慮が必要で、この「未設定時の見た目」まで考えるのが実務のポイント。",
+    useCase: "ヘッダーのログイン中ユーザー表示、コメント欄、メンバー一覧。",
+    related: ["badge", "card", "header"],
+  },
+  {
+    slug: "tag",
+    nameJa: "タグ／チップ",
+    nameEn: "Tag / Chip",
+    reading: "たぐ",
+    aliases: ["チップ", "ラベル"],
+    category: "ui",
+    level: 2,
+    summary: "「#CSS」「初級」のような小さな角丸のラベル部品。",
+    description:
+      "コンテンツの分類やキーワードを示す小さなラベル。クリックで絞り込みできるものはチップとも呼ばれる。HTMLの「タグ（<p>など）」とは別物なので文脈で区別すること——初心者が混同しやすいポイント。",
+    useCase: "記事のカテゴリ表示、検索の絞り込み条件、スキル一覧。",
+    related: ["badge", "search-bar"],
+  },
+  {
+    slug: "progress-bar",
+    nameJa: "プログレスバー",
+    nameEn: "Progress Bar",
+    reading: "ぷろぐれすばー",
+    aliases: ["進捗バー"],
+    category: "ui",
+    level: 2,
+    summary: "処理の進み具合を横棒の伸びで示すインジケーター。",
+    description:
+      "アップロードやインストールの進捗を「どこまで終わったか」で見せる横棒。終わりが見えるためスピナーより待ちのストレスが小さい。学習アプリの「習得率」のような達成度表示にも使われる。",
+    useCase: "ファイルアップロード、フォームの入力ステップ、学習の進捗表示。",
+    sampleCode: `<progress value="70" max="100">70%</progress>`,
+    related: ["spinner", "skeleton-screen"],
+  },
+  {
+    slug: "search-bar",
+    nameJa: "検索バー",
+    nameEn: "Search Bar",
+    reading: "けんさくばー",
+    aliases: ["検索ボックス", "検索窓"],
+    category: "ui",
+    level: 1,
+    summary: "キーワードを入力して検索するための入力欄。",
+    description:
+      "虫眼鏡アイコンとセットになった検索用の入力欄。「検索窓」とも呼ぶ。入力中に候補を出すサジェスト機能や、入力のたびに結果が絞り込まれるインクリメンタルサーチを組み合わせると使い勝手が大きく向上する。",
+    useCase: "サイト内検索、商品検索、この図鑑の用語検索。",
+    related: ["placeholder", "dropdown", "tag"],
+  },
+  {
+    slug: "drawer",
+    nameJa: "ドロワー",
+    nameEn: "Drawer",
+    reading: "どろわー",
+    aliases: ["サイドメニュー", "スライドメニュー"],
+    category: "ui",
+    level: 2,
+    summary: "画面の横からスライドして出てくるメニューパネル。",
+    description:
+      "引き出し（drawer）のように画面の端からスッと出てくるパネル。ハンバーガーメニューをタップした先で開くのが定番の組み合わせ。モーダルと同じく背景を暗くして、外側タップで閉じられるようにすることが多い。",
+    useCase: "スマホのナビゲーション、フィルター条件の設定パネル。",
+    related: ["hamburger-menu", "modal", "sidebar"],
+  },
+
+  // ============ レイアウト ============
+  {
+    slug: "header",
+    nameJa: "ヘッダー",
+    nameEn: "Header",
+    reading: "へっだー",
+    category: "layout",
+    level: 1,
+    summary: "ページ最上部の、ロゴやナビゲーションが入る帯状の領域。",
+    description:
+      "サイトの一番上にある共通領域。ロゴ・グローバルナビ・検索・ログインボタンなどを配置する。スクロールしても上部に固定する「固定ヘッダー（sticky header)」も定番。HTMLではheader要素で意味づけする。",
+    useCase: "全ページ共通のロゴとナビゲーションの配置。",
+    sampleCode: `<header>
+  <img src="logo.svg" alt="サイト名" />
+  <nav>…</nav>
+</header>`,
+    related: ["footer", "global-navigation", "hero-section"],
+  },
+  {
+    slug: "footer",
+    nameJa: "フッター",
+    nameEn: "Footer",
+    reading: "ふったー",
+    category: "layout",
+    level: 1,
+    summary: "ページ最下部の、コピーライトや各種リンクが入る領域。",
+    description:
+      "ページの一番下にある共通領域。会社概要・利用規約・プライバシーポリシー・SNSリンク・コピーライト表記（©）などを置く。ユーザーが「困ったときに探す場所」なので、問い合わせへの導線を置くのも定番。",
+    useCase: "規約・会社情報・サイトマップなど全ページ共通の補足リンク集。",
+    related: ["header", "section"],
+  },
+  {
+    slug: "sidebar",
+    nameJa: "サイドバー",
+    nameEn: "Sidebar",
+    reading: "さいどばー",
+    category: "layout",
+    level: 1,
+    summary: "メインコンテンツの横に置く補助的な縦長エリア。",
+    description:
+      "画面の左右どちらかに置く細長い領域で、目次・カテゴリ一覧・プロフィール・広告などを配置する。メイン＋サイドバーの構成を2カラムレイアウトと呼ぶ。スマホでは横幅が足りないため、下に回り込ませるかドロワーに格納するのが普通。",
+    useCase: "ブログのカテゴリ一覧、管理画面のメニュー、ECの絞り込み条件。",
+    related: ["drawer", "wrapper", "grid-layout"],
+  },
+  {
+    slug: "hero-section",
+    nameJa: "ヒーローセクション",
+    nameEn: "Hero Section",
+    reading: "ひーろーせくしょん",
+    aliases: ["ヒーローイメージ", "メインビジュアル", "MV"],
+    category: "layout",
+    level: 1,
+    summary: "ページを開いて最初に目に入る、大きな画像＋キャッチコピーの領域。",
+    description:
+      "トップページの最上部に置く、画面幅いっぱいの大きなビジュアル領域。キャッチコピーとCTAボタンをセットにするのが定番。日本の制作現場では「メインビジュアル（MV）」とも呼ばれる。第一印象を決める最重要エリア。",
+    useCase: "サービスサイトやLPの冒頭で、一言で価値を伝える。",
+    related: ["first-view", "cta", "carousel"],
+  },
+  {
+    slug: "card",
+    nameJa: "カード",
+    nameEn: "Card",
+    reading: "かーど",
+    aliases: ["カードUI"],
+    category: "layout",
+    level: 1,
+    summary: "画像＋タイトル＋説明を1枚にまとめた四角い情報のかたまり。",
+    description:
+      "名刺やトランプのように、関連する情報（サムネイル・見出し・説明・ボタン）を1枚の枠にまとめたUI。同じ形のカードをグリッドで並べると一覧性が高く、レスポンシブ対応もしやすいため、現代のWebデザインの主役級パターン。",
+    useCase: "商品一覧、記事一覧、この図鑑の用語一覧。",
+    related: ["grid-layout", "carousel", "skeleton-screen"],
+  },
+  {
+    slug: "grid-layout",
+    nameJa: "グリッドレイアウト",
+    nameEn: "Grid Layout",
+    reading: "ぐりっどれいあうと",
+    aliases: ["グリッド"],
+    category: "layout",
+    level: 2,
+    summary: "格子状のマス目に沿って要素を整列させるレイアウト手法。",
+    description:
+      "縦横の線（グリッド）を基準に要素を配置する手法で、整然とした美しいレイアウトを作れる。CSSのdisplay: gridで縦横二次元の配置を直接制御できる。横一列の整列が得意なフレックスボックスとの使い分けは「一次元ならflex、二次元ならgrid」。",
+    useCase: "カード一覧の整列、雑誌風レイアウト、ページ全体の骨組み。",
+    sampleCode: `.list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}`,
+    related: ["card", "flexbox", "wrapper"],
+  },
+  {
+    slug: "global-navigation",
+    nameJa: "グローバルナビゲーション",
+    nameEn: "Global Navigation",
+    reading: "ぐろーばるなびげーしょん",
+    aliases: ["グロナビ", "ナビ", "ナビゲーション"],
+    category: "layout",
+    level: 1,
+    summary: "全ページ共通で表示される、サイトの主要メニュー。",
+    description:
+      "ヘッダーに置かれる「ホーム/サービス/料金/会社概要」のような主要リンクの並び。略して「グロナビ」。サイトのどのページからでも主要ページへ移動できる背骨の役割を持つ。項目は5〜7個程度に絞るのがセオリー。",
+    useCase: "ヘッダー内のメインメニュー。スマホではハンバーガーメニューに格納。",
+    related: ["header", "hamburger-menu", "breadcrumb"],
+  },
+  {
+    slug: "first-view",
+    nameJa: "ファーストビュー",
+    nameEn: "Above the Fold",
+    reading: "ふぁーすとびゅー",
+    aliases: ["FV"],
+    category: "layout",
+    level: 2,
+    summary: "スクロールせずに最初に見える画面範囲のこと。",
+    description:
+      "ページを開いた瞬間にスクロールなしで見える範囲。ユーザーはここで「読み続けるか離脱するか」を数秒で判断すると言われ、LP制作では最重要視される。英語では新聞の折り目の上を意味するabove the foldと呼ぶ。",
+    useCase: "LPの設計時に「FVに何を入れるか」を最初に決める。",
+    related: ["hero-section", "cta", "viewport"],
+  },
+  {
+    slug: "cta",
+    nameJa: "CTA（コールトゥアクション）",
+    nameEn: "Call to Action",
+    reading: "こーるとぅあくしょん",
+    aliases: ["CTAボタン", "コンバージョンボタン"],
+    category: "layout",
+    level: 2,
+    summary: "「無料で始める」など、ユーザーに行動を促すボタンや領域。",
+    description:
+      "「行動（Action)への呼びかけ（Call)」の意味で、登録・購入・問い合わせなどサイトの目的となる行動へ誘導するボタンや区画のこと。目立つ色・大きさ・言葉選びが成果（コンバージョン率）を左右する、マーケティングとデザインの交差点。",
+    useCase: "LPの「今すぐ登録」ボタン、記事末尾の資料請求ボタン。",
+    related: ["button", "hero-section", "first-view"],
+    isPremium: true,
+  },
+  {
+    slug: "form",
+    nameJa: "フォーム",
+    nameEn: "Form",
+    reading: "ふぉーむ",
+    aliases: ["入力フォーム", "お問い合わせフォーム"],
+    category: "layout",
+    level: 1,
+    summary: "名前やメールアドレスなどを入力して送信する画面部品一式。",
+    description:
+      "入力欄・選択肢・送信ボタンをまとめた、ユーザーから情報を受け取るための仕組み。HTMLのform要素で囲み、中にinputやselectを置く。入力ミスをその場で知らせるバリデーションの設計が使いやすさを大きく左右する。",
+    useCase: "会員登録、ログイン、お問い合わせ、決済情報の入力。",
+    sampleCode: `<form action="/signup" method="post">
+  <label>メール <input type="email" required /></label>
+  <button type="submit">登録する</button>
+</form>`,
+    related: ["button", "checkbox", "placeholder"],
+  },
+  {
+    slug: "section",
+    nameJa: "セクション",
+    nameEn: "Section",
+    reading: "せくしょん",
+    category: "layout",
+    level: 1,
+    summary: "見出しごとに区切られた、ページ内のひとまとまりの区画。",
+    description:
+      "「サービス紹介」「料金」「お客様の声」のような、ページを構成する意味のまとまり。HTMLではsection要素で表し、原則として見出し（h2など）とセットで使う。ページ設計は「どんなセクションをどの順で並べるか」を考える作業とも言える。",
+    useCase: "LPやトップページの構成単位。デザインカンプの区切り。",
+    related: ["hero-section", "footer", "wrapper"],
+  },
+  {
+    slug: "wrapper",
+    nameJa: "ラッパー／コンテナ",
+    nameEn: "Wrapper / Container",
+    reading: "らっぱー",
+    aliases: ["コンテナ", "インナー"],
+    category: "layout",
+    level: 2,
+    summary: "コンテンツの最大幅を決めて中央寄せするための外枠要素。",
+    description:
+      "コンテンツを「包む（wrap）」ための目に見えない箱。max-widthで最大幅を決め、margin: 0 autoで中央に寄せるのが定番パターン。大画面でもコンテンツが横に伸びすぎないようにする、ほぼ全サイトで使われる縁の下の力持ち。",
+    useCase: "ページ全体やセクション内側の幅制御・中央寄せ。",
+    sampleCode: `.wrapper {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 16px;
+}`,
+    related: ["section", "margin", "grid-layout"],
+  },
+
+  // ============ HTML/CSS ============
+  {
+    slug: "semantic-html",
+    nameJa: "セマンティックHTML",
+    nameEn: "Semantic HTML",
+    reading: "せまんてぃっく",
+    aliases: ["セマンティック"],
+    category: "htmlcss",
+    level: 2,
+    summary: "見た目でなく「意味」で適切なHTMLタグを選ぶ書き方。",
+    description:
+      "「これは見出しだからh1」「これはナビだからnav」のように、内容の意味に合ったタグを使うこと。divだけで組んでも見た目は作れるが、検索エンジンや読み上げソフトには意味が伝わらない。SEOとアクセシビリティの土台になる考え方。",
+    useCase: "マークアップ全般。header/nav/main/article/footerの使い分け。",
+    sampleCode: `<!-- ✕ 意味のないdivだけ -->
+<div class="title">お知らせ</div>
+<!-- ○ 意味が伝わる -->
+<h2>お知らせ</h2>`,
+    related: ["markup", "class", "header"],
+  },
+  {
+    slug: "flexbox",
+    nameJa: "フレックスボックス",
+    nameEn: "Flexbox",
+    reading: "ふれっくすぼっくす",
+    aliases: ["フレックス", "flex"],
+    category: "htmlcss",
+    level: 2,
+    summary: "要素を横並び・縦並びに柔軟に整列させるCSSの仕組み。",
+    description:
+      "親要素にdisplay: flexを指定すると、子要素を横並びにして間隔・寄せ方を柔軟に制御できる。「横並びにしたい」というCSS初心者最大の壁を解決する現代の標準手段。二次元の配置はグリッドレイアウトが得意なので使い分ける。",
+    useCase: "ナビメニューの横並び、ボタンとテキストの上下中央揃え。",
+    sampleCode: `.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}`,
+    related: ["grid-layout", "margin", "responsive"],
+  },
+  {
+    slug: "media-query",
+    nameJa: "メディアクエリ",
+    nameEn: "Media Query",
+    reading: "めでぃあくえり",
+    category: "htmlcss",
+    level: 2,
+    summary: "画面幅などの条件によってCSSを切り替える仕組み。",
+    description:
+      "「画面幅が768px以下ならこのスタイル」のように、条件付きでCSSを適用する構文。レスポンシブデザインを実現する中核技術。切り替えの境界となる幅をブレークポイントと呼ぶ。",
+    useCase: "スマホでは1カラム、PCでは2カラムに切り替えるなど。",
+    sampleCode: `@media (max-width: 768px) {
+  .sidebar { display: none; }
+}`,
+    related: ["responsive", "breakpoint", "viewport"],
+  },
+  {
+    slug: "responsive",
+    nameJa: "レスポンシブデザイン",
+    nameEn: "Responsive Design",
+    reading: "れすぽんしぶ",
+    aliases: ["レスポンシブ対応"],
+    category: "htmlcss",
+    level: 1,
+    summary: "1つのHTMLで、スマホでもPCでも見やすく表示を変える設計。",
+    description:
+      "画面サイズに「応答（respond）」してレイアウトが変わるデザイン手法。スマホ用サイトを別に作るのではなく、同じページがメディアクエリやフレックスボックスで柔軟に形を変える。現在のWeb制作では対応していて当たり前の必須要件。",
+    useCase: "ほぼすべてのWebサイト制作。案件の要件に必ず登場する。",
+    related: ["media-query", "breakpoint", "viewport"],
+  },
+  {
+    slug: "margin",
+    nameJa: "マージン",
+    nameEn: "Margin",
+    reading: "まーじん",
+    category: "htmlcss",
+    level: 1,
+    summary: "要素の「外側」の余白。",
+    description:
+      "要素と要素の間を空けるための外側の余白。内側の余白であるパディングとの区別がCSS最初の関門で、「境界線（border）の外がマージン、内がパディング」と覚える。上下のマージンは重なり合う（相殺）という独特の挙動もある。",
+    useCase: "カード同士の間隔、セクション間の余白づくり。",
+    sampleCode: `.card {
+  margin: 16px; /* 外側に16pxの余白 */
+}`,
+    related: ["padding", "wrapper", "flexbox"],
+  },
+  {
+    slug: "padding",
+    nameJa: "パディング",
+    nameEn: "Padding",
+    reading: "ぱでぃんぐ",
+    category: "htmlcss",
+    level: 1,
+    summary: "要素の「内側」の余白。",
+    description:
+      "枠線と中身の間を空ける内側の余白。ボタンを大きく見せたり、カードの中身を枠から離したりするのに使う。マージン（外側）との使い分けは「背景色が付く範囲は内側＝パディング」と考えるとわかりやすい。",
+    useCase: "ボタンの押しやすさ確保、カード内の余白。",
+    sampleCode: `.btn {
+  padding: 12px 24px; /* 上下12px 左右24px */
+}`,
+    related: ["margin", "border-radius", "card"],
+  },
+  {
+    slug: "hover",
+    nameJa: "ホバー",
+    nameEn: "Hover",
+    reading: "ほばー",
+    aliases: ["マウスオーバー", "オンマウス"],
+    category: "htmlcss",
+    level: 1,
+    summary: "マウスカーソルを要素の上に乗せた状態。",
+    description:
+      "カーソルが要素に「浮かんで（hover）」乗っている状態のこと。CSSの:hover擬似クラスで「乗せたら色が変わる」などの変化を付けられ、クリックできることを直感的に伝える。タッチ操作のスマホにはホバーが存在しない点を忘れずに。",
+    useCase: "ボタンやリンクの色変化、カードをふわっと浮かせる演出。",
+    sampleCode: `.btn:hover {
+  background: #1d4ed8;
+}`,
+    related: ["tooltip", "button", "transition"],
+  },
+  {
+    slug: "class",
+    nameJa: "クラス",
+    nameEn: "Class",
+    reading: "くらす",
+    aliases: ["class属性", "クラス名"],
+    category: "htmlcss",
+    level: 1,
+    summary: "HTML要素に付ける「あだ名」。CSSやJSから狙い撃ちするために使う。",
+    description:
+      "class=\"btn\"のように要素へ付ける名前で、CSSで.btnと書けばその要素だけスタイルを当てられる。同じクラスは何個でも使い回せる（1ページに1回だけのID属性との違い）。クラスの命名はチーム開発で最も揉めるテーマで、BEMなどの命名規則がある。",
+    useCase: "スタイルの適用対象の指定、JavaScriptからの要素取得。",
+    sampleCode: `<button class="btn btn-primary">送信</button>
+/* CSS */
+.btn-primary { background: blue; }`,
+    related: ["semantic-html", "markup"],
+  },
+  {
+    slug: "z-index",
+    nameJa: "z-index（重なり順）",
+    nameEn: "z-index",
+    reading: "ぜっといんでっくす",
+    category: "htmlcss",
+    level: 2,
+    summary: "要素同士が重なったとき、どちらを手前に表示するかを決める番号。",
+    description:
+      "画面を奥行き（Z軸）で考えたときの重なり順。数字が大きいほど手前に来る。モーダルやドロップダウンが他の要素の下に隠れてしまう——という初心者頻出トラブルの原因のほとんどがコレ。position指定がないと効かない点も罠。",
+    useCase: "モーダルを最前面に出す、固定ヘッダーをコンテンツの上に重ねる。",
+    sampleCode: `.modal {
+  position: fixed;
+  z-index: 100; /* 大きいほど手前 */
+}`,
+    related: ["modal", "header", "hover"],
+    isPremium: true,
+  },
+  {
+    slug: "border-radius",
+    nameJa: "角丸（border-radius）",
+    nameEn: "Border Radius",
+    reading: "かどまる",
+    aliases: ["ボーダーラディウス"],
+    category: "htmlcss",
+    level: 1,
+    summary: "四角い要素の角を丸くするCSSプロパティ。",
+    description:
+      "ボタンやカードの角を丸めて柔らかい印象にする。50%を指定すると正方形が真円になり、アバターの円形切り抜きにも使われる。角の丸みはデザインの世界観（かっちり/親しみやすい）を大きく左右する。",
+    useCase: "ボタン・カード・入力欄の角丸、アバターの円形化。",
+    sampleCode: `.avatar {
+  border-radius: 50%; /* 真円になる */
+}`,
+    related: ["box-shadow", "avatar", "card"],
+  },
+  {
+    slug: "box-shadow",
+    nameJa: "ボックスシャドウ",
+    nameEn: "Box Shadow",
+    reading: "ぼっくすしゃどう",
+    aliases: ["ドロップシャドウ", "影"],
+    category: "htmlcss",
+    level: 2,
+    summary: "要素に影を付けて浮いているように見せるCSSプロパティ。",
+    description:
+      "要素の下に影を落とし、立体感・浮遊感を出す。カードUIやモーダルが「浮いて見える」のはこれのおかげ。影の距離とぼかしで高さ（エレベーション）を表現するのがマテリアルデザインの考え方。付けすぎると野暮ったくなるので薄く控えめが今風。",
+    useCase: "カードの立体感、モーダルの浮遊感、ホバー時の強調。",
+    sampleCode: `.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}`,
+    related: ["border-radius", "card", "hover"],
+  },
+  {
+    slug: "viewport",
+    nameJa: "ビューポート",
+    nameEn: "Viewport",
+    reading: "びゅーぽーと",
+    category: "htmlcss",
+    level: 2,
+    summary: "ブラウザでページが実際に表示されている領域のこと。",
+    description:
+      "ユーザーが今見ている「窓」の範囲。スマホ対応ではmetaタグでviewportを設定しないと、PCサイトを縮小した豆粒表示になってしまう。CSSの単位vw/vh（ビューポートの幅・高さの%）もここから来ている。",
+    useCase: "レスポンシブ対応の前提設定、画面いっぱいのヒーロー表示（100vh）。",
+    sampleCode: `<meta name="viewport"
+  content="width=device-width, initial-scale=1" />`,
+    related: ["responsive", "media-query", "first-view"],
+  },
+  {
+    slug: "breakpoint",
+    nameJa: "ブレークポイント",
+    nameEn: "Breakpoint",
+    reading: "ぶれーくぽいんと",
+    category: "htmlcss",
+    level: 2,
+    summary: "レイアウトを切り替える画面幅の境界値。",
+    description:
+      "「768pxを境にスマホ用とPC用のレイアウトを切り替える」というときの768pxのこと。メディアクエリで指定する。スマホ/タブレット/PCの3段階が定番で、代表的な値は640・768・1024px周辺。デザインの段階で決めておくのが理想。",
+    useCase: "レスポンシブ設計の起点。CSSフレームワークの設定値。",
+    related: ["media-query", "responsive", "viewport"],
+    isPremium: true,
+  },
+  {
+    slug: "transition",
+    nameJa: "トランジション",
+    nameEn: "Transition",
+    reading: "とらんじしょん",
+    aliases: ["アニメーション"],
+    category: "htmlcss",
+    level: 2,
+    summary: "色や大きさの変化をなめらかなアニメーションにするCSS機能。",
+    description:
+      "ホバーで色が「パッ」と変わるのを「ふわっ」と変える機能。変化にかける時間と緩急（イージング）を指定するだけで、UIの質感が一気に上がる。0.2〜0.3秒程度が心地よいとされる。もっと複雑な動きはanimationプロパティの出番。",
+    useCase: "ホバー時の色変化、メニューの開閉、カードの浮き上がり。",
+    sampleCode: `.btn {
+  transition: background 0.2s ease;
+}`,
+    related: ["hover", "box-shadow"],
+  },
+
+  // ============ 開発用語 ============
+  {
+    slug: "dom",
+    nameJa: "DOM",
+    nameEn: "Document Object Model",
+    reading: "どむ",
+    category: "dev",
+    level: 2,
+    summary: "HTMLをJavaScriptから操作できる形にした「ページの設計図データ」。",
+    description:
+      "ブラウザがHTMLを読み込んで作る、ページ構造の木（ツリー）状データ。JavaScriptで「ボタンの文字を変える」「要素を追加する」といった操作は、実際にはこのDOMを書き換えている。「DOM操作」はフロントエンドJSの基本スキル。",
+    useCase: "ボタンクリックで表示を変えるなど、動きのあるページ作り全般。",
+    sampleCode: `const btn = document.querySelector(".btn");
+btn.textContent = "送信中…";`,
+    related: ["event", "markup", "console"],
+  },
+  {
+    slug: "api",
+    nameJa: "API",
+    nameEn: "Application Programming Interface",
+    reading: "えーぴーあい",
+    category: "dev",
+    level: 2,
+    summary: "プログラム同士がデータをやり取りするための「窓口」。",
+    description:
+      "「この住所に問い合わせると天気データを返すよ」のような、機能やデータを外部に提供する接続口。フロントエンドは天気API・地図API・自社サーバーのAPIなどからデータを取得して画面に表示する。レストランの注文窓口に例えられることが多い。",
+    useCase: "サーバーからのデータ取得、決済（Stripe）や地図など外部サービス連携。",
+    sampleCode: `const res = await fetch("/api/terms");
+const data = await res.json();`,
+    related: ["backend", "framework", "deploy"],
+  },
+  {
+    slug: "framework",
+    nameJa: "フレームワーク",
+    nameEn: "Framework",
+    reading: "ふれーむわーく",
+    category: "dev",
+    level: 2,
+    summary: "アプリの「骨組み」を提供してくれる開発の土台。",
+    description:
+      "よくある機能や構造があらかじめ用意された開発の土台。ReactベースのNext.js、VueベースのNuxtなどが代表格。決められた作法に従う代わりに、開発速度と品質が大きく上がる。「呼び出して使う部品集」であるライブラリとの違いは、主導権が framework 側にあること。",
+    useCase: "Webアプリ開発の技術選定。求人票の必須スキル欄の常連。",
+    related: ["library", "frontend", "deploy"],
+  },
+  {
+    slug: "library",
+    nameJa: "ライブラリ",
+    nameEn: "Library",
+    reading: "らいぶらり",
+    category: "dev",
+    level: 2,
+    summary: "必要なときに呼び出して使う、便利な機能の部品集。",
+    description:
+      "日付処理・グラフ描画・アニメーションなど、よくある処理をまとめた再利用可能なコード集。図書館（library）から本を借りるように、必要な機能だけ取り込んで使う。全体の構造まで決めるフレームワークに対し、ライブラリは道具として自分のコードから呼び出す。",
+    useCase: "グラフ表示（Chart.js）、日付処理（date-fns）など車輪の再発明の回避。",
+    related: ["framework", "frontend"],
+  },
+  {
+    slug: "deploy",
+    nameJa: "デプロイ",
+    nameEn: "Deploy",
+    reading: "でぷろい",
+    aliases: ["リリース", "公開"],
+    category: "dev",
+    level: 2,
+    summary: "作ったアプリをサーバーに配置して、世界に公開すること。",
+    description:
+      "手元で動いているコードを本番サーバーへ配置し、URLでアクセスできる状態にする作業。元は軍隊の「部隊展開」の意味。VercelやCloud Runなどのサービスを使うと、Gitにプッシュするだけで自動デプロイされる仕組み（CI/CD）も作れる。",
+    useCase: "開発したサイト・アプリの公開、更新の反映。",
+    related: ["git", "backend", "api"],
+  },
+  {
+    slug: "console",
+    nameJa: "コンソール",
+    nameEn: "Console",
+    reading: "こんそーる",
+    aliases: ["開発者ツール", "デベロッパーツール"],
+    category: "dev",
+    level: 1,
+    summary: "ブラウザに隠れている、エラーやログが表示される開発者用画面。",
+    description:
+      "F12キー（またはCtrl+Shift+I）で開ける開発者ツールの一角。JavaScriptのエラーがここに表示されるため、「動かない！」と思ったらまずコンソールを見るのが鉄則。console.log()で変数の中身を確認するのがデバッグの第一歩。",
+    useCase: "エラー確認、console.logでの動作チェック、通信内容の調査。",
+    sampleCode: `console.log("ここまで動いてる", data);`,
+    related: ["debug", "dom", "event"],
+  },
+  {
+    slug: "event",
+    nameJa: "イベント",
+    nameEn: "Event",
+    reading: "いべんと",
+    category: "dev",
+    level: 2,
+    summary: "クリックやスクロールなど、ページ上で起きる「出来事」。",
+    description:
+      "「クリックされた」「入力された」「スクロールした」など、ブラウザ上で発生する出来事の総称。JavaScriptはこのイベントを「聞いて（addEventListener）」処理を実行する、イベント駆動という考え方で動く。フロントエンドの動きはほぼすべてイベントから始まる。",
+    useCase: "ボタンクリックでモーダルを開く、入力と同時に検索するなど。",
+    sampleCode: `btn.addEventListener("click", () => {
+  modal.showModal();
+});`,
+    related: ["dom", "console", "hover"],
+  },
+  {
+    slug: "debug",
+    nameJa: "デバッグ",
+    nameEn: "Debug",
+    reading: "でばっぐ",
+    category: "dev",
+    level: 1,
+    summary: "プログラムの不具合（バグ）を見つけて直す作業。",
+    description:
+      "バグ（虫）を取り除く（de-）が語源。エラーメッセージを読む→console.logで状況を確認する→原因を絞り込む、が基本の流れ。「エラーメッセージは敵ではなくヒント」と思えるようになるのが初心者卒業の第一歩。",
+    useCase: "動かないコードの原因調査。開発時間の半分はデバッグとも言われる。",
+    related: ["console", "event"],
+  },
+  {
+    slug: "git",
+    nameJa: "Git",
+    nameEn: "Git",
+    reading: "ぎっと",
+    aliases: ["ギット", "バージョン管理"],
+    category: "dev",
+    level: 2,
+    summary: "コードの変更履歴を記録・巻き戻しできるバージョン管理ツール。",
+    description:
+      "「セーブポイントを作りながら開発できる」仕組み。変更を記録（コミット）しておけば、いつでも過去の状態に戻れる。共有サービスのGitHubと組み合わせてチーム開発の標準となっている。GitとGitHubは別物（ツールとサービス）という点は初心者の頻出勘違い。",
+    useCase: "変更履歴の記録、チームでのコード共有、デプロイとの連携。",
+    sampleCode: `git add .
+git commit -m "図鑑一覧ページを追加"
+git push`,
+    related: ["deploy", "debug"],
+  },
+  {
+    slug: "frontend",
+    nameJa: "フロントエンド",
+    nameEn: "Frontend",
+    reading: "ふろんとえんど",
+    aliases: ["フロント"],
+    category: "dev",
+    level: 1,
+    summary: "ユーザーの目に見える画面側の開発領域。",
+    description:
+      "ブラウザで動く「見える部分」を作る領域で、HTML・CSS・JavaScriptが三種の神器。デザインの再現、動きの実装、データの表示までを担当する。対して、サーバーやデータベースなど見えない裏側を担当するのがバックエンド。この図鑑はフロントエンド用語を扱う。",
+    useCase: "Web制作・アプリ開発の役割分担、キャリア選択の分類。",
+    related: ["backend", "markup", "framework"],
+  },
+  {
+    slug: "backend",
+    nameJa: "バックエンド",
+    nameEn: "Backend",
+    reading: "ばっくえんど",
+    aliases: ["サーバーサイド"],
+    category: "dev",
+    level: 2,
+    summary: "サーバーやデータベースなど、裏側の仕組みを作る開発領域。",
+    description:
+      "ユーザーからは見えない裏側——データの保存、ログイン認証、決済処理など——を担当する領域。フロントエンドからAPIを通じて呼び出される。「注文を受けるホールがフロント、調理する厨房がバックエンド」というレストランの例えが定番。",
+    useCase: "会員機能・決済・データ管理など、このアプリでもSupabaseが担う部分。",
+    related: ["frontend", "api", "deploy"],
+    isPremium: true,
+  },
+  {
+    slug: "markup",
+    nameJa: "マークアップ",
+    nameEn: "Markup",
+    reading: "まーくあっぷ",
+    aliases: ["コーディング"],
+    category: "dev",
+    level: 1,
+    summary: "文章にHTMLタグで意味の印を付けていく作業。",
+    description:
+      "「ここが見出し」「ここが段落」とタグで印（マーク）を付けてHTMLを書く作業。デザインカンプ通りにHTML/CSSを書く仕事を「マークアップ」「コーディング」と呼び、それを専門とするマークアップエンジニアという職種もある。",
+    useCase: "デザインをWebページとして実装する工程全般。",
+    related: ["semantic-html", "class", "frontend"],
+  },
+
+  // ============ UI部品（追加分） ============
+  {
+    slug: "stepper",
+    nameJa: "ステッパー",
+    nameEn: "Stepper",
+    reading: "すてっぱー",
+    aliases: ["ステップインジケーター", "進捗ステップ"],
+    category: "ui",
+    level: 2,
+    summary: "「1 入力 → 2 確認 → 3 完了」のように手順の現在地を示す表示。",
+    description:
+      "複数ステップの手続きで「いま何番目か・あと何步か」を見せる部品。ゴールまでの距離がわかると離脱率が下がるため、会員登録や決済フローの定番。各ステップは短い名詞で簡潔に示すのがコツ。",
+    useCase: "会員登録フロー、ECの購入手続き、アンケートの進行表示。",
+    related: ["progress-bar", "form", "pagination"],
+  },
+  {
+    slug: "rating",
+    nameJa: "レーティング（星評価）",
+    nameEn: "Rating",
+    reading: "れーてぃんぐ",
+    aliases: ["星評価", "スター評価"],
+    category: "ui",
+    level: 1,
+    summary: "★★★★☆ のように星の数で評価を表す部品。",
+    description:
+      "5段階の星で評価を表示・入力する部品。レビューの平均点表示と、ユーザーが自分で付ける入力用の2通りの使い方がある。0.5刻みの表示や件数の併記（★4.2 / 356件）で信頼感が大きく変わる。",
+    useCase: "商品レビュー、アプリの評価、宿・飲食店の点数表示。",
+    related: ["badge", "card"],
+  },
+  {
+    slug: "range-slider",
+    nameJa: "スライダー（range）",
+    nameEn: "Range Slider",
+    reading: "すらいだー",
+    aliases: ["レンジスライダー", "シークバー"],
+    category: "ui",
+    level: 2,
+    summary: "つまみを左右にドラッグして数値を選ぶ入力部品。",
+    description:
+      "音量や価格帯など、連続した数値を直感的に選ばせる部品。HTMLでは input type=\"range\" で作れる。正確な数値入力には向かないため、数値表示やテキスト入力を併設するのが親切。画像カルーセルの「スライダー」とは別物なので文脈に注意。",
+    useCase: "音量・明るさ調整、ECの価格帯絞り込み、動画のシークバー。",
+    sampleCode: `<input type="range" min="0" max="100" value="50" />`,
+    related: ["toggle-switch", "form", "carousel"],
+  },
+  {
+    slug: "lightbox",
+    nameJa: "ライトボックス",
+    nameEn: "Lightbox",
+    reading: "らいとぼっくす",
+    category: "ui",
+    level: 2,
+    summary: "サムネイルをクリックすると画像が画面中央に大きく表示される仕組み。",
+    description:
+      "背景を暗転させて画像や動画を大きく見せるオーバーレイ表示。モーダルの一種で、ギャラリー系サイトの定番。左右の矢印で前後の画像へ移動できるものが多い。名前は「写真を光にかざして見るライトボックス（透写台）」から。",
+    useCase: "商品画像の拡大表示、フォトギャラリー、作品ポートフォリオ。",
+    related: ["modal", "carousel", "card"],
+  },
+  {
+    slug: "infinite-scroll",
+    nameJa: "無限スクロール",
+    nameEn: "Infinite Scroll",
+    reading: "むげんすくろーる",
+    category: "ui",
+    level: 2,
+    summary: "ページ末尾まで来ると次のコンテンツが自動で読み込まれる仕組み。",
+    description:
+      "ページ送りの代わりに、スクロールに合わせて続きを自動読み込みする方式。SNSのタイムラインで主流。回遊が伸びる一方、「フッターに永遠にたどり着けない」「目的の位置に戻れない」という弱点があり、ECではページネーションとの併用が多い。",
+    useCase: "SNSフィード、画像一覧、ニュースアプリ。",
+    related: ["pagination", "skeleton-screen", "spinner"],
+  },
+  {
+    slug: "empty-state",
+    nameJa: "エンプティステート",
+    nameEn: "Empty State",
+    reading: "えんぷてぃすてーと",
+    aliases: ["空状態"],
+    category: "ui",
+    level: 3,
+    summary: "「まだ何もありません」を伝える、データが空のときの画面。",
+    description:
+      "検索結果0件・通知なし・カートが空、などデータがない状態のデザイン。ただ空白にするのではなく、「なぜ空か」と「次に何をすればよいか」を添えるのがプロの仕事。プロダクトの品質はこういう端の画面に表れる。",
+    useCase: "検索0件画面、初回利用時のガイド、空のカート・受信箱。",
+    related: ["placeholder", "skeleton-screen", "search-bar"],
+    isPremium: true,
+  },
+  {
+    slug: "divider",
+    nameJa: "ディバイダー（区切り線）",
+    nameEn: "Divider",
+    reading: "でぃばいだー",
+    aliases: ["区切り線", "セパレーター", "罫線"],
+    category: "ui",
+    level: 1,
+    summary: "コンテンツの間に引く区切りの線。",
+    description:
+      "リストの項目間やセクションの間に引く細い線。HTMLのhr要素が意味的な区切りを表す。近年は線を引かず「余白で区切る」デザインも主流で、線と余白の使い分けがレイアウト上達のポイント。",
+    useCase: "リスト項目の区切り、設定画面のグループ分け、記事の話題転換。",
+    sampleCode: `<hr class="divider" />
+/* CSS */
+.divider { border: none; border-top: 1px solid #e2e8f0; }`,
+    related: ["section", "margin"],
+  },
+
+  // ============ レイアウト（追加分） ============
+  {
+    slug: "sticky-header",
+    nameJa: "固定ヘッダー",
+    nameEn: "Sticky Header",
+    reading: "こていへっだー",
+    aliases: ["追従ヘッダー", "スティッキーヘッダー"],
+    category: "layout",
+    level: 2,
+    summary: "スクロールしても画面上部に貼り付いたままのヘッダー。",
+    description:
+      "ページをどれだけスクロールしてもナビゲーションが画面上部に残り続ける仕組み。CSSの position: sticky（または fixed）で実現する。いつでもメニューに触れる利便性と引き換えに画面を常に占有するため、スマホでは高さを抑えるのが鉄則。",
+    useCase: "グローバルナビの常時表示、ECの「カートに入れる」ボタン追従。",
+    sampleCode: `header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}`,
+    related: ["header", "z-index", "global-navigation"],
+  },
+  {
+    slug: "lp",
+    nameJa: "LP（ランディングページ）",
+    nameEn: "Landing Page",
+    reading: "らんでぃんぐぺーじ",
+    aliases: ["LP", "ランペ"],
+    category: "layout",
+    level: 1,
+    summary: "広告などから最初に「着地」する、1枚完結の縦長ページ。",
+    description:
+      "広告や検索から流入したユーザーを、登録・購入という1つのゴールへ導くことに特化した縦長1ページ。他ページへのリンクを極力減らし、ヒーロー→悩み共感→解決策→実績→CTAという定番構成で畳みかける。Web制作の受注案件として最も多いジャンルのひとつ。",
+    useCase: "広告のリンク先、キャンペーンページ、サービス紹介。",
+    related: ["hero-section", "cta", "first-view"],
+  },
+  {
+    slug: "wireframe",
+    nameJa: "ワイヤーフレーム",
+    nameEn: "Wireframe",
+    reading: "わいやーふれーむ",
+    aliases: ["ワイヤー"],
+    category: "layout",
+    level: 2,
+    summary: "色や装飾を省いた、ページの設計図となる線画レイアウト。",
+    description:
+      "「どこに何を置くか」だけを白黒の箱と線で表した設計図。針金（wire)の骨組み（frame）が語源。デザインの前に情報の配置と優先順位を固めるための工程で、ここを飛ばすとデザインの手戻りが多発する。",
+    useCase: "サイト制作の設計工程、クライアントとの構成合意。",
+    related: ["mockup", "section", "first-view"],
+  },
+  {
+    slug: "mockup",
+    nameJa: "デザインカンプ",
+    nameEn: "Design Mockup",
+    reading: "でざいんかんぷ",
+    aliases: ["モックアップ", "カンプ"],
+    category: "layout",
+    level: 2,
+    summary: "完成形そっくりに作り込んだデザインの見本。",
+    description:
+      "ワイヤーフレームに色・写真・フォントを乗せ、完成時の見た目を忠実に再現したデザインデータ。FigmaやPhotoshopで作られる。コーダーはこのカンプを寸分違わずHTML/CSSで再現する——それが「コーディング」という仕事。",
+    useCase: "実装前のデザイン確定、クライアント承認、コーディングの元データ。",
+    related: ["wireframe", "markup", "font-family"],
+  },
+  {
+    slug: "not-found-page",
+    nameJa: "404ページ",
+    nameEn: "404 Page",
+    reading: "よんまるよんぺーじ",
+    aliases: ["404", "ノットファウンド"],
+    category: "layout",
+    level: 1,
+    summary: "存在しないURLにアクセスしたとき表示されるエラーページ。",
+    description:
+      "404はHTTPステータスコードで「ページが見つからない」の意味。デフォルトの素っ気ないエラー画面ではなく、検索窓やトップへの導線を置いた専用ページを用意するのがマナー。遊び心のある404ページはブランドの個性を見せる場でもある。",
+    useCase: "リンク切れ・URL打ち間違い時の受け皿。",
+    related: ["empty-state", "search-bar"],
+  },
+
+  // ============ HTML/CSS（追加分） ============
+  {
+    slug: "position",
+    nameJa: "ポジション",
+    nameEn: "Position",
+    reading: "ぽじしょん",
+    aliases: ["absolute", "fixed", "relative"],
+    category: "htmlcss",
+    level: 2,
+    summary: "要素を通常の流れから外して自由な位置に置くCSSプロパティ。",
+    description:
+      "relative（基準を保ったままずらす）、absolute（親を基準に絶対配置）、fixed（画面に固定）、sticky（スクロールで貼り付く）の4モードが主役。「親にrelative、子にabsolute」がバッジやアイコン重ねの黄金パターン。z-indexはposition指定があって初めて効く。",
+    useCase: "アイコンへのバッジ重ね、固定ヘッダー、背景装飾の配置。",
+    sampleCode: `.parent { position: relative; }
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}`,
+    related: ["z-index", "sticky-header", "badge"],
+  },
+  {
+    slug: "pseudo-class",
+    nameJa: "擬似クラス",
+    nameEn: "Pseudo-class",
+    reading: "ぎじくらす",
+    aliases: [":hover", ":focus", "疑似クラス"],
+    category: "htmlcss",
+    level: 3,
+    summary: ":hover や :first-child のように要素の「状態」を指定するセレクタ。",
+    description:
+      "クラスを付けなくても「マウスが乗っている」「最初の子要素」「奇数番目」のような状態・位置を条件にスタイルを当てられる仕組み。:hover / :focus / :nth-child() / :not() あたりが頻出。似た名前の擬似要素（::before / ::after）は「存在しない要素を作る」もので別物。",
+    useCase: "ホバー効果、フォーカス時の強調、リストの縞模様。",
+    sampleCode: `li:nth-child(odd) { background: #f8fafc; }
+input:focus { outline: 2px solid #4f46e5; }`,
+    related: ["hover", "class", "transition"],
+    isPremium: true,
+  },
+  {
+    slug: "opacity",
+    nameJa: "不透明度（opacity）",
+    nameEn: "Opacity",
+    reading: "おぱしてぃ",
+    aliases: ["透過", "透明度"],
+    category: "htmlcss",
+    level: 1,
+    summary: "要素の透け具合を0〜1で指定するCSSプロパティ。",
+    description:
+      "1で完全に見える、0で完全に透明。ホバー時に画像を少し透けさせる、無効なボタンを薄く見せる、フェードイン演出など出番は多い。要素全体が透けるため、「背景だけ半透明にしたい」ときは rgba() や色の透明度指定を使い分ける。",
+    useCase: "無効状態の表現、ホバー演出、フェードイン・アウト。",
+    sampleCode: `.disabled { opacity: 0.4; }
+.photo:hover { opacity: 0.8; }`,
+    related: ["hover", "transition", "box-shadow"],
+  },
+  {
+    slug: "overflow",
+    nameJa: "オーバーフロー",
+    nameEn: "Overflow",
+    reading: "おーばーふろー",
+    category: "htmlcss",
+    level: 2,
+    summary: "中身が箱からはみ出したときの扱いを決めるCSSプロパティ。",
+    description:
+      "hidden（切り取る）、scroll / auto（スクロールさせる）、visible（はみ出したまま＝初期値）から選ぶ。「角丸の箱から画像がはみ出る」「横スクロールが勝手に出る」といった初心者頻出トラブルの解決役。テキストの省略（…）にも組み合わせで使う。",
+    useCase: "カード内画像の切り抜き、表の横スクロール、長文の省略表示。",
+    sampleCode: `.card { overflow: hidden; }
+.table-wrap { overflow-x: auto; }`,
+    related: ["border-radius", "wrapper", "responsive"],
+  },
+  {
+    slug: "line-height",
+    nameJa: "行間（line-height）",
+    nameEn: "Line Height",
+    reading: "ぎょうかん",
+    aliases: ["ラインハイト", "行送り"],
+    category: "htmlcss",
+    level: 1,
+    summary: "文章の行と行の間隔を決めるCSSプロパティ。",
+    description:
+      "読みやすさを最も左右するプロパティのひとつ。日本語本文は1.7〜2.0程度、見出しは1.2〜1.4程度が目安で、単位なしの数値で指定するのが安全。行間が詰まっているだけで「素人っぽいデザイン」に見えてしまう。",
+    useCase: "本文の可読性向上、見出しの調整。日本語サイトでは特に重要。",
+    sampleCode: `p { line-height: 1.8; }
+h1 { line-height: 1.3; }`,
+    related: ["font-family", "margin", "rem-em"],
+  },
+  {
+    slug: "font-family",
+    nameJa: "フォントファミリー",
+    nameEn: "Font Family",
+    reading: "ふぉんとふぁみりー",
+    aliases: ["書体", "Webフォント"],
+    category: "htmlcss",
+    level: 1,
+    summary: "文字の書体を指定するCSSプロパティ。",
+    description:
+      "ゴシック体・明朝体などの書体指定。ユーザーの端末にないフォントは表示できないため、候補をカンマ区切りで並べて先頭から順に採用される。Google Fontsなどの「Webフォント」を読み込めば、どの端末でも同じ書体を表示できる（このサイトのフォントもWebフォント）。",
+    useCase: "サイト全体の書体設定、見出しと本文の書体分け。",
+    sampleCode: `body {
+  font-family: "Noto Sans JP", "Hiragino Sans", sans-serif;
+}`,
+    related: ["line-height", "mockup"],
+  },
+  {
+    slug: "rem-em",
+    nameJa: "remとem",
+    nameEn: "rem / em",
+    reading: "れむ",
+    aliases: ["rem", "em", "相対単位"],
+    category: "htmlcss",
+    level: 2,
+    summary: "文字サイズを基準にした、拡大縮小に強い相対単位。",
+    description:
+      "remはルート（html要素）の文字サイズ基準、emは親要素の文字サイズ基準。pxで固定するとユーザーがブラウザで文字を大きくしても追従しないため、文字サイズはremが推奨。emは入れ子で複利計算されて事故りやすいので、パディング等の限定用途に。",
+    useCase: "アクセシブルな文字サイズ設計、拡大表示への対応。",
+    sampleCode: `html { font-size: 16px; }
+h2 { font-size: 1.5rem; } /* = 24px */`,
+    related: ["viewport", "line-height", "responsive"],
+  },
+  {
+    slug: "css-animation",
+    nameJa: "CSSアニメーション",
+    nameEn: "CSS Animation",
+    reading: "しーえすえすあにめーしょん",
+    aliases: ["keyframes", "キーフレーム"],
+    category: "htmlcss",
+    level: 2,
+    summary: "@keyframesで動きの流れを定義して要素を動かすCSS機能。",
+    description:
+      "「0%のとき透明、100%のとき表示」のように時間経過に沿った変化を@keyframesで定義し、animationプロパティで再生する。ホバーなどのきっかけが必要なトランジションと違い、読み込みと同時に自動再生やループ再生ができる。スピナーの回転もこれ。",
+    useCase: "ローディングの回転、ふわっと出現する演出、繰り返しの動き。",
+    sampleCode: `@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.item { animation: fade-in 0.5s ease; }`,
+    related: ["transition", "spinner", "hover"],
+  },
+
+  // ============ 開発用語（追加分） ============
+  {
+    slug: "seo",
+    nameJa: "SEO",
+    nameEn: "Search Engine Optimization",
+    reading: "えすいーおー",
+    aliases: ["検索エンジン最適化"],
+    category: "dev",
+    level: 1,
+    summary: "検索結果で上位に表示されるようにサイトを整えること。",
+    description:
+      "Googleなどの検索結果で見つけてもらいやすくする施策の総称。適切なタイトル・見出し構造・表示速度・スマホ対応・良質なコンテンツが基本。フロントエンドの実装品質（セマンティックHTML、速度）が直接影響する領域で、コーダーの腕の見せ所。",
+    useCase: "メディアサイト・ECの集客。制作案件の要件として頻出。",
+    related: ["semantic-html", "ogp", "breadcrumb"],
+  },
+  {
+    slug: "ogp",
+    nameJa: "OGP",
+    nameEn: "Open Graph Protocol",
+    reading: "おーじーぴー",
+    aliases: ["OGP画像", "シェア画像"],
+    category: "dev",
+    level: 2,
+    summary: "SNSでシェアしたときに出るタイトル・画像を指定する仕組み。",
+    description:
+      "XやLINEにURLを貼ったときに表示されるカード（タイトル・説明・サムネイル画像）を制御するmetaタグの規格。設定しないと味気ないリンクになり、クリック率が大きく落ちる。シェア用画像は1200×630pxが定番サイズ。",
+    useCase: "SNSシェア時の見栄え、記事・商品ページの拡散対策。",
+    sampleCode: `<meta property="og:title" content="コード図鑑" />
+<meta property="og:image" content="/ogp.png" />`,
+    related: ["seo", "favicon"],
+  },
+  {
+    slug: "cookie",
+    nameJa: "クッキー",
+    nameEn: "Cookie",
+    reading: "くっきー",
+    aliases: ["Cookie"],
+    category: "dev",
+    level: 1,
+    summary: "ブラウザに保存される小さなデータ。ログイン状態の維持などに使う。",
+    description:
+      "サイトがブラウザに預けておける小さなメモ。次の訪問時にも送り返されるため、「ログインしたままにする」「カートの中身を覚えておく」が実現できる。広告トラッキングにも使われるため、同意バナー（Cookieバナー）での告知が求められる流れになっている。",
+    useCase: "ログインセッションの維持、設定の記憶、アクセス解析。",
+    related: ["local-storage", "cache", "backend"],
+  },
+  {
+    slug: "cache",
+    nameJa: "キャッシュ",
+    nameEn: "Cache",
+    reading: "きゃっしゅ",
+    category: "dev",
+    level: 2,
+    summary: "一度読み込んだデータを保存しておき、次回を速くする仕組み。",
+    description:
+      "画像やCSSをブラウザが保存しておき、再訪問時にダウンロードを省略して高速表示する仕組み。「更新したのに反映されない」場合の原因No.1で、スーパーリロード（Ctrl+Shift+R）はこのキャッシュを無視して読み直す操作。開発中は開発者ツールでキャッシュ無効化もできる。",
+    useCase: "表示高速化。「反映されない」トラブルの原因調査。",
+    related: ["console", "deploy", "cookie"],
+  },
+  {
+    slug: "local-storage",
+    nameJa: "ローカルストレージ",
+    nameEn: "Local Storage",
+    reading: "ろーかるすとれーじ",
+    aliases: ["localStorage", "Webストレージ"],
+    category: "dev",
+    level: 3,
+    summary: "ブラウザにデータを保存できるJavaScriptの仕組み。",
+    description:
+      "キーと値のペアをブラウザ内に永続保存できるAPI。クッキーと違いサーバーに自動送信されず、容量も大きい（約5MB）。ダークモード設定やゲームのスコアなど「サーバーに送る必要のないデータ」の置き場に最適。ただし誰でも中身を見られるため、秘密情報は保存しない。",
+    useCase: "テーマ設定の記憶、下書きの自動保存、チュートリアル済みフラグ。",
+    sampleCode: `localStorage.setItem("theme", "dark");
+const theme = localStorage.getItem("theme");`,
+    related: ["cookie", "dom", "api"],
+    isPremium: true,
+  },
+  {
+    slug: "validation",
+    nameJa: "バリデーション",
+    nameEn: "Validation",
+    reading: "ばりでーしょん",
+    aliases: ["入力チェック"],
+    category: "dev",
+    level: 2,
+    summary: "フォームの入力内容が正しいかチェックすること。",
+    description:
+      "「メールアドレスの形式か」「必須項目が空でないか」を検証する処理。入力中にその場で知らせるフロント側チェックと、改ざん対策のサーバー側チェックの二段構えが原則（フロントのチェックは突破できるため、サーバー側は必須）。エラーメッセージは「何をどう直せばいいか」まで書くのが親切。",
+    useCase: "会員登録・問い合わせフォームの入力チェック全般。",
+    sampleCode: `<input type="email" required maxlength="100" />`,
+    related: ["form", "backend", "placeholder"],
+  },
+  {
+    slug: "ux",
+    nameJa: "UXとUI",
+    nameEn: "UX / UI",
+    reading: "ゆーえっくす",
+    aliases: ["UX", "ユーザー体験", "UI/UX"],
+    category: "dev",
+    level: 1,
+    summary: "UIは「見た目と操作部分」、UXは「体験全体」のこと。",
+    description:
+      "UI（User Interface）はボタンや画面などユーザーが触れる部分そのもの。UX（User Experience）は「探しやすかった」「速くて快適だった」という体験全体を指す。「UIはきれいだがUXが悪い」（見た目は良いが目的を達成しにくい）という状況もあり得る、と理解すると区別しやすい。",
+    useCase: "デザイン議論の共通言語。求人・案件の職種名にも頻出。",
+    related: ["frontend", "wireframe", "empty-state"],
+  },
+  {
+    slug: "favicon",
+    nameJa: "ファビコン",
+    nameEn: "Favicon",
+    reading: "ふぁびこん",
+    category: "dev",
+    level: 1,
+    summary: "ブラウザのタブに表示されるサイトの小さなアイコン。",
+    description:
+      "favorite icon（お気に入りアイコン）の略。タブ・ブックマーク・検索結果に表示され、小さいながらサイトの信頼感を左右する。未設定だと地球儀マークなどが出て未完成な印象に。近年はSVGや複数サイズのPNGで用意するのが主流。",
+    useCase: "サイト公開時の必須素材。ブランディングの仕上げ。",
+    sampleCode: `<link rel="icon" href="/favicon.svg" type="image/svg+xml" />`,
+    related: ["ogp", "seo"],
+  },
+
+  // ============ UI部品（第3バッチ） ============
+  {
+    slug: "popover",
+    nameJa: "ポップオーバー",
+    nameEn: "Popover",
+    reading: "ぽっぷおーばー",
+    aliases: ["吹き出しメニュー"],
+    category: "ui",
+    level: 2,
+    summary: "要素をクリックすると、その近くに小さなパネルが吹き出しで開くUI。",
+    description:
+      "ボタンやアイコンをクリックした位置の近くに、追加情報や操作メニューを吹き出しで表示する部品。ツールチップより情報量が多く、モーダルより軽量。クリックで開く点がホバーで出るツールチップとの違い。プロフィールのプレビューや絵文字ピッカーなどで使われる。",
+    useCase: "アイコンの詳細メニュー、日付の選択、プロフィールのプレビュー表示。",
+    related: ["tooltip", "dropdown", "modal"],
+  },
+  {
+    slug: "kebab-menu",
+    nameJa: "ケバブメニュー",
+    nameEn: "Kebab Menu",
+    reading: "けばぶめにゅー",
+    aliases: ["三点メニュー", "・・・メニュー", "オプションメニュー"],
+    category: "ui",
+    level: 1,
+    summary: "縦three点（⋮）のアイコン。押すと「その他の操作」が開く。",
+    description:
+      "縦に並んだ3つの点のアイコンで、串に刺さったケバブに見えることが名前の由来。項目ごとの「編集・削除・共有」などの補助的な操作をまとめて隠しておくのに使う。横三点はミートボールメニュー、三本線はハンバーガーメニューと、点の並びで呼び名が変わる。",
+    useCase: "リスト項目ごとの操作メニュー、カード右上のオプション。",
+    related: ["hamburger-menu", "dropdown", "context-menu"],
+  },
+  {
+    slug: "context-menu",
+    nameJa: "コンテキストメニュー",
+    nameEn: "Context Menu",
+    reading: "こんてきすとめにゅー",
+    aliases: ["右クリックメニュー"],
+    category: "ui",
+    level: 2,
+    summary: "右クリック（長押し）で出る、その状況に応じた操作メニュー。",
+    description:
+      "対象を右クリックしたときに開く、その場（コンテキスト）に応じた操作の一覧。文字を選択して右クリックすると「コピー・翻訳」が出るアレ。状況ごとに項目が変わるのが特徴。Webアプリで独自のものを作ることもあるが、ブラウザ標準の右クリックを奪うとUXを損なうため慎重に。",
+    useCase: "エディタの編集操作、ファイル管理アプリ、独自の右クリック操作。",
+    related: ["kebab-menu", "dropdown", "popover"],
+    isPremium: true,
+  },
+  {
+    slug: "segmented-control",
+    nameJa: "セグメンテッドコントロール",
+    nameEn: "Segmented Control",
+    reading: "せぐめんてっどこんとろーる",
+    aliases: ["トグルボタングループ", "切り替えボタン"],
+    category: "ui",
+    level: 2,
+    summary: "横に連結したボタンで、2〜4個の選択肢から1つを選ぶ切り替え。",
+    description:
+      "「日 / 週 / 月」のように横並びの連結ボタンで表示を切り替えるUI。選択肢が少なく、今どれが選ばれているか一目でわかるのが利点。タブと似るが、コンテンツの切り替えより「設定値の選択」に近い場面で使う。選択肢が多いならドロップダウンに譲る。",
+    useCase: "グラフの期間切り替え、地図/リスト表示の切り替え、並び順の選択。",
+    related: ["tab", "radio-button", "toggle-switch"],
+  },
+  {
+    slug: "date-picker",
+    nameJa: "デートピッカー",
+    nameEn: "Date Picker",
+    reading: "でーとぴっかー",
+    aliases: ["カレンダー入力", "日付選択"],
+    category: "ui",
+    level: 2,
+    summary: "カレンダーから日付を選んで入力する部品。",
+    description:
+      "入力欄をタップするとカレンダーが開き、日付を選択できるUI。手入力の表記ゆれ（2026/1/1 と 2026-01-01）を防げる。予約サイトでは開始日〜終了日を選ぶ範囲選択（レンジ）も定番。スマホでは端末標準のピッカーを使うと操作に迷いがない。",
+    useCase: "予約日の指定、生年月日の入力、期間の絞り込み。",
+    sampleCode: `<input type="date" />`,
+    related: ["dropdown", "form", "stepper"],
+  },
+  {
+    slug: "banner",
+    nameJa: "バナー（告知バー）",
+    nameEn: "Banner",
+    reading: "ばなー",
+    aliases: ["お知らせバー", "アナウンスバー"],
+    category: "ui",
+    level: 1,
+    summary: "画面上部などに帯状で出る、お知らせ・警告の表示。",
+    description:
+      "「セール開催中」「メンテナンス予定」などを画面幅いっぱいの帯で知らせるUI。トーストと違い自動では消えず、ユーザーが閉じるか状況が変わるまで残る。重要度に応じて色を変える（情報=青、警告=黄、エラー=赤）のが定石。閉じるボタンを付けるのがマナー。",
+    useCase: "キャンペーン告知、Cookie同意、システム障害のお知らせ。",
+    related: ["toast", "badge", "cookie"],
+  },
+  {
+    slug: "bottom-sheet",
+    nameJa: "ボトムシート",
+    nameEn: "Bottom Sheet",
+    reading: "ぼとむしーと",
+    category: "ui",
+    level: 3,
+    summary: "画面下からせり上がってくるパネル。スマホで多用される。",
+    description:
+      "画面下端からスライドして現れるパネルで、スマホの親指が届きやすい位置に操作を集められる。地図アプリで下から出てくる店舗情報がこれ。途中まで開いた状態（ハーフ）と全画面の二段階を持つものも多い。ドロワーの下版と考えるとわかりやすい。",
+    useCase: "地図アプリの詳細、共有メニュー、スマホのフィルター設定。",
+    related: ["drawer", "modal", "fab"],
+    isPremium: true,
+  },
+  {
+    slug: "notification",
+    nameJa: "通知",
+    nameEn: "Notification",
+    reading: "つうち",
+    aliases: ["プッシュ通知", "ノーティフィケーション"],
+    category: "ui",
+    level: 1,
+    summary: "新着や重要な出来事をユーザーに知らせる仕組み全般。",
+    description:
+      "アプリ内のベルアイコンの一覧や、端末に届くプッシュ通知など、ユーザーに何かを知らせる仕組みの総称。届けすぎると通知疲れで逆効果になるため、「本当に今伝えるべきか」の設計が重要。未読はバッジで示すのが定番。",
+    useCase: "新着メッセージ、いいねの通知、リマインダー。",
+    related: ["badge", "toast", "banner"],
+  },
+
+  // ============ レイアウト（第3バッチ） ============
+  {
+    slug: "whitespace",
+    nameJa: "余白（ホワイトスペース）",
+    nameEn: "Whitespace",
+    reading: "よはく",
+    aliases: ["ネガティブスペース", "間"],
+    category: "layout",
+    level: 2,
+    summary: "要素の間や周りにあえて設ける「何もない空間」。",
+    description:
+      "余白は「埋め忘れ」ではなく、情報を整理し高級感を出すための積極的なデザイン要素。要素を詰め込むほど安っぽく見え、余白をたっぷり取るほど洗練されて見える。関連する要素は近づけ、無関係な要素は離す（近接の原則）ことで、線を引かなくてもグループが伝わる。",
+    useCase: "全レイアウトの品位。ブランドサイト・LPで特に効く。",
+    related: ["margin", "padding", "section"],
+  },
+  {
+    slug: "masonry",
+    nameJa: "メーソンリーレイアウト",
+    nameEn: "Masonry Layout",
+    reading: "めーそんりーれいあうと",
+    aliases: ["ピンタレスト風", "石積みレイアウト"],
+    category: "layout",
+    level: 2,
+    summary: "高さの違うカードをレンガ積みのように隙間なく並べる配置。",
+    description:
+      "Pinterestでおなじみの、高さがバラバラのカードを段差をつけて詰めて並べるレイアウト。石工（mason）のレンガ積みが名前の由来。写真など縦横比が揃わないコンテンツを美しく敷き詰められる。以前はJSライブラリが必要だったが、CSSだけでも組めるようになってきた。",
+    useCase: "写真ギャラリー、ムードボード、作品一覧。",
+    related: ["grid-layout", "card", "aspect-ratio"],
+    isPremium: true,
+  },
+  {
+    slug: "bento-grid",
+    nameJa: "ベントーグリッド",
+    nameEn: "Bento Grid",
+    reading: "べんとーぐりっど",
+    aliases: ["弁当グリッド"],
+    category: "layout",
+    level: 2,
+    summary: "大小のマスを弁当箱のように敷き詰めた、近年流行のレイアウト。",
+    description:
+      "日本の弁当箱の仕切りにヒントを得た、大きさの異なるカードを組み合わせて情報を見せるレイアウト。AppleやスタートアップのLPで一気に流行した。重要な要素を大きなマスに、補足を小さなマスに置くことで、視線の優先順位を自然に作れる。",
+    useCase: "サービスの機能紹介、ダッシュボード、ポートフォリオのトップ。",
+    related: ["grid-layout", "card", "hero-section"],
+  },
+  {
+    slug: "aspect-ratio",
+    nameJa: "アスペクト比",
+    nameEn: "Aspect Ratio",
+    reading: "あすぺくとひ",
+    aliases: ["縦横比"],
+    category: "layout",
+    level: 2,
+    summary: "幅と高さの比率（16:9 など）。画像や動画の形を保つのに使う。",
+    description:
+      "「横：縦」の比率のこと。16:9（動画）、1:1（正方形）、4:3 などが代表。CSSの aspect-ratio プロパティで箱の比率を固定でき、画像の読み込み前でも高さが確保されてレイアウトのガタつき（レイアウトシフト）を防げる。サムネイルの形を揃えるのに必須。",
+    useCase: "動画埋め込み、サムネイル一覧、カード画像の形揃え。",
+    sampleCode: `.thumb {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}`,
+    related: ["overflow", "masonry", "responsive"],
+  },
+  {
+    slug: "z-pattern",
+    nameJa: "Zパターン・Fパターン",
+    nameEn: "Z-Pattern / F-Pattern",
+    reading: "ぜっとぱたーん",
+    aliases: ["視線誘導", "Fの法則"],
+    category: "layout",
+    level: 3,
+    summary: "ユーザーの視線の動き方（ZやFの形）に沿って要素を配置する考え方。",
+    description:
+      "人は初見のページを左上→右上→左下→右下とZ字に、文章の多いページはF字に見ると言われる。この視線の流れに沿って、ロゴ→ナビ→キャッチ→CTAと重要要素を置くと自然に読ませられる。LPやランディングの構成を考える土台になる知識。",
+    useCase: "LPの要素配置、CTAの位置決め、視線誘導の設計。",
+    related: ["first-view", "cta", "lp"],
+    isPremium: true,
+  },
+  {
+    slug: "gutter",
+    nameJa: "ガター（溝）",
+    nameEn: "Gutter",
+    reading: "がたー",
+    aliases: ["カラム間余白", "溝"],
+    category: "layout",
+    level: 2,
+    summary: "グリッドの列と列のあいだの余白。",
+    description:
+      "グリッドレイアウトで、隣り合うカラム（列）の間に設ける一定の余白。CSSグリッドやフレックスボックスの gap プロパティで指定する。ガターの幅を全体で統一すると、リズムの整った端正なレイアウトになる。狭すぎると窮屈、広すぎると関連が切れて見える。",
+    useCase: "カード一覧の間隔、段組みの列間、グリッドシステムの設計。",
+    sampleCode: `.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px; /* これがガター */
+}`,
+    related: ["grid-layout", "whitespace", "flexbox"],
+  },
+
+  // ============ HTML/CSS（第3バッチ） ============
+  {
+    slug: "box-model",
+    nameJa: "ボックスモデル",
+    nameEn: "Box Model",
+    reading: "ぼっくすもでる",
+    category: "htmlcss",
+    level: 2,
+    summary: "全要素を「内容＋padding＋border＋margin」の入れ子の箱と捉える考え方。",
+    description:
+      "CSSではすべての要素が長方形の箱で、内側から content → padding（内側余白）→ border（枠線）→ margin（外側余白）の層でできている。この積み木を理解すると「なぜか幅がズレる」問題が解ける。box-sizing: border-box を指定すると幅計算が直感的になり、現代ではほぼ必須の初期設定。",
+    useCase: "レイアウト崩れの原因調査、余白と幅の設計の基礎。",
+    sampleCode: `* { box-sizing: border-box; }`,
+    related: ["margin", "padding", "overflow"],
+  },
+  {
+    slug: "display",
+    nameJa: "display プロパティ",
+    nameEn: "Display",
+    reading: "でぃすぷれい",
+    aliases: ["block", "inline", "none"],
+    category: "htmlcss",
+    level: 2,
+    summary: "要素の並び方（縦積み・横並び・非表示など）を決めるCSSの基本。",
+    description:
+      "block（縦に積まれ幅いっぱい）、inline（文章中で横に並ぶ）、inline-block（横並びだが幅高さを持てる）、flex / grid（子を柔軟に配置）、none（消す）が主役。要素が思った並びにならない時はまずdisplayを疑う。none は場所ごと消える点が、場所を残す visibility: hidden との違い。",
+    useCase: "横並び・縦積みの制御、要素の表示/非表示の切り替え。",
+    sampleCode: `.menu { display: flex; }
+.hidden { display: none; }`,
+    related: ["flexbox", "grid-layout", "position"],
+  },
+  {
+    slug: "pseudo-element",
+    nameJa: "擬似要素",
+    nameEn: "Pseudo-element",
+    reading: "ぎじようそ",
+    aliases: ["::before", "::after", "疑似要素"],
+    category: "htmlcss",
+    level: 3,
+    summary: "HTMLに書かなくても、CSSだけで飾りの要素を作り出す仕組み。",
+    description:
+      "::before / ::after を使うと、実際のHTMLを増やさずに装飾用の要素をCSSで生成できる。見出しの前の飾り線、引用符、アイコン、リボンなどに活躍する。content プロパティが必須。状態を指定する擬似クラス（:hover など）とは別物で、コロン2つ（::）で書くのが目印。",
+    useCase: "装飾の追加、吹き出しのしっぽ、アイコンの付与。",
+    sampleCode: `.title::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  background: #12a854;
+}`,
+    related: ["pseudo-class", "css-variable", "transform"],
+    isPremium: true,
+  },
+  {
+    slug: "css-variable",
+    nameJa: "CSS変数（カスタムプロパティ）",
+    nameEn: "CSS Variable",
+    reading: "しーえすえすへんすう",
+    aliases: ["カスタムプロパティ", "--変数"],
+    category: "htmlcss",
+    level: 3,
+    summary: "色や余白の値に名前を付けて使い回せるCSSの機能。",
+    description:
+      "--brand-color: #12a854; のように値を変数化し、var(--brand-color) で呼び出す。テーマカラーを一箇所で管理でき、ダークモードの切り替えにも使える。JavaScriptから書き換えられるのも強力。プリプロセッサ（Sass）の変数と違い、ブラウザ上で動的に変わるのが特徴。",
+    useCase: "テーマカラーの一元管理、ダークモード、余白の統一。",
+    sampleCode: `:root { --gap: 16px; }
+.card { padding: var(--gap); }`,
+    related: ["font-family", "pseudo-element", "reset-css"],
+  },
+  {
+    slug: "transform",
+    nameJa: "トランスフォーム",
+    nameEn: "Transform",
+    reading: "とらんすふぉーむ",
+    aliases: ["translate", "scale", "rotate"],
+    category: "htmlcss",
+    level: 2,
+    summary: "要素を移動・拡大・回転・傾斜させるCSSプロパティ。",
+    description:
+      "translate（移動）scale（拡大縮小）rotate（回転）skew（傾斜）で要素を変形させる。レイアウトを崩さず見た目だけ動かせるため、ホバーで少し浮かせる・拡大する演出やアニメーションで多用される。GPUで処理され動きが滑らかなのも利点。トランジションと組むと効果的。",
+    useCase: "ホバーで浮かせる/拡大、アイコンの回転、スライドイン演出。",
+    sampleCode: `.card:hover {
+  transform: translateY(-4px) scale(1.02);
+}`,
+    related: ["transition", "css-animation", "hover"],
+  },
+  {
+    slug: "gradient",
+    nameJa: "グラデーション",
+    nameEn: "Gradient",
+    reading: "ぐらでーしょん",
+    aliases: ["linear-gradient", "背景グラデ"],
+    category: "htmlcss",
+    level: 1,
+    summary: "色から色へなめらかに変化する背景を作るCSSの表現。",
+    description:
+      "linear-gradient（直線）や radial-gradient（円形）で、複数の色を滑らかにつないだ背景を画像なしで作れる。ヒーローの背景やボタンの立体感、テキストの色付け（背景クリップ）に使う。使いすぎると古臭くなるので、近い色同士で控えめに、が今風。",
+    useCase: "ヒーロー背景、ボタンの装飾、見出しの色付け。",
+    sampleCode: `.hero {
+  background: linear-gradient(135deg, #40dc7e, #12a854);
+}`,
+    related: ["box-shadow", "opacity", "css-variable"],
+  },
+  {
+    slug: "specificity",
+    nameJa: "詳細度（セレクタの強さ）",
+    nameEn: "Specificity",
+    reading: "しょうさいど",
+    aliases: ["セレクタの優先順位"],
+    category: "htmlcss",
+    level: 3,
+    summary: "同じ要素に複数のCSSが当たったとき、どれが勝つかを決めるルール。",
+    description:
+      "「CSSを書いたのに効かない」の主犯。ID（強い）＞クラス＞要素（弱い）の順で優先度が決まり、強いセレクタが勝つ。同じ強さなら後に書いた方が勝つ。!important で無理やり勝たせる手もあるが乱用は禁物。詳細度を低く保つのが保守しやすいCSSのコツ。",
+    useCase: "「スタイルが効かない」トラブルの解決、CSS設計。",
+    sampleCode: `/* こちらが勝つ（IDは強い） */
+#title { color: red; }
+.title { color: blue; }`,
+    related: ["class", "pseudo-class", "reset-css"],
+    isPremium: true,
+  },
+  {
+    slug: "reset-css",
+    nameJa: "リセットCSS",
+    nameEn: "Reset CSS",
+    reading: "りせっとしーえすえす",
+    aliases: ["ノーマライズ", "normalize.css"],
+    category: "htmlcss",
+    level: 2,
+    summary: "ブラウザごとの初期スタイルの差をならす、最初に読み込むCSS。",
+    description:
+      "ブラウザは見出しや余白に独自の初期スタイルを持ち、そのままだと表示がバラつく。それをゼロや共通値に揃えるのがリセットCSS。まっさらに戻すreset系と、程よく残すnormalize系がある。プロジェクトの一番最初に読み込むのが定番の作法。",
+    useCase: "制作の初期セットアップ。ブラウザ間の表示統一。",
+    sampleCode: `* { margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; }`,
+    related: ["box-model", "css-variable", "vendor-prefix"],
+  },
+  {
+    slug: "vendor-prefix",
+    nameJa: "ベンダープレフィックス",
+    nameEn: "Vendor Prefix",
+    reading: "べんだーぷれふぃっくす",
+    aliases: ["-webkit-", "接頭辞"],
+    category: "htmlcss",
+    level: 3,
+    summary: "新しいCSSをブラウザ独自に先行実装するための接頭辞（-webkit- など）。",
+    description:
+      "-webkit-（Safari/Chrome系）-moz-（Firefox）のように、正式採用前の実験的なCSSを各ブラウザが先行実装する際に付ける接頭辞。今も一部プロパティで必要。手で書くと漏れるため、Autoprefixerなどのツールが自動付与してくれるのが現代の標準。",
+    useCase: "一部の新しいCSSのブラウザ対応、ツールによる自動付与。",
+    sampleCode: `.box {
+  -webkit-user-select: none;
+  user-select: none;
+}`,
+    related: ["reset-css", "responsive", "css-animation"],
+    isPremium: true,
+  },
+  {
+    slug: "color-code",
+    nameJa: "カラーコード",
+    nameEn: "Color Code",
+    reading: "からーこーど",
+    aliases: ["16進カラー", "HEX", "RGB"],
+    category: "htmlcss",
+    level: 1,
+    summary: "#40dc7e のように色を数値で表す記法。",
+    description:
+      "Webで色を指定する記法。#RRGGBB の16進（HEX）が最も一般的で、rgb()／rgba()（透明度つき）、近年は扱いやすい hsl() も普及。デザインカンプのカラーコードをそのままCSSに写すのが実装の基本作業。透明度は rgba の第4値か、HEXの末尾2桁で表す。",
+    useCase: "色の指定全般。デザインカンプからの色の写し取り。",
+    sampleCode: `color: #12a854;
+background: rgba(18, 168, 84, 0.1);`,
+    related: ["opacity", "gradient", "css-variable"],
+  },
+
+  // ============ 開発用語（第3バッチ） ============
+  {
+    slug: "json",
+    nameJa: "JSON",
+    nameEn: "JavaScript Object Notation",
+    reading: "じぇいそん",
+    category: "dev",
+    level: 2,
+    summary: "データをやり取りするための、人にも読める軽量な記述形式。",
+    description:
+      "{ \"name\": \"太郎\", \"age\": 20 } のように、キーと値でデータを表す形式。APIの返答はほぼJSONで、フロントはこれを受け取って画面に反映する。JavaScriptのオブジェクトによく似ているが別物で、キーは必ずダブルクォートで囲むなどのルールがある。設定ファイルにも広く使われる。",
+    useCase: "APIのデータ受け渡し、設定ファイル、データの保存形式。",
+    sampleCode: `{
+  "term": "モーダル",
+  "level": 1
+}`,
+    related: ["api", "rest-api", "local-storage"],
+  },
+  {
+    slug: "rest-api",
+    nameJa: "REST API",
+    nameEn: "REST API",
+    reading: "れすとえーぴーあい",
+    aliases: ["エンドポイント", "RESTful"],
+    category: "dev",
+    level: 3,
+    summary: "URLとHTTPメソッドでデータを操作する、API設計の定番スタイル。",
+    description:
+      "「/users にGETで一覧取得、POSTで新規作成」のように、URL（エンドポイント）とHTTPメソッド（GET/POST/PUT/DELETE）の組み合わせでデータを操作するAPIの作法。ルールが分かりやすく広く普及。フロントはこのエンドポイントを叩いてデータを取得・送信する。",
+    useCase: "サーバーとのデータ連携、外部サービスの利用。",
+    sampleCode: `fetch("/api/terms", { method: "GET" })`,
+    related: ["api", "json", "http-status"],
+    isPremium: true,
+  },
+  {
+    slug: "http-status",
+    nameJa: "HTTPステータスコード",
+    nameEn: "HTTP Status Code",
+    reading: "えいちてぃーてぃーぴーすてーたすこーど",
+    aliases: ["404", "200", "500"],
+    category: "dev",
+    level: 2,
+    summary: "通信の結果を表す3桁の番号（200=成功, 404=なし, 500=エラー）。",
+    description:
+      "サーバーが「リクエストをどう処理したか」を返す3桁の番号。200番台は成功、300番台は転送、400番台は利用者側の問題（404=ページなし、403=権限なし）、500番台はサーバー側のエラー。開発者ツールのネットワークタブで確認でき、不具合調査の第一歩になる。",
+    useCase: "APIの成否判定、エラー原因の切り分け、404ページの設計。",
+    related: ["rest-api", "not-found-page", "console"],
+  },
+  {
+    slug: "npm",
+    nameJa: "npm（パッケージマネージャ）",
+    nameEn: "Package Manager",
+    reading: "えぬぴーえむ",
+    aliases: ["パッケージマネージャ", "yarn", "pnpm"],
+    category: "dev",
+    level: 2,
+    summary: "ライブラリの導入・更新をまとめて管理してくれる道具。",
+    description:
+      "npm install で公開ライブラリを一発で導入し、バージョンをまとめて管理できるツール。使うライブラリは package.json に記録され、他の人も同じ環境を再現できる。yarn や pnpm も同じ役割の仲間。現代のフロント開発は、この仕組みの上に成り立っている。",
+    useCase: "ライブラリの導入・更新、チームでの環境の統一。",
+    sampleCode: `npm install react
+npm run dev`,
+    related: ["library", "framework", "bundler"],
+  },
+  {
+    slug: "bundler",
+    nameJa: "バンドラー",
+    nameEn: "Bundler",
+    reading: "ばんどらー",
+    aliases: ["webpack", "Vite", "ビルドツール"],
+    category: "dev",
+    level: 3,
+    summary: "たくさんのファイルを、配信用にひとまとめ・最適化する道具。",
+    description:
+      "分割して書いたJS/CSS/画像を、ブラウザ向けに結合・圧縮・変換してくれるツール。Vite や webpack が代表格。開発中は変更を即座に画面へ反映（ホットリロード）し、公開時はファイルを小さくまとめて表示を速くする。フレームワークに内蔵されていることも多い。",
+    useCase: "本番用の最適化ビルド、開発中の高速プレビュー。",
+    related: ["npm", "framework", "deploy"],
+    isPremium: true,
+  },
+  {
+    slug: "cdn",
+    nameJa: "CDN",
+    nameEn: "Content Delivery Network",
+    reading: "しーでぃーえぬ",
+    category: "dev",
+    level: 2,
+    summary: "世界中のサーバーから、利用者に一番近い場所で配信を速くする仕組み。",
+    description:
+      "画像やCSSなどを世界各地のサーバーにコピーして置き、アクセスした人に最も近い拠点から届けることで表示を高速化する仕組み。混雑の分散や障害への強さも得られる。フォントやライブラリをCDN経由で読み込む、サイト全体をCDNで配信する、といった使い方をする。",
+    useCase: "画像・動画の高速配信、アクセス集中への備え、表示速度の改善。",
+    related: ["cache", "deploy", "lazy-loading"],
+  },
+  {
+    slug: "accessibility",
+    nameJa: "アクセシビリティ",
+    nameEn: "Accessibility",
+    reading: "あくせしびりてぃ",
+    aliases: ["a11y", "ウェブアクセシビリティ"],
+    category: "dev",
+    level: 2,
+    summary: "障害の有無や環境によらず、誰もが使えるようにする配慮。",
+    description:
+      "視覚障害の人が使う読み上げソフト、キーボードだけの操作、色覚特性への配慮など、あらゆる人がWebをきちんとかいるようにするための取り組み（略してa11y）。適切な見出し構造、画像の代替テキスト、十分な色のコントラストが基本。法制度化も進み、実務での重要度が年々増している。",
+    useCase: "公共・企業サイトの必須要件、読み上げ対応、キーボード操作対応。",
+    sampleCode: `<img src="logo.png" alt="会社のロゴ" />
+<button aria-label="メニューを開く">≡</button>`,
+    related: ["semantic-html", "ux", "seo"],
+  },
+  {
+    slug: "lazy-loading",
+    nameJa: "遅延読み込み",
+    nameEn: "Lazy Loading",
+    reading: "ちえんよみこみ",
+    aliases: ["レイジーロード"],
+    category: "dev",
+    level: 2,
+    summary: "画面に入ってから画像などを読み込み、初期表示を速くする技術。",
+    description:
+      "ページを開いた瞬間に全部の画像を読むのではなく、スクロールして表示領域に近づいたものから順に読み込む手法。最初の表示が軽く速くなり、通信量も節約できる。img要素の loading=\"lazy\" 属性だけで手軽に有効化でき、画像の多い図鑑のようなサイトで効果が大きい。",
+    useCase: "画像の多い一覧ページ、記事中の画像、無限スクロール。",
+    sampleCode: `<img src="photo.jpg" loading="lazy" alt="写真" />`,
+    related: ["cdn", "infinite-scroll", "cache"],
+  },
+  {
+    slug: "ssr-csr",
+    nameJa: "SSRとCSR",
+    nameEn: "SSR / CSR",
+    reading: "えすえすあーる",
+    aliases: ["サーバーサイドレンダリング", "SSG"],
+    category: "dev",
+    level: 3,
+    summary: "画面をサーバーで作るか（SSR）、ブラウザで作るか（CSR）の方式の違い。",
+    description:
+      "CSRはブラウザ側でJSが画面を組み立てる方式で、アプリらしい操作感が得意な反面、初期表示とSEOに弱い。SSRはサーバーで完成HTMLを作って返すため、表示が速くSEOに強い。事前に作り置きするSSGもある。Next.jsはこれらを使い分けられるのが強み（この図鑑もSSGで配信）。",
+    useCase: "SEO重視のサイト設計、表示速度の最適化、Next.jsの構成選択。",
+    related: ["framework", "seo", "deploy"],
+    isPremium: true,
+  },
+  {
+    slug: "environment-variable",
+    nameJa: "環境変数",
+    nameEn: "Environment Variable",
+    reading: "かんきょうへんすう",
+    aliases: [".env", "APIキー管理"],
+    category: "dev",
+    level: 3,
+    summary: "APIキーなどの秘密情報を、コードの外に切り出して管理する仕組み。",
+    description:
+      "APIキーやデータベースの接続情報など、公開してはいけない値をコードに直書きせず .env ファイルなどに逃がして管理する仕組み。開発用と本番用で値を切り替えられる利点もある。秘密情報はGitに含めない（.gitignoreに入れる）のが鉄則で、漏洩事故の多くはこの徹底不足が原因。",
+    useCase: "APIキーの管理、開発/本番の設定切り替え、機密情報の保護。",
+    sampleCode: `# .env（Gitには含めない）
+STRIPE_SECRET_KEY=sk_xxx`,
+    related: ["backend", "git", "deploy"],
+    isPremium: true,
+  },
+
+  // ============ バックエンド（サイトの裏側） ============
+  {
+    slug: "server",
+    nameJa: "サーバー",
+    nameEn: "Server",
+    reading: "さーばー",
+    category: "backend",
+    level: 1,
+    summary: "リクエストを受け取り、データやページを返す“裏方”のコンピュータ。",
+    description:
+      "ブラウザ（クライアント）からの「これちょうだい」に応えて、ページやデータを返す“お店の奥の厨房”のような存在。24時間動きっぱなしで、たくさんの人からの注文（リクエスト）をさばく。自分のパソコンではなく、どこかのデータセンターで動いていることが多い。",
+    useCase: "ログイン情報の確認、商品データの取り出し、予約の保存など、画面の裏側の処理はすべてサーバーが担当。",
+    sampleCode: `app.get("/hello", (req, res) => {
+  res.send("こんにちは！");
+});`,
+    related: ["backend", "api", "database"],
+  },
+  {
+    slug: "database",
+    nameJa: "データベース",
+    nameEn: "Database",
+    reading: "でーたべーす",
+    aliases: ["DB", "ディービー"],
+    category: "backend",
+    level: 1,
+    summary: "データを表の形で整理して保存し、すばやく取り出せる“倉庫”。",
+    description:
+      "ユーザー情報や商品、予約などを表（テーブル）の形でためておく場所。ただのメモ帳と違い、「レベルが2の用語だけ」のような条件で一瞬で探し出せる。代表的なのは PostgreSQL や MySQL（表の形＝リレーショナルデータベース）。",
+    useCase: "会員登録の保存、いいねの記録、検索結果の取り出しなど、消えては困るデータの保管。",
+    related: ["sql", "server", "backend"],
+  },
+  {
+    slug: "sql",
+    nameJa: "SQL",
+    nameEn: "SQL",
+    reading: "えすきゅーえる",
+    aliases: ["シークェル"],
+    category: "backend",
+    level: 2,
+    summary: "データベースに「これ取って」と伝えるための言葉。",
+    description:
+      "「usersテーブルから、レベルが2の行を全部ちょうだい」を SELECT * FROM users WHERE level = 2; のように書く命令文。取り出す(SELECT)・追加(INSERT)・更新(UPDATE)・削除(DELETE)が基本。表形式のデータベースを操作する共通語。",
+    useCase: "会員一覧の取得、売上の集計、条件に合う商品の抽出など。",
+    sampleCode: `SELECT * FROM terms
+WHERE category = 'backend';`,
+    related: ["database", "backend"],
+  },
+  {
+    slug: "authentication",
+    nameJa: "認証",
+    nameEn: "Authentication",
+    reading: "にんしょう",
+    aliases: ["ログイン認証", "認証（ログイン）"],
+    category: "backend",
+    level: 2,
+    summary: "「あなたは本人ですか？」を確かめるしくみ。",
+    description:
+      "メールとパスワード（や指紋・SMSコード）で“本人だと確認”すること。認証(Authentication＝誰か)と、認可(Authorization＝何をしていいか)は別物。ログインに成功すると、次からは合言葉（トークン）を見せて通してもらう。",
+    useCase: "ログイン、二段階認証、「Googleでログイン」など。",
+    related: ["jwt", "session", "backend"],
+  },
+  {
+    slug: "jwt",
+    nameJa: "トークン（JWT）",
+    nameEn: "JSON Web Token",
+    reading: "とーくん",
+    aliases: ["トークン", "アクセストークン", "JSON Web Token"],
+    category: "backend",
+    level: 3,
+    summary: "ログイン後に渡される“通行手形”のような文字列。",
+    description:
+      "認証に成功するとサーバーが発行する署名つきの文字列。「ヘッダー.中身(payload).署名」の3つを点でつないだ形。次のリクエストでこれを見せると、いちいちログインし直さずに本人と認めてもらえる。署名があるので、改ざんするとすぐバレる。",
+    useCase: "ログイン状態の維持、APIを叩くときの本人確認。",
+    related: ["authentication", "session", "api"],
+  },
+  {
+    slug: "endpoint",
+    nameJa: "エンドポイント",
+    nameEn: "Endpoint",
+    reading: "えんどぽいんと",
+    category: "backend",
+    level: 2,
+    summary: "サーバーの機能ごとに用意された“窓口のURL”。",
+    description:
+      "「会員一覧はここ」「予約の追加はここ」と、機能ごとに割り当てられたURLのこと。GET /users（一覧）や POST /reservations（予約追加）のように、メソッド＋パスの組み合わせでどんな操作かが決まる。APIは複数のエンドポイントの集まり。",
+    useCase: "アプリからサーバーのデータを取りに行く「行き先」の指定。",
+    related: ["api", "rest-api", "server"],
+  },
+  {
+    slug: "session",
+    nameJa: "セッション",
+    nameEn: "Session",
+    reading: "せっしょん",
+    category: "backend",
+    level: 2,
+    summary: "ログイン状態など「今の続き」をサーバー側で覚えておくしくみ。",
+    description:
+      "ブラウザに小さな合言葉（セッションID）をクッキーで持たせ、サーバー側の“名簿”と照合して「この人はさっきログインした人だ」と思い出す。閉じても消えないログインや、カートの中身の保持に使う。",
+    useCase: "ログインの維持、買い物カゴ、フォームの入力途中の保持。",
+    related: ["cookie", "authentication", "jwt"],
+  },
+  {
+    slug: "request-response",
+    nameJa: "リクエストとレスポンス",
+    nameEn: "Request & Response",
+    reading: "りくえすととれすぽんす",
+    aliases: ["リクエスト", "レスポンス", "HTTP通信"],
+    category: "backend",
+    level: 1,
+    summary: "ブラウザの「ちょうだい」とサーバーの「はいどうぞ」のやりとり。",
+    description:
+      "ブラウザがサーバーに送るお願いが「リクエスト」（例: GET /users）、サーバーが返す答えが「レスポンス」（例: 200 OK ＋ データ）。この往復1回で、ページやデータがやってくる。返事には成否を表すHTTPステータスコード（200/404/500など）がつく。",
+    useCase: "ページの読み込み、データの取得・送信など、通信すべての基本。",
+    related: ["server", "http-status", "api"],
+  },
+  {
+    slug: "authorization",
+    nameJa: "認可",
+    nameEn: "Authorization",
+    reading: "にんか",
+    aliases: ["権限", "アクセス権"],
+    category: "backend",
+    level: 2,
+    summary: "「あなたは“何をしていい”か」＝権限を決めること。認証とは別物。",
+    description:
+      "認証(Authentication)が「誰か」の確認なら、認可(Authorization)は「何をしていいか」の判定。たとえば同じログイン済みでも、管理者は記事を消せるが一般ユーザーは読むだけ、のように役割(ロール)で権限を分ける。「ログインはできたのに操作できない」はこの認可の話。",
+    useCase: "管理画面へのアクセス制限、有料会員だけの機能、投稿の編集権限など。",
+    related: ["authentication", "jwt", "backend"],
+  },
+  {
+    slug: "cors",
+    nameJa: "CORS",
+    nameEn: "Cross-Origin Resource Sharing",
+    reading: "こるず",
+    aliases: ["クロスオリジン"],
+    category: "backend",
+    level: 3,
+    summary: "「どのサイトからのアクセスなら許すか」をサーバーが決めるルール。",
+    description:
+      "ブラウザの安全のため、別ドメイン（オリジン）からのデータ取得は原則ブロックされる。それを「このサイトからならOK」とサーバー側で許可するしくみがCORS。フロント開発で「CORSエラー」に出会うのはほぼ通過儀礼で、サーバーの許可設定で直す。",
+    useCase: "自作フロントから別ドメインのAPIを叩くとき、許可オリジンを設定する。",
+    related: ["api", "server", "endpoint"],
+  },
+  {
+    slug: "api-key",
+    nameJa: "APIキー",
+    nameEn: "API Key",
+    reading: "えーぴーあいきー",
+    aliases: ["APIキー", "シークレットキー"],
+    category: "backend",
+    level: 2,
+    summary: "APIを使うための“合言葉（鍵）”。誰が使ったかを見分ける。",
+    description:
+      "外部のAPIを使うとき、リクエストに添える秘密の文字列。これで「正規の利用者か」を判定し、使いすぎ(レート制限)や課金の計測にも使う。表に出すと悪用されるので、コードに直書きせず環境変数などで秘密にするのが鉄則。",
+    useCase: "地図・天気・決済など外部サービスのAPIを呼ぶときの認証。",
+    related: ["api", "authentication", "environment"],
+  },
+  {
+    slug: "environment",
+    nameJa: "環境（本番・開発）",
+    nameEn: "Environment",
+    reading: "かんきょう",
+    aliases: ["本番環境", "開発環境", "ステージング"],
+    category: "backend",
+    level: 2,
+    summary: "作業用と公開用など、目的で分けた“実行する場所”のこと。",
+    description:
+      "同じアプリでも「手元で試す開発環境」「公開前に確認するテスト(ステージング)環境」「お客さんが使う本番環境」と分けて動かす。壊しても平気な場所で試し、大丈夫なら本番へ。環境ごとに接続先DBや設定（環境変数）を変えるのが普通。",
+    useCase: "本番を壊さずに新機能を試す、公開前の最終確認など。",
+    related: ["environment-variable", "deploy", "backend"],
+  },
+  {
+    slug: "webhook",
+    nameJa: "Webhook",
+    nameEn: "Webhook",
+    reading: "うぇぶふっく",
+    category: "backend",
+    level: 3,
+    summary: "イベントが起きたら“向こうから”通知が飛んでくるしくみ。",
+    description:
+      "ふつうのAPIは「こちらから聞きに行く」が、Webhookは逆。「支払いが完了した」などのイベントが起きた瞬間、相手のサーバーがあなたの決めたURLへ通知(POST)を送ってくる。何度も問い合わせずに済むので、決済完了やGitHubのプッシュ通知などで使われる。",
+    useCase: "決済完了の受け取り、GitHubのpush通知、フォーム送信の連携など。",
+    related: ["api", "endpoint", "request-response"],
+  },
+  {
+    slug: "orm",
+    nameJa: "ORM",
+    nameEn: "Object-Relational Mapping",
+    reading: "おーあーるえむ",
+    category: "backend",
+    level: 3,
+    summary: "SQLを直接書かず、コードでデータベースを操作できる道具。",
+    description:
+      "「usersテーブルのid=1を取る」を、SQLの代わりに User.find(1) のようなコードで書けるようにする仕組み・ライブラリ。裏で自動的にSQLへ翻訳してくれる。書きやすく安全になる一方、複雑な処理では生SQLの理解も要る。Prisma・TypeORM などが有名。",
+    useCase: "アプリのコードから、SQLを意識せずにDBの読み書きをする。",
+    related: ["sql", "database", "backend"],
+  },
+];
+
+export function getTerm(slug: string): Term | undefined {
+  return terms.find((t) => t.slug === slug);
+}
+
+// 図鑑番号（ポケモン図鑑式の採番: No.001〜）
+const indexBySlug = new Map(terms.map((t, i) => [t.slug, i]));
+
+export function termNo(slug: string): string {
+  const i = indexBySlug.get(slug) ?? 0;
+  return `No.${String(i + 1).padStart(3, "0")}`;
+}

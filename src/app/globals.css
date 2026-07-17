@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@theme {
+  /* タイポグラフィ */
+  --font-sans: var(--font-noto), "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-display: var(--font-display), var(--font-noto), sans-serif;
+
+  /* ブランドカラー: Co-Cre グリーン（ロゴ #40DC7E を基準にしたスケール） */
+  --color-brand-50: #ecfdf3;
+  --color-brand-100: #d2f9e0;
+  --color-brand-200: #a8f0c4;
+  --color-brand-300: #6fe4a1;
+  --color-brand-400: #40dc7e;
+  --color-brand-500: #1fc866;
+  --color-brand-600: #12a854;
+  --color-brand-700: #138244;
+  --color-brand-800: #14663a;
+  --color-brand-900: #115331;
+  --color-brand-950: #042c1b;
+
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+
+  /* アニメーション */
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop-in: pop-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-shine: shine 2.5s ease-in-out infinite;
+  --animate-blob: blob 14s ease-in-out infinite;
+  --animate-wiggle: wiggle 2.4s ease-in-out infinite;
+  --animate-stamp: stamp 0.42s cubic-bezier(0.22, 1.4, 0.4, 1) both;
+  --animate-blink: blink 4.5s ease-in-out infinite;
+  --animate-sweep: sweep 6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-bob: bob 1.8s ease-in-out infinite;
+  --animate-award: award-pop 0.6s cubic-bezier(0.22, 1.5, 0.4, 1) both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--float-rotate, 0deg)); }
+    50% { transform: translateY(-14px) rotate(var(--float-rotate, 0deg)); }
+  }
+  @keyframes shine {
+    0% { transform: translateX(-150%) skewX(-20deg); }
+    60%, 100% { transform: translateX(250%) skewX(-20deg); }
+  }
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.1); }
+    66% { transform: translate(-30px, 24px) scale(0.95); }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+  }
+  @keyframes stamp {
+    0% { opacity: 0; transform: scale(1.7) rotate(-12deg); }
+    55% { opacity: 1; transform: scale(0.88) rotate(-12deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-12deg); }
+  }
+  /* キャラクターのまばたき */
+  @keyframes blink {
+    0%, 88%, 100% { transform: scaleY(1); }
+    93% { transform: scaleY(0.1); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @keyframes award-pop {
+    0% { opacity: 0; transform: scale(0.4) rotate(-8deg); }
+    60% { opacity: 1; transform: scale(1.1) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  /* 虫めがねが「名前を探す」象徴アニメ（斜めにスイープ） */
+  @keyframes sweep {
+    0% { transform: translate(0px, 64px) rotate(-8deg); opacity: 0; }
+    14% { opacity: 1; }
+    50% { transform: translate(320px, -26px) rotate(-8deg); opacity: 1; }
+    66% { opacity: 0; }
+    100% { transform: translate(0px, 64px) rotate(-8deg); opacity: 0; }
+  }
+}
+
+body {
+  /* 紙の図鑑らしい温かみのある背景色 */
+  @apply bg-[#faf8f2] text-slate-800 antialiased;
+  font-feature-settings: "palt";
+}
+
+/* 見出し用フォント */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+/* ドット方眼の背景（図鑑の"標本台"らしさ） */
+.bg-dots {
+  background-image: radial-gradient(circle, #d8cfbc 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* 紙の図鑑カード: 2px枠 + ベタ塗りの落ち影（ぼかさない） */
+.card-pop {
+  background: #fff;
+  border: 2px solid #ebe4d5;
+  border-radius: 1.5rem;
+  box-shadow: 0 3px 0 #ebe4d5;
+}
+a.card-pop,
+button.card-pop {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+a.card-pop:hover,
+button.card-pop:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 0 #ebe4d5;
+}
+
+/* Duolingo式の"押せる"ボタン: 下端の影が押すと沈む */
+.btn-3d {
+  box-shadow: 0 4px 0 var(--edge, #14663a);
+  transition:
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.12s ease,
+    filter 0.15s ease;
+}
+.btn-3d:hover {
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+}
+.btn-3d:active {
+  transform: translateY(4px) scale(0.97);
+  box-shadow: 0 0 0 var(--edge, #14663a);
+}
+
+/* コンテンツ保護: 転載防止のため解説文は選択不可にする（コードブロックは除外） */
+.protected {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.protected [data-copy-ok],
+.protected [data-copy-ok] * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* リンク下線のスライドイン */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--color-brand-500);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease;
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* CTAボタンのキラッと光る演出 */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: var(--animate-shine);
+}
+
+/* 横スクロールのスクロールバーを隠す（ヘッダーnav用） */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 動きが苦手な人への配慮 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

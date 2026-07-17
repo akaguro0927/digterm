@@ -1,0 +1,116 @@
+<svg width="640" height="540" viewBox="0 0 640 540" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Co-Cre：フロントエンド用語図鑑のイメージ">
+  <defs>
+    <linearGradient id="g-green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#40dc7e"/>
+      <stop offset="1" stop-color="#12a854"/>
+    </linearGradient>
+    <linearGradient id="g-mag" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6fe4a1"/>
+      <stop offset="1" stop-color="#12a854"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0c3a22" flood-opacity="0.18"/>
+    </filter>
+    <filter id="soft-sm" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0c3a22" flood-opacity="0.16"/>
+    </filter>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#c9e9d5"/>
+    </pattern>
+    <clipPath id="win-clip"><rect x="70" y="70" width="470" height="392" rx="26"/></clipPath>
+  </defs>
+
+  <!-- 背景の丸みブロブ -->
+  <circle cx="120" cy="120" r="130" fill="#d2f9e0"/>
+  <circle cx="560" cy="430" r="120" fill="#d9f2ff"/>
+  <rect x="30" y="30" width="580" height="470" rx="40" fill="url(#dots)" opacity="0.5"/>
+
+  <!-- アプリのウィンドウ -->
+  <g filter="url(#soft)">
+    <rect x="70" y="70" width="470" height="392" rx="26" fill="#ffffff"/>
+  </g>
+  <g clip-path="url(#win-clip)">
+    <!-- ウィンドウ上部バー -->
+    <rect x="70" y="70" width="470" height="52" fill="#faf8f2"/>
+    <circle cx="98" cy="96" r="6" fill="#fb7185"/>
+    <circle cx="118" cy="96" r="6" fill="#fbbf24"/>
+    <circle cx="138" cy="96" r="6" fill="#34d399"/>
+    <!-- 検索バー -->
+    <rect x="170" y="82" width="340" height="28" rx="14" fill="#eef2f0"/>
+    <circle cx="188" cy="96" r="6.5" stroke="#12a854" stroke-width="2.5" fill="none"/>
+    <line x1="193" y1="101" x2="198" y2="106" stroke="#12a854" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="206" y="92" width="150" height="8" rx="4" fill="#c7d2ce"/>
+    <line x1="70" y1="122" x2="540" y2="122" stroke="#eef2f0" stroke-width="2"/>
+
+    <!-- 用語カード 4枚（標本） -->
+    <!-- card 1（ハイライト） -->
+    <g>
+      <rect x="94" y="146" width="196" height="128" rx="16" fill="#f6fdf9"/>
+      <rect x="94" y="146" width="196" height="128" rx="16" fill="none" stroke="#40dc7e" stroke-width="2.5"/>
+      <rect x="110" y="162" width="44" height="44" rx="12" fill="#ede9fe"/>
+      <rect x="122" y="176" width="20" height="16" rx="3" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+      <text x="272" y="172" font-family="monospace" font-size="10" fill="#cbd5e1" text-anchor="end">No.002</text>
+      <rect x="110" y="220" width="110" height="11" rx="5.5" fill="#0f172a"/>
+      <rect x="110" y="240" width="150" height="8" rx="4" fill="#cbd5e1"/>
+      <rect x="110" y="254" width="120" height="8" rx="4" fill="#cbd5e1"/>
+    </g>
+    <!-- card 2 -->
+    <g opacity="0.96">
+      <rect x="306" y="146" width="196" height="128" rx="16" fill="#ffffff" stroke="#ebe4d5" stroke-width="2"/>
+      <rect x="322" y="162" width="44" height="44" rx="12" fill="#e0f2fe"/>
+      <rect x="332" y="174" width="24" height="20" rx="3" fill="none" stroke="#0284c7" stroke-width="2.5"/>
+      <line x1="332" y1="182" x2="356" y2="182" stroke="#0284c7" stroke-width="2.5"/>
+      <text x="484" y="172" font-family="monospace" font-size="10" fill="#cbd5e1" text-anchor="end">No.027</text>
+      <rect x="322" y="220" width="96" height="11" rx="5.5" fill="#0f172a"/>
+      <rect x="322" y="240" width="150" height="8" rx="4" fill="#e2e8f0"/>
+      <rect x="322" y="254" width="110" height="8" rx="4" fill="#e2e8f0"/>
+    </g>
+    <!-- card 3 -->
+    <g opacity="0.92">
+      <rect x="94" y="290" width="196" height="120" rx="16" fill="#ffffff" stroke="#ebe4d5" stroke-width="2"/>
+      <rect x="110" y="306" width="44" height="44" rx="12" fill="#fce7f3"/>
+      <path d="M132 318 l8 14 h-16 z" fill="none" stroke="#db2777" stroke-width="2.5" stroke-linejoin="round"/>
+      <rect x="110" y="362" width="104" height="11" rx="5.5" fill="#0f172a"/>
+      <rect x="110" y="382" width="150" height="8" rx="4" fill="#e2e8f0"/>
+    </g>
+    <!-- card 4 -->
+    <g opacity="0.92">
+      <rect x="306" y="290" width="196" height="120" rx="16" fill="#ffffff" stroke="#ebe4d5" stroke-width="2"/>
+      <rect x="322" y="306" width="44" height="44" rx="12" fill="#d1fae5"/>
+      <path d="M332 328 l6 -6 6 6 6 -6" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="322" y="362" width="118" height="11" rx="5.5" fill="#0f172a"/>
+      <rect x="322" y="382" width="140" height="8" rx="4" fill="#e2e8f0"/>
+    </g>
+  </g>
+
+  <!-- 大きな虫めがね -->
+  <g filter="url(#soft-sm)">
+    <circle cx="452" cy="352" r="72" fill="#ffffff" fill-opacity="0.25"/>
+    <circle cx="452" cy="352" r="72" stroke="url(#g-mag)" stroke-width="14" fill="none"/>
+    <circle cx="452" cy="352" r="58" fill="#ffffff" fill-opacity="0.12"/>
+    <line x1="502" y1="404" x2="546" y2="452" stroke="url(#g-mag)" stroke-width="20" stroke-linecap="round"/>
+  </g>
+
+  <!-- 浮遊する 3D ボタン（Duolingo風） -->
+  <g filter="url(#soft-sm)" transform="rotate(-6 150 300)">
+    <rect x="70" y="300" width="150" height="56" rx="28" fill="#0e7a3d"/>
+    <rect x="70" y="292" width="150" height="56" rx="28" fill="url(#g-green)"/>
+    <circle cx="100" cy="320" r="8" stroke="#ffffff" stroke-width="3" fill="none"/>
+    <line x1="106" y1="326" x2="112" y2="332" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <rect x="124" y="315" width="72" height="10" rx="5" fill="#ffffff"/>
+  </g>
+
+  <!-- 浮遊するトグルスイッチ -->
+  <g filter="url(#soft-sm)" transform="rotate(5 540 150)">
+    <rect x="486" y="120" width="108" height="60" rx="18" fill="#ffffff"/>
+    <rect x="504" y="138" width="44" height="24" rx="12" fill="#40dc7e"/>
+    <circle cx="536" cy="150" r="9" fill="#ffffff"/>
+    <rect x="558" y="145" width="20" height="10" rx="5" fill="#e2e8f0"/>
+  </g>
+
+  <!-- 浮遊する No. タグ -->
+  <g filter="url(#soft-sm)" transform="rotate(-8 118 430)">
+    <rect x="74" y="410" width="88" height="40" rx="14" fill="#0f172a"/>
+    <text x="118" y="435" font-family="monospace" font-size="16" font-weight="bold" fill="#40dc7e" text-anchor="middle">No.001</text>
+  </g>
+</svg>

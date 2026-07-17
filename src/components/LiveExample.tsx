@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Category } from "@/data/terms";
 import { categoryTheme } from "@/lib/categoryTheme";
 import { codeSnippets } from "@/data/codeSnippets";
@@ -868,7 +868,147 @@ function DropdownMenuDemo() {
   );
 }
 
+function ColorPickerDemo() {
+  const cols = ["#1fc866", "#3b82f6", "#f43f5e", "#f59e0b", "#8b5cf6", "#0ea5e9"];
+  const [c, setC] = useState(cols[0]);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="mx-auto h-14 w-14 rounded-2xl shadow-inner ring-1 ring-black/10" style={{ background: c }} />
+      <p className="mt-1 font-mono text-xs text-slate-500">{c}</p>
+      <div className="mt-2 flex justify-center gap-1.5">
+        {cols.map((x) => (
+          <button key={x} onClick={() => setC(x)} className={`h-6 w-6 rounded-full ring-2 ${c === x ? "ring-slate-700" : "ring-transparent"}`} style={{ background: x }} />
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">色をビジュアルに選ぶ＝カラーピッカー</p>
+    </div>
+  );
+}
+
+function CountdownDemo() {
+  const [s, setS] = useState(2 * 3600 + 14 * 60 + 30);
+  useEffect(() => {
+    const t = setInterval(() => setS((v) => (v > 0 ? v - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return (
+    <div className="text-center">
+      <p className="text-xs text-slate-500">セール終了まで</p>
+      <p className="font-display mt-1 text-3xl font-extrabold tabular-nums text-rose-500">
+        {p(Math.floor(s / 3600))}:{p(Math.floor((s % 3600) / 60))}:{p(s % 60)}
+      </p>
+      <p className="mt-2 text-[10px] text-slate-400">残り時間を刻々と減らす＝カウントダウン</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（フォーム・データ表示など 2026-07-18b） ----
+  "color-picker": () => <ColorPickerDemo />,
+  countdown: () => <CountdownDemo />,
+  "text-field": () => (
+    <div className="w-full max-w-xs">
+      <label className="text-xs font-bold text-slate-500">お名前</label>
+      <input placeholder="山田 太郎" className="mt-1 w-full rounded-lg bg-white px-3 py-2 text-sm outline-none ring-1 ring-slate-300 focus:ring-2 focus:ring-blue-500" />
+      <p className="mt-1 text-[10px] text-slate-400">1行の文字を打つ基本の入力欄＝テキストフィールド</p>
+    </div>
+  ),
+  select: () => (
+    <div className="w-full max-w-xs">
+      <label className="text-xs font-bold text-slate-500">都道府県</label>
+      <select className="mt-1 w-full rounded-lg bg-white px-3 py-2 text-sm outline-none ring-1 ring-slate-300 focus:ring-2 focus:ring-blue-500">
+        <option>東京都</option>
+        <option>大阪府</option>
+        <option>北海道</option>
+      </select>
+      <p className="mt-1 text-[10px] text-slate-400">候補から1つ選ぶ＝セレクトボックス</p>
+    </div>
+  ),
+  autocomplete: () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 ring-1 ring-slate-300">
+        <Icon name="search" className="h-4 w-4 text-slate-400" />
+        <span className="text-sm text-slate-700">とうきょう</span>
+      </div>
+      <div className="mt-1 rounded-lg bg-white py-1 shadow-md ring-1 ring-slate-200">
+        {["東京都", "東京タワー", "東京駅"].map((s) => (
+          <div key={s} className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50">{s}</div>
+        ))}
+      </div>
+      <p className="mt-1 text-center text-[10px] text-slate-400">入力の途中で候補を先読み＝オートコンプリート</p>
+    </div>
+  ),
+  calendar: () => (
+    <div className="w-full max-w-[13rem] rounded-xl bg-white p-3 shadow-sm ring-1 ring-slate-200">
+      <p className="text-center text-xs font-bold text-slate-700">2026年 7月</p>
+      <div className="mt-2 grid grid-cols-7 gap-1 text-center text-[10px]">
+        {["日", "月", "火", "水", "木", "金", "土"].map((d) => (
+          <span key={d} className="text-slate-400">{d}</span>
+        ))}
+        {Array.from({ length: 31 }, (_, i) => i + 1).map((n) => (
+          <span key={n} className={`rounded py-0.5 ${n === 18 ? "bg-brand-500 text-white" : "text-slate-600"}`}>{n}</span>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">日付を格子で見せる＝カレンダー</p>
+    </div>
+  ),
+  "notification-bell": () => (
+    <div className="text-center">
+      <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+        <Icon name="bell" className="h-6 w-6 text-slate-600" />
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">3</span>
+      </span>
+      <p className="mt-2 text-[10px] text-slate-400">未読数を知らせるベル＝通知ベル</p>
+    </div>
+  ),
+  "status-dot": () => (
+    <div className="w-full max-w-xs space-y-2">
+      {[
+        ["オンライン", "bg-emerald-500"],
+        ["取り込み中", "bg-rose-500"],
+        ["オフライン", "bg-slate-300"],
+      ].map(([label, c]) => (
+        <div key={label as string} className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
+          <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+            <Icon name="user" className="h-4 w-4 text-slate-400" />
+            <span className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-white ${c}`} />
+          </span>
+          <span className="text-xs text-slate-600">{label}</span>
+        </div>
+      ))}
+    </div>
+  ),
+  "price-tag": () => (
+    <div className="text-center">
+      <div className="inline-flex items-end gap-2 rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200">
+        <span className="text-xs text-slate-400 line-through">¥2,980</span>
+        <span className="font-display text-2xl font-extrabold text-rose-500">¥1,980</span>
+        <span className="text-[10px] text-slate-400">税込</span>
+        <span className="rounded bg-rose-500 px-1.5 py-0.5 text-[10px] font-bold text-white">33%OFF</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">値段を目立たせる＝価格表示</p>
+    </div>
+  ),
+  "bar-chart": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex h-28 items-end justify-around gap-2 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        {[
+          [40, "月"],
+          [70, "火"],
+          [55, "水"],
+          [90, "木"],
+          [65, "金"],
+        ].map(([h, d]) => (
+          <div key={d as string} className="flex flex-1 flex-col items-center gap-1">
+            <div className="w-full rounded-t bg-brand-400" style={{ height: `${h}%` }} />
+            <span className="text-[9px] text-slate-400">{d}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">棒の長さで大小を比べる＝棒グラフ</p>
+    </div>
+  ),
   // ---- UI部品 追加（新規用語 2026-07-18） ----
   snackbar: () => <SnackbarDemo />,
   "like-button": () => <LikeButtonDemo />,

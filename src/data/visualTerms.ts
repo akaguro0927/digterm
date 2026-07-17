@@ -44,6 +44,9 @@ export const VISUAL_SLUGS: readonly string[] = [
   "timeline", "chip", "data-table", "blockquote", "stat-card", "floating-label", "command-palette", "kbd",
   // 2026-07-18 新規UI用語（+7）
   "alert", "snackbar", "bottom-navigation", "split-button", "like-button", "dropdown-menu", "file-upload",
+  // 2026-07-18b フォーム・データ表示など（+10）
+  "text-field", "select", "autocomplete", "color-picker", "calendar",
+  "notification-bell", "status-dot", "countdown", "price-tag", "bar-chart",
 ];
 
 const set = new Set(VISUAL_SLUGS);

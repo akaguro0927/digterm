@@ -14,8 +14,9 @@ interface NavItem {
 }
 
 const LINKS: NavItem[] = [
-  { href: "/learn", label: "レッスン", icon: "flag", tour: "nav-learn", badge: { text: "NEW", className: "bg-accent-400" } },
+  { href: "/qa", label: "質問", icon: "message", tour: "nav-qa", badge: { text: "NEW", className: "bg-accent-400" } },
   { href: "/zukan", label: "図鑑", icon: "book-open", tour: "nav-zukan" },
+  { href: "/learn", label: "レッスン", icon: "flag", tour: "nav-learn" },
   { href: "/ai", label: "AI", icon: "zap", tour: "nav-ai", badge: { text: "β", className: "bg-indigo-500" } },
   { href: "/quiz", label: "問題集", icon: "pencil", tour: "nav-quiz" },
   { href: "/mypage", label: "マイページ", icon: "heart", tour: "nav-mypage" },

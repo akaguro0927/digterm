@@ -12,7 +12,7 @@ const ROWS: { label: string; free: string | boolean; vip: string | boolean }[] =
   { label: "ストリーク・デイリーゴール", free: true, vip: true },
   { label: "レッスン（すごろく）", free: "第1〜2章まで", vip: "全章" },
   { label: "弱点復習（間違いだけ集中）", free: false, vip: true },
-  { label: "AIでしらべる / AIに質問", free: "1日5回まで", vip: "無制限" },
+  { label: "AIでしらべる / AIに質問", free: "1日1回お試し", vip: "無制限" },
   { label: "プレミアム用語（上級・実装課題）", free: false, vip: true },
   { label: "広告", free: "あり", vip: "なし" },
 ];

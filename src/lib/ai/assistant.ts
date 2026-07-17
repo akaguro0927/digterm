@@ -25,7 +25,7 @@ export async function askAI(question: string): Promise<AskResult> {
 // ============ 利用回数（無料の1日上限）＝コスト暴走を防ぐ／VIPで無制限 ============
 
 const AI_USAGE_KEY = "cocre:ai-usage:v1";
-export const AI_FREE_DAILY = 5;
+export const AI_FREE_DAILY = 1; // 無料は1日1回お試し（VIPは無制限）
 
 function todayKey(): string {
   const d = new Date();

@@ -905,7 +905,181 @@ function CountdownDemo() {
 
 const QR_MATRIX = ["11101111", "10100101", "11110111", "00011000", "01001011", "11101100", "10110011", "11101010"];
 
+function TagInputDemo() {
+  const [tags, setTags] = useState(["旅行", "カメラ"]);
+  const [v, setV] = useState("");
+  return (
+    <div className="w-full max-w-xs">
+      <div className="flex flex-wrap items-center gap-1.5 rounded-lg bg-white p-2 ring-1 ring-slate-300">
+        {tags.map((t) => (
+          <span key={t} className="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
+            {t}
+            <button onClick={() => setTags(tags.filter((x) => x !== t))} className="text-blue-400">×</button>
+          </span>
+        ))}
+        <input
+          value={v}
+          onChange={(e) => setV(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && v.trim()) {
+              setTags([...tags, v.trim()]);
+              setV("");
+            }
+          }}
+          placeholder="入力してEnter"
+          className="min-w-[6rem] flex-1 bg-transparent text-xs outline-none"
+        />
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">言葉がチップになる入力欄＝タグ入力</p>
+    </div>
+  );
+}
+
+function SortDemo() {
+  const opts = ["新着順", "人気順", "価格が安い順"];
+  const [sel, setSel] = useState(opts[0]);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="text-center">
+      <div className="relative inline-block">
+        <button onClick={() => setOpen(!open)} className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-sm font-bold text-slate-600 ring-1 ring-slate-300">
+          並び替え：{sel} <span className="text-xs">▼</span>
+        </button>
+        {open && (
+          <div className="absolute left-0 z-10 mt-1 w-36 rounded-lg bg-white py-1 text-left shadow-lg ring-1 ring-slate-200">
+            {opts.map((o) => (
+              <div key={o} onClick={() => { setSel(o); setOpen(false); }} className={`cursor-pointer px-3 py-1.5 text-xs hover:bg-slate-50 ${o === sel ? "font-bold text-brand-600" : "text-slate-600"}`}>
+                {o}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">順番を切り替える＝並び替え</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（視覚・操作 2026-07-18d） ----
+  "tag-input": () => <TagInputDemo />,
+  "sort-button": () => <SortDemo />,
+  gallery: () => (
+    <div className="w-full max-w-xs">
+      <div className="grid grid-cols-3 gap-1">
+        {["bg-rose-200", "bg-sky-200", "bg-amber-200", "bg-emerald-200", "bg-violet-200", "bg-blue-200"].map((c, i) => (
+          <div key={i} className={`flex aspect-square items-center justify-center rounded ${c}`}>
+            <Icon name="image" className="h-4 w-4 text-white/70" />
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">画像を格子で並べる＝ギャラリー</p>
+    </div>
+  ),
+  thumbnail: () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="flex gap-2 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        <div className="flex h-12 w-16 shrink-0 items-center justify-center rounded bg-slate-800 text-white">▶</div>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-bold text-slate-700">動画のタイトル</p>
+          <p className="text-[10px] text-slate-400">3:40・1.2万回</p>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">中身を示す小さな画像＝サムネイル</p>
+    </div>
+  ),
+  toolbar: () => (
+    <div className="text-center">
+      <div className="inline-flex items-center gap-1 rounded-lg bg-white p-1 shadow-sm ring-1 ring-slate-200">
+        {[["B", "font-bold"], ["I", "italic"], ["U", "underline"]].map(([t, cls]) => (
+          <button key={t} className={`h-7 w-7 rounded text-sm text-slate-600 hover:bg-slate-100 ${cls}`}>{t}</button>
+        ))}
+        <span className="mx-1 h-5 w-px bg-slate-200" />
+        <button className="flex h-7 w-7 items-center justify-center rounded text-slate-600 hover:bg-slate-100"><Icon name="image" className="h-4 w-4" /></button>
+        <button className="flex h-7 w-7 items-center justify-center rounded text-slate-600 hover:bg-slate-100"><Icon name="trash" className="h-4 w-4" /></button>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">操作ボタンを並べた帯＝ツールバー</p>
+    </div>
+  ),
+  "mega-menu": () => (
+    <div className="w-full max-w-sm">
+      <div className="rounded-t-lg bg-slate-800 px-3 py-2 text-center text-xs font-bold text-white">カテゴリ ▼</div>
+      <div className="grid grid-cols-3 gap-2 rounded-b-lg bg-white p-3 shadow-lg ring-1 ring-slate-200">
+        {[
+          ["ファッション", ["メンズ", "レディース", "キッズ"]],
+          ["家電", ["TV", "PC", "カメラ"]],
+          ["食品", ["飲料", "お菓子", "冷凍"]],
+        ].map(([h, items]) => (
+          <div key={h as string}>
+            <p className="mb-1 text-[10px] font-bold text-slate-700">{h}</p>
+            {(items as string[]).map((it) => (
+              <p key={it} className="text-[10px] text-slate-500 hover:text-brand-600">{it}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">大きく開く多列メニュー＝メガメニュー</p>
+    </div>
+  ),
+  animation: () => (
+    <div className="text-center">
+      <div className="flex items-center justify-center gap-3">
+        <span className="h-8 w-8 animate-bounce rounded-full bg-brand-400" />
+        <span className="h-8 w-8 animate-pulse rounded-full bg-sky-400" />
+        <span className="relative flex h-8 w-8 items-center justify-center">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
+          <span className="relative h-8 w-8 rounded-full bg-rose-400" />
+        </span>
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">時間で動かす・変化させる演出＝アニメーション</p>
+    </div>
+  ),
+  "hover-effect": () => (
+    <div className="text-center">
+      <div className="mx-auto w-40 cursor-pointer rounded-xl bg-white p-4 shadow-[0_2px_0_#e2e8f0] ring-1 ring-slate-200 transition hover:-translate-y-1 hover:bg-brand-50 hover:shadow-[0_6px_0_#a8f0c4]">
+        <p className="text-sm font-bold text-slate-700">カーソルを乗せてみて</p>
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">乗せると変わる反応＝ホバーエフェクト</p>
+    </div>
+  ),
+  "review-star": () => (
+    <div className="text-center">
+      <div className="flex items-center justify-center gap-0.5 text-lg text-amber-400">
+        {[1, 2, 3, 4].map((i) => (
+          <span key={i}>★</span>
+        ))}
+        <span className="relative">
+          <span className="text-slate-200">★</span>
+          <span className="absolute inset-0 w-1/2 overflow-hidden text-amber-400">★</span>
+        </span>
+      </div>
+      <p className="mt-1 text-sm font-bold text-slate-700">
+        4.5 <span className="text-xs font-normal text-slate-400">(238件)</span>
+      </p>
+      <p className="mt-2 text-[10px] text-slate-400">星の数で評価＝星レビュー</p>
+    </div>
+  ),
+  "comment-box": () => (
+    <div className="w-full max-w-xs">
+      <div className="space-y-1.5">
+        {[
+          ["たろう", "わかりやすい！"],
+          ["はなこ", "助かりました"],
+        ].map(([n, c]) => (
+          <div key={n as string} className="rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+            <p className="text-[10px] font-bold text-slate-600">{n}</p>
+            <p className="text-xs text-slate-500">{c}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-1.5 flex gap-1">
+        <div className="flex-1 rounded-lg bg-slate-50 px-2 py-1.5 text-xs text-slate-400 ring-1 ring-slate-200">コメントを書く…</div>
+        <button className="rounded-lg bg-brand-500 px-3 text-xs font-bold text-white">送信</button>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">感想を書き込む場所＝コメント欄</p>
+    </div>
+  ),
+  // ---- UI部品 追加（データ表示・操作など 2026-07-18c） ----
   // ---- UI部品 追加（データ表示・操作など 2026-07-18c） ----
   "qr-code": () => (
     <div className="text-center">

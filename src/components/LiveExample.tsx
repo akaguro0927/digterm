@@ -3,6 +3,8 @@
 import { useState, type ReactNode } from "react";
 import type { Category } from "@/data/terms";
 import { categoryTheme } from "@/lib/categoryTheme";
+import { codeSnippets } from "@/data/codeSnippets";
+import CodeBlock from "@/components/CodeBlock";
 import { Icon, type IconName } from "@/components/icons";
 
 // 用語ごとの「実物ミニデモ」。画像の代わりに本物のUIを触って覚えてもらう。
@@ -2103,6 +2105,8 @@ export default function LiveExample({
   category: Category;
 }) {
   const demo = demos[slug];
+  const code = codeSnippets[slug];
+  const [showCode, setShowCode] = useState(false);
   return (
     // 静的カードと混同しないよう、緑の枠で「触れるゾーン」だと一目でわかるようにする
     <div className="relative overflow-hidden rounded-[1.6rem] border-2 border-brand-300 bg-white shadow-[0_4px_0_#a8f0c4]">
@@ -2141,6 +2145,28 @@ export default function LiveExample({
         <Icon name="pointer" className="h-3 w-3" />
         実物のミニ例 — 実際に押して動きを確かめよう
       </p>
+
+      {/* この見た目のコード（用意がある用語のみ）＝“調べる”から“作れる”への橋渡し */}
+      {code && (
+        <div className="border-t border-slate-100">
+          <button
+            onClick={() => setShowCode((s) => !s)}
+            aria-expanded={showCode}
+            className="flex w-full items-center justify-center gap-1.5 bg-slate-50/60 py-2.5 text-[11px] font-bold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+          >
+            <Icon name="book-open" className="h-3.5 w-3.5" />
+            {showCode ? "コードを隠す" : "この見た目のコードを見る"}
+          </button>
+          {showCode && (
+            <div className="animate-pop-in p-3">
+              <CodeBlock code={code} />
+              <p className="mt-2 text-center text-[10px] text-slate-400">
+                このコードをHTMLファイルに貼ると、同じ見た目が作れます。
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

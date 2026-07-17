@@ -794,7 +794,146 @@ function FloatingLabelDemo() {
   );
 }
 
+function SnackbarDemo() {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <button
+        onClick={() => {
+          setShow(true);
+          setTimeout(() => setShow(false), 2500);
+        }}
+        className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-bold text-white"
+      >
+        削除する
+      </button>
+      <div className="mt-3 h-12">
+        {show && (
+          <div className="animate-pop-in mx-auto flex max-w-[15rem] items-center justify-between gap-3 rounded-lg bg-slate-800 px-3 py-2.5 text-xs text-white shadow-lg">
+            <span>メッセージを削除しました</span>
+            <button onClick={() => setShow(false)} className="font-bold text-emerald-300">取り消し</button>
+          </div>
+        )}
+      </div>
+      <p className="text-[10px] text-slate-400">下に出て自動で消える通知＝スナックバー</p>
+    </div>
+  );
+}
+
+function LikeButtonDemo() {
+  const [liked, setLiked] = useState(false);
+  const [n, setN] = useState(128);
+  return (
+    <div className="text-center">
+      <button
+        onClick={() => {
+          setN(liked ? n - 1 : n + 1);
+          setLiked(!liked);
+        }}
+        className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition ${
+          liked ? "bg-rose-50 text-rose-500" : "bg-slate-100 text-slate-500"
+        }`}
+      >
+        <Icon name="heart" className="h-4 w-4" strokeWidth={2.5} />
+        {n}
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">押すと色が変わり数が増える＝いいねボタン</p>
+    </div>
+  );
+}
+
+function DropdownMenuDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="text-center">
+      <div className="relative inline-block">
+        <button
+          onClick={() => setOpen(!open)}
+          className="inline-flex items-center gap-1 rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700 ring-1 ring-slate-300"
+        >
+          メニュー <span className="text-xs">▼</span>
+        </button>
+        {open && (
+          <div className="absolute left-1/2 z-10 mt-1 w-32 -translate-x-1/2 rounded-lg bg-white py-1 text-left shadow-lg ring-1 ring-slate-200">
+            {["編集", "複製", "削除"].map((o) => (
+              <div key={o} onClick={() => setOpen(false)} className="cursor-pointer px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50">
+                {o}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">押すと下に選択肢が開く＝ドロップダウン</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（新規用語 2026-07-18） ----
+  snackbar: () => <SnackbarDemo />,
+  "like-button": () => <LikeButtonDemo />,
+  "dropdown-menu": () => <DropdownMenuDemo />,
+  alert: () => (
+    <div className="w-full max-w-xs space-y-2">
+      {[
+        ["成功", "保存しました", "border-emerald-200 bg-emerald-50 text-emerald-700", "check"],
+        ["エラー", "入力に誤りがあります", "border-rose-200 bg-rose-50 text-rose-700", "x"],
+        ["注意", "未保存の変更があります", "border-amber-200 bg-amber-50 text-amber-700", "lightbulb"],
+      ].map(([t, msg, cls, icon]) => (
+        <div key={t} className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${cls}`}>
+          <Icon name={icon as IconName} className="h-4 w-4 shrink-0" strokeWidth={2.5} />
+          <span>
+            <b>{t}</b>：{msg}
+          </span>
+        </div>
+      ))}
+    </div>
+  ),
+  "bottom-navigation": () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="rounded-b-2xl rounded-t-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="flex h-24 items-center justify-center text-[10px] text-slate-300">アプリ画面</div>
+        <div className="flex items-center justify-around border-t border-slate-100 py-1.5">
+          {[
+            ["book", "ホーム", true],
+            ["search", "さがす", false],
+            ["heart", "保存", false],
+            ["user", "マイ", false],
+          ].map(([ic, label, active]) => (
+            <div key={label as string} className={`flex flex-col items-center gap-0.5 text-[9px] ${active ? "text-brand-600" : "text-slate-400"}`}>
+              <Icon name={ic as IconName} className="h-4 w-4" />
+              {label}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">画面下の固定メニュー＝ボトムナビ</p>
+    </div>
+  ),
+  "split-button": () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="inline-flex overflow-hidden rounded-lg shadow-sm">
+        <button className="bg-brand-500 px-5 py-2 text-sm font-bold text-white">保存</button>
+        <span className="flex items-center border-l border-white/30 bg-brand-500 px-2.5 text-xs text-white">▼</span>
+      </div>
+      <div className="mx-auto mt-1 w-32 rounded-lg bg-white py-1 text-left shadow-md ring-1 ring-slate-200">
+        {["別名で保存", "コピーを保存"].map((o) => (
+          <div key={o} className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50">{o}</div>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">主操作＋▼で追加操作＝分割ボタン</p>
+    </div>
+  ),
+  "file-upload": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 py-6 text-center">
+        <Icon name="image" className="h-7 w-7 text-slate-400" />
+        <span className="text-xs font-bold text-slate-500">ファイルをドラッグ＆ドロップ</span>
+        <span className="rounded-lg bg-white px-3 py-1 text-[11px] text-slate-600 ring-1 ring-slate-300">ファイルを選択</span>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">選ぶ or ドラッグで送信＝ファイルアップロード</p>
+    </div>
+  ),
   // ---- UI部品 追加（新規用語 2026-07-17e） ----
   chip: () => <ChipDemo />,
   "floating-label": () => <FloatingLabelDemo />,

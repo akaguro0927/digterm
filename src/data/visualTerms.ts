@@ -42,6 +42,8 @@ export const VISUAL_SLUGS: readonly string[] = [
   "vendor-prefix", "ssr-csr", "local-storage", "environment-variable", "cdn", "bundler", "npm", "reset-css",
   // 2026-07-17 新規UI用語（+8）
   "timeline", "chip", "data-table", "blockquote", "stat-card", "floating-label", "command-palette", "kbd",
+  // 2026-07-18 新規UI用語（+7）
+  "alert", "snackbar", "bottom-navigation", "split-button", "like-button", "dropdown-menu", "file-upload",
 ];
 
 const set = new Set(VISUAL_SLUGS);

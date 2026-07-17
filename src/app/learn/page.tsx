@@ -34,7 +34,7 @@ export default function LearnPage() {
           </p>
         </div>
         <div className="mt-6">
-          <LearningMap />
+          <LearningMap hideWelcome />
         </div>
       </div>
     </div>

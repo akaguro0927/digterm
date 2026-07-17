@@ -5,6 +5,7 @@ import { categoryTheme } from "@/lib/categoryTheme";
 import Reveal from "@/components/Reveal";
 import LiveExample from "@/components/LiveExample";
 import HeroMascot from "@/components/HeroMascot";
+import WordOfTheDay from "@/components/WordOfTheDay";
 import { Icon } from "@/components/icons";
 
 export default function Home() {
@@ -135,6 +136,13 @@ export default function Home() {
               </span>
             </div>
           </Link>
+        </Reveal>
+      </section>
+
+      {/* 今日の1語 */}
+      <section className="mx-auto max-w-5xl px-4 pt-6">
+        <Reveal>
+          <WordOfTheDay />
         </Reveal>
       </section>
 

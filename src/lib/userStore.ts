@@ -18,6 +18,7 @@ const QUIZ_KEY = "cocre:quiz-results:v1";
 const SEEN_KEY = "cocre:seen:v1"; // 詳細を開いた（読んだ）用語のslug → 学習マップの達成度に使う
 const JOURNEY_KEY = "cocre:journey:v1"; // クリアしたすごろくノードのid
 const STREAK_KEY = "cocre:streak:v1"; // 連続学習日数＋今日の目標
+const ACTIVITY_KEY = "cocre:activity-log:v1"; // 日付(YYYY-MM-DD)→学習回数（カレンダー用）
 const WEAKCLEAR_KEY = "cocre:weak-clears:v1"; // 苦手復習で正解した回数（slug→count）
 const MAX_ATTEMPTS = 200; // 直近200件だけ保持（localStorage肥大化を防ぐ）
 
@@ -40,6 +41,7 @@ export interface WeakTerm {
   misses: number; // 実効ミス数（誤答回数 − 復習正解回数）
 }
 const EMPTY_WEAKCLEARS: Readonly<Record<string, number>> = Object.freeze({});
+const EMPTY_ACTIVITY: Readonly<Record<string, number>> = Object.freeze({});
 
 /** クイズ1回分の成績（→ quiz_results テーブル1行に対応） */
 export interface QuizAttempt {
@@ -84,6 +86,7 @@ let seenSnapshot: readonly string[] = EMPTY_SEEN;
 let journeySnapshot: readonly string[] = EMPTY_JOURNEY;
 let streakSnapshot: StreakData = EMPTY_STREAK;
 let weakClearsSnapshot: Record<string, number> = EMPTY_WEAKCLEARS;
+let activitySnapshot: Record<string, number> = EMPTY_ACTIVITY;
 let hydrated = false;
 
 function ensureHydrated() {
@@ -94,6 +97,7 @@ function ensureHydrated() {
   journeySnapshot = read<string[]>(JOURNEY_KEY, []);
   streakSnapshot = read<StreakData>(STREAK_KEY, EMPTY_STREAK);
   weakClearsSnapshot = read<Record<string, number>>(WEAKCLEAR_KEY, {});
+  activitySnapshot = read<Record<string, number>>(ACTIVITY_KEY, {});
   hydrated = true;
 }
 
@@ -111,6 +115,7 @@ function onStorage(e: StorageEvent) {
   if (e.key === JOURNEY_KEY || e.key === null) journeySnapshot = read<string[]>(JOURNEY_KEY, []);
   if (e.key === STREAK_KEY || e.key === null) streakSnapshot = read<StreakData>(STREAK_KEY, EMPTY_STREAK);
   if (e.key === WEAKCLEAR_KEY || e.key === null) weakClearsSnapshot = read<Record<string, number>>(WEAKCLEAR_KEY, {});
+  if (e.key === ACTIVITY_KEY || e.key === null) activitySnapshot = read<Record<string, number>>(ACTIVITY_KEY, {});
   emit();
 }
 
@@ -237,7 +242,22 @@ export function recordActivity() {
   }
   streakSnapshot = next;
   persist(STREAK_KEY, next);
+  // 学習カレンダー用に、その日の回数も記録
+  activitySnapshot = { ...activitySnapshot, [today]: (activitySnapshot[today] ?? 0) + 1 };
+  persist(ACTIVITY_KEY, activitySnapshot);
   emit();
+}
+
+/** 日付(YYYY-MM-DD)→学習回数のログ（学習カレンダー用） */
+export function useActivityLog(): Record<string, number> {
+  return useSyncExternalStore(
+    subscribe,
+    () => {
+      ensureHydrated();
+      return activitySnapshot;
+    },
+    () => EMPTY_ACTIVITY
+  );
 }
 
 /** 表示用に「今日時点」で補正したストリーク情報 */
@@ -433,6 +453,7 @@ export function clearAllUserData() {
   journeySnapshot = EMPTY_JOURNEY;
   streakSnapshot = EMPTY_STREAK;
   weakClearsSnapshot = EMPTY_WEAKCLEARS;
+  activitySnapshot = EMPTY_ACTIVITY;
   if (isBrowser) {
     try {
       window.localStorage.removeItem(FAV_KEY);
@@ -441,6 +462,7 @@ export function clearAllUserData() {
       window.localStorage.removeItem(JOURNEY_KEY);
       window.localStorage.removeItem(STREAK_KEY);
       window.localStorage.removeItem(WEAKCLEAR_KEY);
+      window.localStorage.removeItem(ACTIVITY_KEY);
     } catch {
       /* 無視 */
     }

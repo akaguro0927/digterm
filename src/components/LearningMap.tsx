@@ -15,19 +15,21 @@ function offsetX(globalIndex: number): number {
   return Math.round(Math.sin(globalIndex * 0.9) * 52);
 }
 
-export default function LearningMap() {
+export default function LearningMap({ hideWelcome = false }: { hideWelcome?: boolean }) {
   const seen = useSeen();
   const [playId, setPlayId] = useState(0); // ++でアニメを再生
   const [showWelcome, setShowWelcome] = useState(false);
 
   // 初回だけウェルカム表示（クライアントのみ／ハイドレーション不一致を避ける）
+  // ※レッスンページに埋め込むときは hideWelcome で抑制（オンボーディングの二重表示を防ぐ）
   useEffect(() => {
+    if (hideWelcome) return;
     try {
       if (!window.localStorage.getItem(INTRO_KEY)) setShowWelcome(true);
     } catch {
       /* 無視 */
     }
-  }, []);
+  }, [hideWelcome]);
 
   const dismissWelcome = () => {
     setShowWelcome(false);

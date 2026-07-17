@@ -1,0 +1,131 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Icon } from "@/components/icons";
+import { useProfile, saveProfile, type Profile } from "@/lib/profile";
+import { useAuth } from "@/lib/supabase/AuthProvider";
+
+const CERT_SAMPLES = ["基本情報技術者", "応用情報技術者", "ITパスポート", "AWS SAA", "ウェブデザイン技能士"];
+
+export default function ProfilePage() {
+  const saved = useProfile();
+  const { user } = useAuth();
+  const [form, setForm] = useState<Profile>(saved);
+  const [done, setDone] = useState(false);
+
+  // 初期値を保存済みデータで埋める（ハイドレーション後）
+  useEffect(() => {
+    setForm(saved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saved.displayName, saved.bio, saved.certifications, saved.experienceYears]);
+
+  const set = (k: keyof Profile, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveProfile(form);
+    setDone(true);
+    setTimeout(() => setDone(false), 2200);
+  };
+
+  const addCert = (c: string) => {
+    const cur = form.certifications.trim();
+    if (cur.includes(c)) return;
+    set("certifications", cur ? `${cur}, ${c}` : c);
+  };
+
+  const inputCls =
+    "mt-1 w-full rounded-xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 transition focus:bg-white focus:ring-2 focus:ring-brand-500";
+
+  return (
+    <div className="mx-auto max-w-xl px-4 py-10">
+      <div className="animate-fade-up mb-6">
+        <Link href="/mypage" className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-brand-600">
+          <Icon name="chevron-left" className="h-3.5 w-3.5" />
+          マイページにもどる
+        </Link>
+        <h1 className="font-display mt-1 flex items-center gap-2 text-2xl font-extrabold">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+            <Icon name="user" className="h-5 w-5" />
+          </span>
+          プロフィール編集
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          あなたの資格や経歴を登録できます{user ? "" : "（ログインすると他の端末にも同期されます）"}。
+        </p>
+      </div>
+
+      <form onSubmit={submit} className="card-pop space-y-5 p-6 sm:p-7">
+        <label className="block">
+          <span className="text-xs font-bold text-slate-500">表示名（ニックネーム）</span>
+          <input value={form.displayName} onChange={(e) => set("displayName", e.target.value)} placeholder="例: あかぐろ" className={inputCls} />
+        </label>
+
+        <label className="block">
+          <span className="text-xs font-bold text-slate-500">ひとこと（自己紹介）</span>
+          <textarea value={form.bio} onChange={(e) => set("bio", e.target.value)} rows={3} placeholder="例: フロントエンドを勉強中！" className={`${inputCls} resize-none`} />
+        </label>
+
+        <label className="block">
+          <span className="text-xs font-bold text-slate-500">IT実務の経験年数</span>
+          <div className="mt-1 flex items-center gap-2">
+            <input
+              type="number"
+              min={0}
+              max={60}
+              value={form.experienceYears}
+              onChange={(e) => set("experienceYears", e.target.value)}
+              placeholder="0"
+              className={`${inputCls} mt-0 w-28`}
+            />
+            <span className="text-sm text-slate-500">年</span>
+          </div>
+        </label>
+
+        <div className="block">
+          <span className="text-xs font-bold text-slate-500">保有資格</span>
+          <input
+            value={form.certifications}
+            onChange={(e) => set("certifications", e.target.value)}
+            placeholder="例: 基本情報技術者, ITパスポート"
+            className={inputCls}
+          />
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {CERT_SAMPLES.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => addCert(c)}
+                className="rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-brand-600"
+              >
+                ＋ {c}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 pt-1">
+          <button
+            type="submit"
+            className="btn-3d font-display inline-flex items-center gap-1.5 rounded-full bg-brand-500 px-7 py-3 text-sm font-extrabold text-white"
+            style={{ ["--edge" as string]: "#12a854" }}
+          >
+            <Icon name="check" className="h-4 w-4" strokeWidth={3} />
+            保存する
+          </button>
+          {done && (
+            <span className="animate-pop-in flex items-center gap-1 text-sm font-bold text-brand-600">
+              <Icon name="check" className="h-4 w-4" strokeWidth={3} />
+              保存しました
+            </span>
+          )}
+        </div>
+      </form>
+
+      <p className="mt-4 text-center text-[11px] text-slate-400">
+        ※いまは端末に保存されます。ログイン中はアカウントにも紐づけて保存する予定です。
+      </p>
+    </div>
+  );
+}

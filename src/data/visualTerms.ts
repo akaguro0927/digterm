@@ -35,6 +35,13 @@ export const VISUAL_SLUGS: readonly string[] = [
   "validation", "event", "http-status", "favicon",
   // 2026-07-17d 図解デモ追加（+5）
   "markup", "json", "console", "cache", "cookie",
+  // 2026-07-17 バッチ3（残りのデモ化 +12）
+  "media-query", "position", "infinite-scroll", "lazy-loading", "not-found-page",
+  "wireframe", "mockup", "lp", "accessibility", "css-variable", "specificity", "rest-api",
+  // 2026-07-17 バッチ4（+8）
+  "vendor-prefix", "ssr-csr", "local-storage", "environment-variable", "cdn", "bundler", "npm", "reset-css",
+  // 2026-07-17 新規UI用語（+8）
+  "timeline", "chip", "data-table", "blockquote", "stat-card", "floating-label", "command-palette", "kbd",
 ];
 
 const set = new Set(VISUAL_SLUGS);

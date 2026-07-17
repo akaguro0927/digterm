@@ -7,7 +7,9 @@ import { MODE_CONFIGS, type QuizMode } from "@/lib/quiz";
 import { Icon, type IconName } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
 import StreakBar from "@/components/StreakBar";
+import AdSlot from "@/components/AdSlot";
 import { usePlan } from "@/lib/plan";
+import { useProfile, hasProfile } from "@/lib/profile";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
   useFavorites,
@@ -60,6 +62,7 @@ function StatTile({
 export default function MyPage() {
   const { user } = useAuth();
   const plan = usePlan();
+  const profile = useProfile();
   const favSlugs = useFavorites();
   const attempts = useQuizAttempts();
   const weakClears = useWeakClears();
@@ -170,6 +173,41 @@ export default function MyPage() {
           <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
         </span>
       </Link>
+
+      {/* プロフィール */}
+      <Link
+        href="/profile"
+        className="group mt-4 flex items-center gap-4 rounded-2xl border-2 border-[#ebe4d5] bg-white p-4 shadow-[0_3px_0_#ebe4d5] transition hover:-translate-y-0.5"
+      >
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+          <Icon name="user" className="h-6 w-6" />
+        </span>
+        <div className="min-w-0 flex-1">
+          {hasProfile(profile) ? (
+            <>
+              <p className="font-display truncate text-sm font-extrabold text-slate-800">
+                {profile.displayName || "名前未設定"}
+                {profile.experienceYears && <span className="ml-1.5 text-xs font-bold text-slate-400">IT歴 {profile.experienceYears}年</span>}
+              </p>
+              <p className="mt-0.5 truncate text-xs text-slate-500">
+                {profile.certifications ? `資格: ${profile.certifications}` : profile.bio || "プロフィールを編集"}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-display text-sm font-extrabold text-slate-800">プロフィールを登録しよう</p>
+              <p className="mt-0.5 text-xs text-slate-500">資格やIT経験年数を書けます</p>
+            </>
+          )}
+        </div>
+        <span className="flex shrink-0 items-center gap-1 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-600 transition group-hover:bg-slate-200">
+          編集
+          <Icon name="chevron-right" className="h-3.5 w-3.5" />
+        </span>
+      </Link>
+
+      {/* 広告（無料ユーザーのみ） */}
+      <AdSlot className="mt-4" />
 
       {/* ===== 学習の記録 ===== */}
       <section className="mt-10">
@@ -367,9 +405,36 @@ export default function MyPage() {
         )}
       </section>
 
+      {/* ===== その他 ===== */}
+      <section className="mt-12">
+        <h2 className="font-display mb-3 text-lg font-extrabold text-slate-800">その他</h2>
+        <div className="card-pop divide-y divide-slate-100 p-0">
+          {[
+            { icon: "user", label: "プロフィール編集", href: "/profile" },
+            { icon: "mail", label: "お問い合わせ", href: "/contact" },
+            { icon: "trophy", label: "会員プラン・お支払い", href: "/vip" },
+            { icon: "shield", label: "プライバシーポリシー", href: "/legal/privacy" },
+            { icon: "book", label: "利用規約", href: "/legal/terms" },
+          ].map((it) => (
+            <Link
+              key={it.label}
+              href={it.href}
+              className="flex items-center gap-3 px-4 py-3.5 text-sm text-slate-700 transition first:rounded-t-2xl last:rounded-b-2xl hover:bg-slate-50"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                <Icon name={it.icon as IconName} className="h-4 w-4" />
+              </span>
+              <span className="flex-1 font-medium">{it.label}</span>
+              <Icon name="chevron-right" className="h-4 w-4 text-slate-300" />
+            </Link>
+          ))}
+        </div>
+        <p className="mt-3 text-center text-[11px] text-slate-400">Co-Cre プロトタイプ版 v0.1</p>
+      </section>
+
       {/* ===== 記録の削除 ===== */}
       {(hasProgress || favTerms.length > 0) && (
-        <div className="mt-14 border-t border-slate-200 pt-6 text-center">
+        <div className="mt-10 border-t border-slate-200 pt-6 text-center">
           <button
             type="button"
             onClick={handleClear}

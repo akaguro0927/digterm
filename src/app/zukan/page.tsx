@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ZukanBrowser from "@/components/ZukanBrowser";
+import AdSlot from "@/components/AdSlot";
 import { CATEGORY_LABELS, type Category } from "@/data/terms";
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default async function ZukanPage({
           名前がうろ覚えでもOK。ひらがな・カタカナ・英語・「見た目の記憶」どれでも検索できます。No.001から順にめくるのもおすすめ。
         </p>
       </div>
+      <AdSlot className="mt-6" />
       <ZukanBrowser initialCategory={initialCategory} />
     </div>
   );

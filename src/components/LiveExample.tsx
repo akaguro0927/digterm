@@ -728,7 +728,445 @@ function EventDemo() {
   );
 }
 
+function InfiniteScrollDemo() {
+  const [n, setN] = useState(6);
+  return (
+    <div className="w-full max-w-[15rem]">
+      <div
+        onScroll={(e) => {
+          const el = e.currentTarget;
+          if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10 && n < 30) setN((v) => v + 6);
+        }}
+        className="h-40 space-y-1.5 overflow-y-auto rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200"
+      >
+        {Array.from({ length: n }, (_, i) => (
+          <div key={i} className="rounded bg-slate-100 px-3 py-2 text-xs text-slate-600">アイテム {i + 1}</div>
+        ))}
+        {n < 30 && <p className="py-1 text-center text-[10px] text-slate-400">↓ スクロールで自動読み込み</p>}
+      </div>
+      <p className="mt-1 text-center text-[10px] text-slate-400">下までスクロールすると次々増える</p>
+    </div>
+  );
+}
+
+function ChipDemo() {
+  const [chips, setChips] = useState(["React", "CSS", "初心者"]);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {chips.map((c) => (
+          <span key={c} className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100">
+            {c}
+            <button onClick={() => setChips(chips.filter((x) => x !== c))} className="text-blue-400 hover:text-blue-600">
+              <Icon name="x" className="h-3 w-3" strokeWidth={3} />
+            </button>
+          </span>
+        ))}
+        {chips.length === 0 && <span className="text-xs text-slate-400">全部消したね</span>}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">×で消せる小さなラベル＝チップ</p>
+    </div>
+  );
+}
+
+function FloatingLabelDemo() {
+  const [v, setV] = useState("");
+  const [focus, setFocus] = useState(false);
+  const up = v.length > 0 || focus;
+  return (
+    <div className="w-full max-w-xs">
+      <div className="relative">
+        <input
+          value={v}
+          onChange={(e) => setV(e.target.value)}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          className="w-full rounded-lg bg-white px-3 pb-2 pt-5 text-sm outline-none ring-1 ring-slate-300 focus:ring-2 focus:ring-blue-500"
+        />
+        <label className={`pointer-events-none absolute left-3 transition-all ${up ? "top-1.5 text-[10px] font-bold text-blue-600" : "top-3.5 text-sm text-slate-400"}`}>
+          お名前
+        </label>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">入力すると見出しが上に浮く＝フローティングラベル</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（新規用語 2026-07-17e） ----
+  chip: () => <ChipDemo />,
+  "floating-label": () => <FloatingLabelDemo />,
+  timeline: () => (
+    <div className="w-full max-w-[15rem]">
+      {[
+        ["注文完了", "done"],
+        ["発送済み", "done"],
+        ["配達中", "now"],
+        ["お届け", "todo"],
+      ].map(([label, st], i, arr) => (
+        <div key={label} className="flex gap-3">
+          <div className="flex flex-col items-center">
+            <span className={`flex h-4 w-4 items-center justify-center rounded-full ${st === "todo" ? "bg-slate-200" : "bg-brand-500"}`}>
+              {st === "now" && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+            </span>
+            {i < arr.length - 1 && <span className={`w-0.5 flex-1 ${st === "todo" ? "bg-slate-200" : "bg-brand-300"}`} style={{ minHeight: 18 }} />}
+          </div>
+          <span className={`pb-4 text-xs font-bold ${st === "todo" ? "text-slate-400" : st === "now" ? "text-brand-600" : "text-slate-700"}`}>{label}</span>
+        </div>
+      ))}
+    </div>
+  ),
+  "data-table": () => (
+    <div className="w-full max-w-xs overflow-hidden rounded-lg bg-white text-xs shadow-sm ring-1 ring-slate-200">
+      <div className="flex bg-slate-50 font-bold text-slate-500">
+        <span className="flex-1 px-3 py-1.5">名前</span>
+        <span className="w-16 px-3 py-1.5">得点</span>
+      </div>
+      {[
+        ["たろう", "92"],
+        ["はなこ", "88"],
+        ["けん", "75"],
+      ].map(([n, s]) => (
+        <div key={n} className="flex border-t border-slate-100 text-slate-600">
+          <span className="flex-1 px-3 py-1.5">{n}</span>
+          <span className="w-16 px-3 py-1.5 font-mono">{s}</span>
+        </div>
+      ))}
+      <p className="border-t border-slate-100 px-3 py-1.5 text-center text-[10px] text-slate-400">行と列で整理＝データテーブル</p>
+    </div>
+  ),
+  blockquote: () => (
+    <div className="w-full max-w-xs">
+      <blockquote className="border-l-4 border-brand-400 bg-brand-50/50 py-2 pl-4 pr-2 text-sm italic text-slate-600">
+        「名前がわかれば、調べられる。」
+        <footer className="mt-1 text-[10px] not-italic text-slate-400">— Co-Cre</footer>
+      </blockquote>
+      <p className="mt-2 text-center text-[10px] text-slate-400">縦線＋字下げで引用を示す＝blockquote</p>
+    </div>
+  ),
+  "stat-card": () => (
+    <div className="flex w-full max-w-xs gap-2">
+      {[
+        ["登録者", "1,240", "人"],
+        ["今日の売上", "¥52,000", ""],
+      ].map(([label, val, unit]) => (
+        <div key={label} className="flex-1 rounded-xl bg-white p-3 shadow-sm ring-1 ring-slate-200">
+          <p className="text-[10px] font-bold text-slate-400">{label}</p>
+          <p className="font-display text-xl font-extrabold text-slate-800">
+            {val}
+            <span className="text-xs text-slate-400">{unit}</span>
+          </p>
+        </div>
+      ))}
+    </div>
+  ),
+  "command-palette": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200">
+        <div className="flex items-center gap-2 border-b border-slate-100 px-2 pb-2">
+          <Icon name="search" className="h-4 w-4 text-slate-400" />
+          <span className="text-sm text-slate-400">コマンドを入力…</span>
+          <span className="ml-auto rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">⌘K</span>
+        </div>
+        <div className="mt-1 space-y-0.5">
+          {["図鑑を開く", "問題集を始める", "マイページ"].map((c) => (
+            <div key={c} className="flex items-center gap-2 rounded px-2 py-1.5 text-xs text-slate-600 hover:bg-slate-50">
+              <Icon name="arrow-right" className="h-3 w-3 text-slate-300" />
+              {c}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">キーで開く検索実行メニュー＝コマンドパレット</p>
+    </div>
+  ),
+  kbd: () => (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-sm text-slate-600">
+        コピーは
+        <kbd className="mx-1 inline-block rounded-md border border-b-2 border-slate-300 bg-white px-2 py-0.5 font-mono text-xs font-bold text-slate-700 shadow-sm">Ctrl</kbd>
+        ＋
+        <kbd className="mx-1 inline-block rounded-md border border-b-2 border-slate-300 bg-white px-2 py-0.5 font-mono text-xs font-bold text-slate-700 shadow-sm">C</kbd>
+      </p>
+      <p className="mt-2 text-[10px] text-slate-400">押すキーをキーっぽく囲う＝kbd</p>
+    </div>
+  ),
+  // ---- フロント用語 追加バッチ3（残りのデモ化・2026-07-17d） ----
+  "media-query": () => (
+    <div className="w-full max-w-xs text-center text-[10px]">
+      <code className="block rounded-lg bg-slate-800 px-3 py-2 text-left font-mono text-sky-200">
+        @media (max-width: 600px) {"{ … }"}
+      </code>
+      <div className="mt-2 flex gap-2">
+        <div className="flex-1 rounded-lg bg-blue-100 py-3 font-bold text-blue-600">広い画面<br />横ならび</div>
+        <div className="w-16 rounded-lg bg-emerald-100 py-3 font-bold text-emerald-600">せまい<br />縦</div>
+      </div>
+      <p className="mt-1 text-slate-400">画面幅の条件で見た目を変えるCSS</p>
+    </div>
+  ),
+  position: () => (
+    <div className="w-full max-w-xs">
+      <div className="relative h-28 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        <span className="inline-block rounded bg-slate-100 px-2 py-1 text-[10px]">static（ふつう）</span>
+        <span className="absolute right-2 top-2 rounded bg-rose-100 px-2 py-1 text-[10px] font-bold text-rose-600">absolute（右上）</span>
+        <span className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-blue-100 px-2 py-1 text-[10px] font-bold text-blue-600">中央下</span>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">要素の置き方を決める＝position</p>
+    </div>
+  ),
+  "infinite-scroll": () => <InfiniteScrollDemo />,
+  "lazy-loading": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-2">
+        <div className="flex-1 text-center">
+          <div className="flex h-20 items-center justify-center rounded-lg bg-slate-100 text-[10px] text-slate-400">読込前<br />（軽い）</div>
+          <p className="mt-1 text-[10px] text-slate-400">画面外</p>
+        </div>
+        <span className="text-slate-300">→</span>
+        <div className="flex-1 text-center">
+          <div className="flex h-20 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+            <Icon name="image" className="h-6 w-6" />
+          </div>
+          <p className="mt-1 text-[10px] text-slate-400">見えたら読込</p>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">必要になってから読み込む＝遅延読み込み</p>
+    </div>
+  ),
+  "not-found-page": () => (
+    <div className="w-full max-w-xs rounded-lg bg-white p-5 text-center shadow-sm ring-1 ring-slate-200">
+      <p className="font-display text-4xl font-extrabold text-slate-300">404</p>
+      <p className="mt-1 text-sm font-bold text-slate-600">ページが見つかりません</p>
+      <p className="mt-1 text-[11px] text-slate-400">URLが違うか、削除された可能性があります</p>
+      <span className="mt-3 inline-block rounded-lg bg-blue-600 px-3 py-1.5 text-xs text-white">ホームへ戻る</span>
+    </div>
+  ),
+  wireframe: () => (
+    <div className="w-full max-w-[14rem] space-y-1.5 rounded-lg border-2 border-dashed border-slate-300 bg-white p-2">
+      <div className="h-6 rounded bg-slate-200" />
+      <div className="flex gap-1.5">
+        <div className="h-16 w-1/3 rounded bg-slate-100" />
+        <div className="flex-1 space-y-1">
+          <div className="h-2 rounded bg-slate-200" />
+          <div className="h-2 w-2/3 rounded bg-slate-200" />
+          <div className="h-2 rounded bg-slate-200" />
+        </div>
+      </div>
+      <div className="h-6 w-1/3 rounded bg-slate-300" />
+      <p className="pt-1 text-center text-[9px] text-slate-400">配置だけ決めた設計図＝ワイヤーフレーム</p>
+    </div>
+  ),
+  mockup: () => (
+    <div className="w-full max-w-[10rem] text-center">
+      <div className="rounded-[1.2rem] bg-slate-800 p-2 shadow-lg">
+        <div className="space-y-1 rounded-[0.7rem] bg-white p-2">
+          <div className="h-3 rounded bg-blue-500" />
+          <div className="h-10 rounded bg-slate-100" />
+          <div className="h-2 rounded bg-slate-200" />
+          <div className="h-2 w-2/3 rounded bg-slate-200" />
+          <div className="h-4 rounded bg-emerald-400" />
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">色や中身まで作った完成イメージ＝モックアップ</p>
+    </div>
+  ),
+  lp: () => (
+    <div className="w-full max-w-[12rem] space-y-1 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+      <div className="rounded bg-gradient-to-r from-blue-500 to-violet-500 py-4 text-center text-[10px] font-bold text-white">大きな見出し＋CTA</div>
+      <div className="flex gap-1">
+        <div className="h-8 flex-1 rounded bg-slate-100" />
+        <div className="h-8 flex-1 rounded bg-slate-100" />
+        <div className="h-8 flex-1 rounded bg-slate-100" />
+      </div>
+      <div className="rounded bg-emerald-400 py-2 text-center text-[10px] font-bold text-white">申し込む</div>
+      <p className="pt-0.5 text-center text-[9px] text-slate-400">1つの目的に絞った縦長ページ＝LP</p>
+    </div>
+  ),
+  accessibility: () => (
+    <div className="w-full max-w-xs space-y-2">
+      <div className="flex gap-2 text-center">
+        <div className="flex-1 rounded-lg bg-slate-800 p-2 text-xs font-bold text-white">
+          読みやすい
+          <br />
+          <span className="text-[9px] font-normal text-slate-300">コントラスト◎</span>
+        </div>
+        <div className="flex-1 rounded-lg bg-slate-300 p-2 text-xs font-bold text-slate-400">
+          読みにくい
+          <br />
+          <span className="text-[9px] font-normal">コントラスト不足</span>
+        </div>
+      </div>
+      <button className="w-full rounded-lg bg-white py-2 text-xs font-bold text-slate-700 ring-2 ring-blue-500 ring-offset-2">
+        フォーカスの枠（キーボード操作）
+      </button>
+      <p className="text-center text-[10px] text-slate-400">誰でも使える工夫＝アクセシビリティ</p>
+    </div>
+  ),
+  "css-variable": () => (
+    <div className="w-full max-w-xs">
+      <code className="block rounded-lg bg-slate-800 p-3 font-mono text-[11px] leading-relaxed">
+        <span className="text-slate-400">:root {"{"}</span>
+        <br />
+        <span className="ml-3 text-sky-300">--main</span>
+        <span className="text-slate-400">: </span>
+        <span className="text-emerald-300">#1fc866</span>
+        <span className="text-slate-400">;</span>
+        <br />
+        <span className="text-slate-400">{"}"}</span>
+        <br />
+        <span className="text-rose-300">color</span>
+        <span className="text-slate-400">: </span>
+        <span className="text-amber-300">var(--main)</span>
+        <span className="text-slate-400">;</span>
+      </code>
+      <p className="mt-2 flex items-center justify-center gap-2 text-[10px] text-slate-400">
+        <span className="h-4 w-4 rounded" style={{ background: "#1fc866" }} />
+        1か所直すと全部変わる＝CSS変数
+      </p>
+    </div>
+  ),
+  specificity: () => (
+    <div className="w-full max-w-xs space-y-1.5 font-mono text-[11px]">
+      {[
+        ["#id", "強い", "bg-rose-50 text-rose-600", "100点"],
+        [".class", "中", "bg-amber-50 text-amber-600", "10点"],
+        ["p（タグ）", "弱い", "bg-emerald-50 text-emerald-600", "1点"],
+      ].map(([sel, s, cls, pt]) => (
+        <div key={sel} className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
+          <span className={`rounded px-2 py-0.5 font-bold ${cls}`}>{sel}</span>
+          <span className="font-sans text-slate-500">{s}</span>
+          <span className="ml-auto font-sans text-[10px] text-slate-400">{pt}</span>
+        </div>
+      ))}
+      <p className="text-center font-sans text-[10px] text-slate-400">強い指定が勝つ＝詳細度</p>
+    </div>
+  ),
+  "rest-api": () => (
+    <div className="w-full max-w-xs space-y-1.5 font-mono text-[11px]">
+      {[
+        ["GET", "取得", "bg-emerald-50 text-emerald-600"],
+        ["POST", "追加", "bg-blue-50 text-blue-600"],
+        ["PUT", "更新", "bg-amber-50 text-amber-600"],
+        ["DELETE", "削除", "bg-rose-50 text-rose-600"],
+      ].map(([m, d, cls]) => (
+        <div key={m} className="flex items-center gap-2 rounded-lg bg-white px-3 py-1.5 shadow-sm ring-1 ring-slate-200">
+          <span className={`w-16 rounded px-2 py-0.5 text-center font-bold ${cls}`}>{m}</span>
+          <span className="text-slate-500">/posts</span>
+          <span className="ml-auto font-sans text-[10px] text-slate-400">{d}</span>
+        </div>
+      ))}
+      <p className="text-center font-sans text-[10px] text-slate-400">操作を動詞で分けるAPIの作法＝REST</p>
+    </div>
+  ),
+  "vendor-prefix": () => (
+    <div className="w-full max-w-xs">
+      <code className="block rounded-lg bg-slate-800 p-3 font-mono text-[11px] leading-relaxed text-slate-300">
+        <span className="text-rose-300">-webkit-</span>appearance: none;
+        <br />
+        <span className="text-amber-300">-moz-</span>appearance: none;
+        <br />
+        appearance: none;
+      </code>
+      <p className="mt-2 text-center text-[10px] text-slate-400">ブラウザごとの頭文字＝ベンダープレフィックス</p>
+    </div>
+  ),
+  "ssr-csr": () => (
+    <div className="flex w-full max-w-xs gap-2 text-center text-[10px]">
+      <div className="flex-1 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        <p className="font-bold text-slate-700">SSR</p>
+        <p className="mt-1 text-slate-500">サーバーが完成HTMLを渡す</p>
+        <p className="mt-1 font-bold text-emerald-600">表示が速い / SEO◎</p>
+      </div>
+      <div className="flex-1 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        <p className="font-bold text-slate-700">CSR</p>
+        <p className="mt-1 text-slate-500">ブラウザのJSが組み立てる</p>
+        <p className="mt-1 font-bold text-blue-600">操作が軽快</p>
+      </div>
+    </div>
+  ),
+  "local-storage": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <p className="mb-1.5 text-[10px] font-bold text-slate-400">ブラウザに保存（閉じても消えない）</p>
+        {[
+          ["theme", "dark"],
+          ["name", "たろう"],
+        ].map(([k, v]) => (
+          <div key={k} className="flex justify-between border-t border-slate-100 py-1 font-mono text-[11px] first:border-t-0">
+            <span className="text-sky-600">{k}</span>
+            <span className="text-slate-600">{v}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">名前と値で手元に保存＝ローカルストレージ</p>
+    </div>
+  ),
+  "environment-variable": () => (
+    <div className="w-full max-w-xs">
+      <code className="block rounded-lg bg-slate-800 p-3 font-mono text-[11px] leading-relaxed text-slate-300">
+        <span className="text-slate-500"># .env（秘密の設定）</span>
+        <br />
+        <span className="text-sky-300">API_KEY</span>=<span className="text-emerald-300">••••••••</span>
+        <br />
+        <span className="text-sky-300">DB_URL</span>=<span className="text-emerald-300">••••••••</span>
+      </code>
+      <p className="mt-2 text-center text-[10px] text-slate-400">鍵や接続先をコード外に隠す＝環境変数</p>
+    </div>
+  ),
+  cdn: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-1.5 text-[10px]">
+        <span className="rounded-lg bg-white px-2 py-3 shadow-sm ring-1 ring-slate-200">あなた</span>
+        <span className="font-bold text-emerald-500">←近い→</span>
+        <span className="rounded-lg bg-emerald-50 px-2 py-3 font-bold text-emerald-600 ring-1 ring-emerald-200">近くの配信拠点</span>
+        <span className="text-slate-300">…</span>
+        <span className="rounded-lg bg-white px-2 py-3 text-slate-400 shadow-sm ring-1 ring-slate-200">本サーバー（遠い）</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">近い拠点から配って速くする＝CDN</p>
+    </div>
+  ),
+  bundler: () => (
+    <div className="w-full max-w-xs text-center text-[10px]">
+      <div className="flex items-center justify-center gap-2">
+        <div className="space-y-1">
+          {["a.js", "b.js", "c.css"].map((f) => (
+            <div key={f} className="rounded bg-slate-100 px-2 py-1 font-mono text-slate-500">{f}</div>
+          ))}
+        </div>
+        <span className="font-bold text-blue-500">→束ねる→</span>
+        <div className="rounded bg-blue-100 px-3 py-3 font-mono font-bold text-blue-600">bundle.js</div>
+      </div>
+      <p className="mt-2 text-slate-400">たくさんのファイルを1つに束ねる＝バンドラー</p>
+    </div>
+  ),
+  npm: () => (
+    <div className="w-full max-w-xs">
+      <code className="block rounded-lg bg-slate-900 px-3 py-2 font-mono text-[11px] text-slate-300">
+        $ npm install <span className="text-emerald-300">react</span>
+      </code>
+      <div className="mt-1.5 rounded-lg bg-slate-800 px-3 py-2 font-mono text-[10px] text-slate-400">
+        + react added
+        <br />
+        node_modules/ に部品が入った
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">公開部品を取り寄せる道具＝npm</p>
+    </div>
+  ),
+  "reset-css": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-2 text-center">
+        <div className="flex-1 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+          <p className="mb-1 text-[9px] font-bold text-slate-400">リセット前</p>
+          <div className="rounded bg-slate-100 p-1 text-[10px] text-slate-500">ブラウザ差の初期余白がバラバラ</div>
+        </div>
+        <div className="flex-1 rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+          <p className="mb-1 text-[9px] font-bold text-slate-400">リセット後</p>
+          <div className="rounded bg-emerald-50 p-1 text-[10px] font-bold text-emerald-600">全ブラウザで揃う</div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">初期スタイルを揃える下ごしらえ＝リセットCSS</p>
+    </div>
+  ),
   // ---- フロント用語 追加バッチ2（http/フォーム/タブ等） ----
   validation: () => <ValidationDemo />,
   event: () => <EventDemo />,

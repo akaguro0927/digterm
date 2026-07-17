@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "@/components/icons";
-import AuthNav from "@/components/AuthNav";
+import AccountMenu from "@/components/AccountMenu";
 
 interface NavItem {
   href: string;
@@ -53,9 +53,7 @@ export default function MainNav() {
         );
       })}
       <span className="mx-1 h-5 w-px shrink-0 bg-slate-200" />
-      <div className="shrink-0">
-        <AuthNav />
-      </div>
+      <AccountMenu />
     </nav>
   );
 }

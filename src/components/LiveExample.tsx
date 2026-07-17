@@ -903,7 +903,127 @@ function CountdownDemo() {
   );
 }
 
+const QR_MATRIX = ["11101111", "10100101", "11110111", "00011000", "01001011", "11101100", "10110011", "11101010"];
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（データ表示・操作など 2026-07-18c） ----
+  "qr-code": () => (
+    <div className="text-center">
+      <div className="mx-auto inline-block rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+        {QR_MATRIX.map((row, r) => (
+          <div key={r} className="flex">
+            {row.split("").map((ch, c) => (
+              <span key={c} className={`h-3 w-3 ${ch === "1" ? "bg-slate-800" : "bg-white"}`} />
+            ))}
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">かざすとURL等に飛ぶ四角い模様＝QRコード</p>
+    </div>
+  ),
+  kanban: () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-1.5">
+        {[
+          ["未着手", ["調査", "設計"]],
+          ["作業中", ["実装"]],
+          ["完了", ["要件"]],
+        ].map(([title, cards]) => (
+          <div key={title as string} className="flex-1 rounded-lg bg-slate-100 p-1.5">
+            <p className="mb-1 text-[9px] font-bold text-slate-500">{title}</p>
+            <div className="space-y-1">
+              {(cards as string[]).map((c) => (
+                <div key={c} className="rounded bg-white px-2 py-1 text-[10px] text-slate-600 shadow-sm">{c}</div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">列にカードを並べて進捗管理＝カンバン</p>
+    </div>
+  ),
+  "drag-and-drop": () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-2">
+        <div className="rounded-lg bg-blue-100 px-3 py-2 text-xs font-bold text-blue-600 shadow-md">アイテム</div>
+        <Icon name="arrow-right" className="h-4 w-4 text-slate-300" />
+        <div className="rounded-lg border-2 border-dashed border-emerald-300 px-3 py-2 text-xs text-emerald-500">ここに置く</div>
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">つかんで運んで離す＝ドラッグ＆ドロップ</p>
+    </div>
+  ),
+  "back-to-top": () => (
+    <div className="w-full max-w-[12rem]">
+      <div className="relative h-28 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="space-y-1.5 p-2.5">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-2 rounded bg-slate-100" style={{ width: `${90 - i * 8}%` }} />
+          ))}
+        </div>
+        <button className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg">↑</button>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">押すと先頭へ戻る＝トップへ戻るボタン</p>
+    </div>
+  ),
+  coupon: () => (
+    <div className="text-center">
+      <div className="mx-auto inline-flex items-center gap-3 rounded-xl border-2 border-dashed border-rose-300 bg-rose-50 px-5 py-3">
+        <span className="font-display text-2xl font-extrabold text-rose-500">
+          20%<span className="text-sm">OFF</span>
+        </span>
+        <span className="text-[10px] text-rose-400">初回限定クーポン</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">割引・特典を表す券＝クーポン</p>
+    </div>
+  ),
+  gauge: () => (
+    <div className="text-center">
+      <svg viewBox="0 0 100 55" className="mx-auto w-32">
+        <path d="M10 50 A40 40 0 0 1 90 50" fill="none" stroke="#e5e7eb" strokeWidth="10" strokeLinecap="round" />
+        <path d="M10 50 A40 40 0 0 1 78 22" fill="none" stroke="#1fc866" strokeWidth="10" strokeLinecap="round" />
+      </svg>
+      <p className="-mt-3 font-display text-xl font-extrabold text-slate-800">
+        72<span className="text-xs text-slate-400">%</span>
+      </p>
+      <p className="mt-1 text-[10px] text-slate-400">半円の目盛りで量を示す＝ゲージ</p>
+    </div>
+  ),
+  "donut-chart": () => (
+    <div className="text-center">
+      <svg viewBox="0 0 36 36" className="mx-auto w-28 -rotate-90">
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e5e7eb" strokeWidth="4" />
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1fc866" strokeWidth="4" strokeDasharray="50 100" />
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3b82f6" strokeWidth="4" strokeDasharray="30 100" strokeDashoffset="-50" />
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="#f59e0b" strokeWidth="4" strokeDasharray="20 100" strokeDashoffset="-80" />
+      </svg>
+      <p className="mt-2 text-[10px] text-slate-400">割合を扇形で見せる＝ドーナツグラフ</p>
+    </div>
+  ),
+  "video-player": () => (
+    <div className="w-full max-w-[14rem]">
+      <div className="relative aspect-video overflow-hidden rounded-lg bg-slate-800">
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-800">▶</span>
+        </span>
+        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-black/40 px-2 py-1.5">
+          <span className="text-[9px] text-white">1:12</span>
+          <div className="h-1 flex-1 rounded-full bg-white/30">
+            <div className="h-full w-1/3 rounded-full bg-rose-500" />
+          </div>
+          <span className="text-[9px] text-white">3:40</span>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">再生バー付きで動画を見せる＝動画プレーヤー</p>
+    </div>
+  ),
+  "link-text": () => (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-sm text-slate-600">
+        くわしくは <span className="cursor-pointer text-blue-600 underline">こちらのページ</span> をご覧ください。
+      </p>
+      <p className="mt-3 text-[10px] text-slate-400">押すと別ページへ飛ぶ文字＝リンク</p>
+    </div>
+  ),
   // ---- UI部品 追加（フォーム・データ表示など 2026-07-18b） ----
   "color-picker": () => <ColorPickerDemo />,
   countdown: () => <CountdownDemo />,

@@ -47,6 +47,9 @@ export const VISUAL_SLUGS: readonly string[] = [
   // 2026-07-18b フォーム・データ表示など（+10）
   "text-field", "select", "autocomplete", "color-picker", "calendar",
   "notification-bell", "status-dot", "countdown", "price-tag", "bar-chart",
+  // 2026-07-18c データ表示・操作など（+9）
+  "qr-code", "kanban", "drag-and-drop", "back-to-top", "coupon",
+  "gauge", "donut-chart", "video-player", "link-text",
 ];
 
 const set = new Set(VISUAL_SLUGS);

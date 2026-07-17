@@ -53,6 +53,9 @@ export const VISUAL_SLUGS: readonly string[] = [
   // 2026-07-18d 視覚・操作（+10）
   "gallery", "thumbnail", "toolbar", "mega-menu", "animation",
   "hover-effect", "review-star", "comment-box", "tag-input", "sort-button",
+  // 2026-07-18e オーバーレイ・ボタン類（+10）
+  "overlay", "close-button", "share-button", "bookmark-button", "follow-button",
+  "tree-view", "callout", "ribbon", "text-shadow", "heading",
 ];
 
 const set = new Set(VISUAL_SLUGS);

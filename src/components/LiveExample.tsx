@@ -960,7 +960,128 @@ function SortDemo() {
   );
 }
 
+function BookmarkDemo() {
+  const [on, setOn] = useState(false);
+  return (
+    <div className="text-center">
+      <button onClick={() => setOn(!on)} className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition ${on ? "bg-amber-50 text-amber-600" : "bg-slate-100 text-slate-500"}`}>
+        <Icon name={on ? "check" : "book"} className="h-4 w-4" strokeWidth={on ? 3 : 2} />
+        {on ? "保存済み" : "あとで読む"}
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">押すと保存される＝ブックマークボタン</p>
+    </div>
+  );
+}
+
+function FollowDemo() {
+  const [f, setF] = useState(false);
+  return (
+    <div className="text-center">
+      <button onClick={() => setF(!f)} className={`rounded-full px-5 py-2 text-sm font-bold transition ${f ? "bg-slate-100 text-slate-500 ring-1 ring-slate-300" : "bg-blue-500 text-white"}`}>
+        {f ? "フォロー中" : "フォローする"}
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">押すとフォロー中に変わる＝フォローボタン</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（オーバーレイ・ボタン類 2026-07-18e） ----
+  "bookmark-button": () => <BookmarkDemo />,
+  "follow-button": () => <FollowDemo />,
+  overlay: () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="relative h-32 overflow-hidden rounded-lg bg-white ring-1 ring-slate-200">
+        <div className="space-y-1 p-2">
+          {[80, 60, 90, 50].map((w, i) => (
+            <div key={i} className="h-2 rounded bg-slate-100" style={{ width: `${w}%` }} />
+          ))}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/50">
+          <div className="rounded-lg bg-white px-4 py-3 text-xs font-bold text-slate-700 shadow-lg">前面の窓</div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">後ろを暗くする半透明の膜＝オーバーレイ</p>
+    </div>
+  ),
+  "close-button": () => (
+    <div className="text-center">
+      <div className="relative mx-auto w-40 rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <button className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100">
+          <Icon name="x" className="h-4 w-4" strokeWidth={2.5} />
+        </button>
+        <p className="text-xs text-slate-500">お知らせの内容…</p>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">×で閉じる＝閉じるボタン</p>
+    </div>
+  ),
+  "share-button": () => (
+    <div className="text-center">
+      <button className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm ring-1 ring-slate-200">
+        <Icon name="arrow-right" className="h-4 w-4 -rotate-45" />
+        シェア
+      </button>
+      <div className="mt-1.5 flex justify-center gap-1.5">
+        {["LINE", "X", "コピー"].map((s) => (
+          <span key={s} className="rounded bg-slate-100 px-2 py-1 text-[10px] text-slate-500">{s}</span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">SNS等に共有＝シェアボタン</p>
+    </div>
+  ),
+  "tree-view": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-lg bg-white p-3 font-mono text-xs text-slate-600 shadow-sm ring-1 ring-slate-200">
+        <div>▼ src</div>
+        <div className="ml-4">▼ components</div>
+        <div className="ml-8 text-slate-400">Button.tsx</div>
+        <div className="ml-8 text-slate-400">Card.tsx</div>
+        <div className="ml-4">▶ lib</div>
+        <div className="ml-4 text-slate-400">app.tsx</div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">入れ子を開閉して見せる＝ツリー表示</p>
+    </div>
+  ),
+  callout: () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-2 rounded-lg border-l-4 border-blue-400 bg-blue-50 p-3">
+        <Icon name="lightbulb" className="h-4 w-4 shrink-0 text-blue-500" />
+        <div>
+          <p className="text-xs font-bold text-blue-700">ヒント</p>
+          <p className="text-[11px] text-blue-600/80">迷ったら図鑑で実物を見てみよう。</p>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">補足を枠で強調＝コールアウト</p>
+    </div>
+  ),
+  ribbon: () => (
+    <div className="text-center">
+      <div className="relative mx-auto h-24 w-32 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="absolute -right-8 top-3 rotate-45 bg-rose-500 px-8 py-0.5 text-[10px] font-bold text-white shadow">NEW</div>
+        <div className="flex h-full items-center justify-center text-xs text-slate-400">商品</div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">角の斜め帯＝リボン</p>
+    </div>
+  ),
+  "text-shadow": () => (
+    <div className="text-center">
+      <div className="flex h-20 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500">
+        <span className="text-2xl font-extrabold text-white" style={{ textShadow: "0 2px 6px rgba(0,0,0,0.5)" }}>Co-Cre</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">文字に影をつけて読みやすく＝テキストシャドウ</p>
+    </div>
+  ),
+  heading: () => (
+    <div className="w-full max-w-xs">
+      <div className="space-y-1 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <p className="text-xl font-extrabold text-slate-800">大見出し（h1）</p>
+        <p className="text-base font-bold text-slate-700">中見出し（h2）</p>
+        <p className="text-sm font-bold text-slate-600">小見出し（h3）</p>
+        <p className="text-xs text-slate-400">本文テキスト…</p>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">大きさで階層を表すタイトル＝見出し</p>
+    </div>
+  ),
   // ---- UI部品 追加（視覚・操作 2026-07-18d） ----
   "tag-input": () => <TagInputDemo />,
   "sort-button": () => <SortDemo />,

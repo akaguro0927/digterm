@@ -23,8 +23,8 @@ export default function LearnPage() {
         </div>
       </div>
 
-      {/* 道のり（広い列＝画面いっぱいに蛇行） */}
-      <div className="mx-auto mt-8 max-w-4xl px-4">
+      {/* 道のり（すっきりした線＋コンパクト） */}
+      <div className="mx-auto mt-8 max-w-2xl px-4">
         <JourneyBoard />
       </div>
 

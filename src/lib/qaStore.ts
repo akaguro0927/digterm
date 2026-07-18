@@ -203,3 +203,14 @@ export function markBest(qid: string, aid: string) {
     )
   );
 }
+
+// ---- 管理者用（モデレーション） ----
+export function deleteQuestion(qid: string) {
+  ensure();
+  commit(snapshot.filter((q) => q.id !== qid));
+}
+
+export function deleteAnswer(qid: string, aid: string) {
+  ensure();
+  commit(snapshot.map((q) => (q.id === qid ? { ...q, answers: q.answers.filter((a) => a.id !== aid) } : q)));
+}

@@ -27,8 +27,10 @@ export default function MainNav() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
-    <nav className="no-scrollbar flex min-w-0 items-center gap-0.5 overflow-x-auto py-0.5 sm:gap-1">
-      {LINKS.map((item) => {
+    <div className="flex min-w-0 items-center gap-1">
+      {/* リンクだけを横スクロール領域に。メニューは外に出す（overflowでドロップダウンが隠れるのを防ぐ） */}
+      <nav className="no-scrollbar flex min-w-0 items-center gap-0.5 overflow-x-auto py-0.5 sm:gap-1">
+        {LINKS.map((item) => {
         const active = isActive(item.href);
         return (
           <Link
@@ -51,10 +53,11 @@ export default function MainNav() {
               </span>
             )}
           </Link>
-        );
-      })}
-      <span className="mx-1 h-5 w-px shrink-0 bg-slate-200" />
+          );
+        })}
+      </nav>
+      <span className="mx-0.5 h-5 w-px shrink-0 bg-slate-200" />
       <AccountMenu />
-    </nav>
+    </div>
   );
 }

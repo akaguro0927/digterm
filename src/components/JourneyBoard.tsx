@@ -13,12 +13,12 @@ import {
 } from "@/data/journey";
 
 // 幅は「置かれたコンテナの実寸」に合わせる（＝画面いっぱいに広がる道）。
-const TOP = 44; // 上の余白
-const STEP = 90; // マスの縦間隔
-const CH_GAP = 26; // 章のあいだの追加すき間
-const BANNER = 54; // 章バナーぶんの高さ
-const GOAL_GAP = 100; // 最後のマス→ゴールの間
-const LABEL_HALF = 74; // ラベル半幅（端でのはみ出し防止）
+const TOP = 30; // 上の余白
+const STEP = 72; // マスの縦間隔（詰めてスクロール減）
+const CH_GAP = 16; // 章のあいだの追加すき間
+const BANNER = 44; // 章バナーぶんの高さ
+const GOAL_GAP = 78; // 最後のマス→ゴールの間
+const LABEL_HALF = 72; // ラベル半幅（端でのはみ出し防止）
 
 interface Placed {
   fn: FlatNode;
@@ -41,7 +41,7 @@ interface Layout {
 function buildLayout(w: number): Layout {
   const center = w / 2;
   // 端に大きく寄せつつ、ノードの丸(±32)＋ラベル(±LABEL_HALF)が必ず内側に収まるよう制限
-  const amp = Math.max(48, Math.min(w * 0.32, w / 2 - LABEL_HALF - 8));
+  const amp = Math.max(40, Math.min(w * 0.26, w / 2 - LABEL_HALF - 8));
   const placed: Placed[] = [];
   const banners: Banner[] = [];
   let y = TOP;
@@ -82,53 +82,6 @@ function smoothPath(pts: { x: number; y: number }[]): string {
     d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
   }
   return d;
-}
-
-// ---- 道ぞいの小さな挿絵（SVG・絵文字なし） ----
-function Cloud({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <svg viewBox="0 0 64 34" className={className} style={style} fill="#eef4ef" aria-hidden>
-      <ellipse cx="20" cy="22" rx="14" ry="11" />
-      <ellipse cx="36" cy="16" rx="17" ry="14" />
-      <ellipse cx="50" cy="22" rx="12" ry="10" />
-    </svg>
-  );
-}
-function Sprout({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <svg viewBox="0 0 32 40" className={className} style={style} fill="none" aria-hidden>
-      <path d="M16 40 V22" stroke="#79cf95" strokeWidth="3" strokeLinecap="round" />
-      <path d="M15 30 C8 28 4 21 6 14 C14 14 18 21 15 30Z" fill="#a8f0c4" />
-      <path d="M17 28 C24 26 28 19 26 12 C18 12 14 19 17 28Z" fill="#6fe4a1" />
-    </svg>
-  );
-}
-function Sparkle({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} style={style} fill="#ffd36b" aria-hidden>
-      <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10Z" />
-    </svg>
-  );
-}
-function MiniMascot({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <div className={`relative h-12 w-14 rounded-xl border-2 border-[#ebe4d5] bg-white shadow-[0_3px_0_#ebe4d5] ${className}`} style={style}>
-      <div className="flex items-center gap-0.5 rounded-t-[0.6rem] border-b border-slate-100 bg-slate-50/70 px-1.5 py-0.5">
-        <span className="h-1 w-1 rounded-full bg-rose-300" />
-        <span className="h-1 w-1 rounded-full bg-amber-300" />
-        <span className="h-1 w-1 rounded-full bg-emerald-300" />
-      </div>
-      <div className="flex h-[calc(100%-13px)] flex-col items-center justify-center">
-        <div className="flex gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-700" />
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-700" />
-        </div>
-        <svg viewBox="0 0 24 10" className="mt-0.5 h-2 w-5 text-brand-500" fill="none" aria-hidden>
-          <path d="M3 3 C7 8 17 8 21 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </div>
-    </div>
-  );
 }
 
 export default function JourneyBoard() {
@@ -182,20 +135,7 @@ export default function JourneyBoard() {
       <div ref={boardRef} className="relative mt-6 w-full" style={{ height: layout?.height ?? 420 }}>
         {layout && (
           <>
-            {/* 装飾（背景・クリック無効・スマホでは控えめ） */}
-            <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-              <Cloud className="animate-float absolute hidden w-16 opacity-80 sm:block" style={{ left: "4%", top: 24 }} />
-              <Cloud className="animate-float-slow absolute hidden w-24 opacity-70 sm:block" style={{ right: "3%", top: layout.height * 0.3 }} />
-              <Cloud className="animate-float absolute hidden w-20 opacity-60 sm:block" style={{ left: "6%", top: layout.height * 0.66 }} />
-              <Sprout className="absolute hidden w-8 sm:block" style={{ right: "6%", top: layout.height * 0.5 }} />
-              <Sprout className="absolute hidden w-7 sm:block" style={{ left: "4%", top: layout.height * 0.86 }} />
-              <Sprout className="absolute hidden w-6 sm:block" style={{ right: "9%", top: layout.height * 0.16 }} />
-              <MiniMascot className="animate-float absolute hidden sm:block" style={{ right: "8%", top: TOP + 2 }} />
-              <Sparkle className="animate-float absolute hidden w-5 opacity-90 sm:block" style={{ left: `calc(${layout.center}px - 40px)`, top: layout.goalY - 30 }} />
-              <Sparkle className="animate-float-slow absolute hidden w-4 opacity-80 sm:block" style={{ left: `calc(${layout.center}px + 30px)`, top: layout.goalY + 10 }} />
-            </div>
-
-            {/* 道（SVG） */}
+            {/* 線（SVG） */}
             <svg
               className="pointer-events-none absolute inset-0 z-0"
               width={w}
@@ -208,12 +148,13 @@ export default function JourneyBoard() {
                 const roadD = smoothPath([...layout.placed.map((p) => ({ x: p.x, y: p.y })), { x: layout.center, y: layout.goalY }]);
                 return (
                   <>
-                    <path d={roadD} stroke="#e7ddc8" strokeWidth={30} strokeLinecap="round" strokeLinejoin="round" />
-                    <path d={roadD} stroke="#f4eede" strokeWidth={23} strokeLinecap="round" strokeLinejoin="round" />
+                    {/* 細い線（道はやめてシンプルに） */}
+                    <path d={roadD} stroke="#e2ddce" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" />
+                    {/* 進んだぶんだけ緑に */}
                     <path
                       d={roadD}
-                      stroke="url(#roadGrad)"
-                      strokeWidth={23}
+                      stroke="#1fc866"
+                      strokeWidth={5}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       pathLength={100}
@@ -221,16 +162,9 @@ export default function JourneyBoard() {
                       strokeDashoffset={100 - pct}
                       style={{ transition: "stroke-dashoffset 0.8s ease" }}
                     />
-                    <path d={roadD} stroke="#ffffff" strokeWidth={3} strokeLinecap="round" strokeDasharray="1 16" opacity={0.9} />
                   </>
                 );
               })()}
-              <defs>
-                <linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#40dc7e" />
-                  <stop offset="1" stopColor="#12a854" />
-                </linearGradient>
-              </defs>
             </svg>
 
             {/* 章のバナー */}

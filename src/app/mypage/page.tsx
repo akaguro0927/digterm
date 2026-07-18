@@ -7,6 +7,7 @@ import { MODE_CONFIGS, type QuizMode } from "@/lib/quiz";
 import { Icon, type IconName } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
 import StreakBar from "@/components/StreakBar";
+import LevelCard from "@/components/LevelCard";
 import StudyCalendar from "@/components/StudyCalendar";
 import AdSlot from "@/components/AdSlot";
 import { usePlan } from "@/lib/plan";
@@ -124,8 +125,13 @@ export default function MyPage() {
         </div>
       )}
 
-      {/* ストリーク＋今日の目標 */}
+      {/* レベル・称号 */}
       <div className="mt-6">
+        <LevelCard />
+      </div>
+
+      {/* ストリーク＋今日の目標 */}
+      <div className="mt-4">
         <StreakBar />
       </div>
 

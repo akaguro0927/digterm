@@ -1268,6 +1268,156 @@ function InlineEditDemo() {
 }
 
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（ログイン・EC・通知 2026-07-18m） ----
+  "social-login": () => (
+    <div className="w-full max-w-xs space-y-2">
+      {[
+        ["Googleで続ける", "bg-white text-slate-700 ring-1 ring-slate-300"],
+        ["LINEで続ける", "bg-[#06c755] text-white"],
+        ["メールで続ける", "bg-slate-800 text-white"],
+      ].map(([t, cls]) => (
+        <button key={t} className={`w-full rounded-lg py-2.5 text-sm font-bold ${cls}`}>{t}</button>
+      ))}
+      <p className="text-center text-[10px] text-slate-400">SNSでサッとログイン＝SNSログイン</p>
+    </div>
+  ),
+  "or-divider": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-slate-200" />
+        <span className="text-xs font-bold text-slate-400">または</span>
+        <span className="h-px flex-1 bg-slate-200" />
+      </div>
+      <p className="mt-3 text-center text-[10px] text-slate-400">文字を挟んだ区切り＝区切りテキスト</p>
+    </div>
+  ),
+  "newsletter-signup": () => (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-xs font-bold text-slate-700">最新情報を受け取る</p>
+      <div className="mt-2 flex gap-1">
+        <input placeholder="you@example.com" className="w-full rounded-lg bg-white px-3 py-2 text-sm outline-none ring-1 ring-slate-300" />
+        <button className="shrink-0 rounded-lg bg-brand-500 px-4 text-sm font-bold text-white">登録</button>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">メール登録の1行フォーム＝メール登録フォーム</p>
+    </div>
+  ),
+  "logo-cloud": () => (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-[10px] font-bold text-slate-400">導入企業</p>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-3 opacity-60">
+        {["ACME", "Globex", "Umbrella", "Soylent"].map((n) => (
+          <span key={n} className="font-display text-sm font-extrabold text-slate-500">{n}</span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">ロゴを並べて信頼感＝ロゴ一覧</p>
+    </div>
+  ),
+  "rating-summary": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-3 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <div className="text-center">
+          <p className="font-display text-2xl font-extrabold text-slate-800">4.5</p>
+          <p className="text-[10px] text-amber-400">★★★★☆</p>
+        </div>
+        <div className="flex-1 space-y-1">
+          {[
+            ["5", 70],
+            ["4", 20],
+            ["3", 6],
+            ["2", 2],
+            ["1", 2],
+          ].map(([s, w]) => (
+            <div key={s as string} className="flex items-center gap-1.5 text-[9px] text-slate-400">
+              <span>{s}</span>
+              <div className="h-1.5 flex-1 rounded-full bg-slate-100">
+                <div className="h-full rounded-full bg-amber-400" style={{ width: `${w}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">平均と星ごとの件数＝評価の内訳</p>
+    </div>
+  ),
+  "cart-summary": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-lg bg-white p-3 text-xs shadow-sm ring-1 ring-slate-200">
+        {[
+          ["小計", "¥1,800"],
+          ["送料", "¥500"],
+        ].map(([k, v]) => (
+          <div key={k} className="flex justify-between py-1 text-slate-500">
+            <span>{k}</span>
+            <span>{v}</span>
+          </div>
+        ))}
+        <div className="mt-1 flex justify-between border-t border-slate-100 pt-2 font-bold text-slate-800">
+          <span>合計</span>
+          <span className="text-brand-600">¥2,300</span>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">支払い前の金額まとめ＝カート小計</p>
+    </div>
+  ),
+  "avatar-upload": () => (
+    <div className="text-center">
+      <div className="relative mx-auto h-16 w-16">
+        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-600">
+          <Icon name="user" className="h-8 w-8" />
+        </span>
+        <span className="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 text-white ring-2 ring-white">
+          <Icon name="image" className="h-3.5 w-3.5" />
+        </span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">押して画像を差し替え＝アバター変更</p>
+    </div>
+  ),
+  "notification-panel": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-xl bg-white p-1.5 shadow-lg ring-1 ring-slate-200">
+        <p className="px-2 py-1 text-[10px] font-bold text-slate-400">通知</p>
+        {[
+          ["いいねが付きました", "3分前", true],
+          ["新しいレッスンが追加", "1時間前", false],
+        ].map(([t, time, unread]) => (
+          <div key={t as string} className={`flex items-start gap-2 rounded-lg px-2 py-2 ${unread ? "bg-brand-50" : ""}`}>
+            <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${unread ? "bg-brand-500" : "bg-transparent"}`} />
+            <div className="min-w-0">
+              <p className="text-xs text-slate-700">{t}</p>
+              <p className="text-[9px] text-slate-400">{time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">お知らせを一覧で＝通知パネル</p>
+    </div>
+  ),
+  "metric-row": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-2">
+        {[
+          ["ユーザー", "1,240"],
+          ["売上", "¥52k"],
+          ["継続率", "82%"],
+        ].map(([l, v]) => (
+          <div key={l as string} className="flex-1 rounded-lg bg-white p-2.5 text-center shadow-sm ring-1 ring-slate-200">
+            <p className="text-[9px] text-slate-400">{l}</p>
+            <p className="font-display text-sm font-extrabold text-slate-800">{v}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">数値カードを横並び＝指標カード列</p>
+    </div>
+  ),
+  "coupon-input": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-1">
+        <input placeholder="クーポンコード" className="w-full rounded-lg bg-white px-3 py-2 text-sm uppercase tracking-wide outline-none ring-1 ring-slate-300" />
+        <button className="shrink-0 rounded-lg bg-slate-800 px-4 text-sm font-bold text-white">適用</button>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">割引コードを入れて適用＝クーポン入力</p>
+    </div>
+  ),
   // ---- UI部品 追加（グラフ・状態・編集 2026-07-18l） ----
   checklist: () => <ChecklistDemo />,
   "inline-edit": () => <InlineEditDemo />,

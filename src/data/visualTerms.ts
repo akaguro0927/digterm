@@ -77,6 +77,9 @@ export const VISUAL_SLUGS: readonly string[] = [
   // 2026-07-18l グラフ・状態・編集（+10）
   "area-chart", "heatmap", "checklist", "map-pin", "skeleton-loader",
   "maintenance-page", "currency-input", "onboarding-slides", "inline-edit", "list-group",
+  // 2026-07-18m ログイン・EC・通知（+10）
+  "social-login", "or-divider", "newsletter-signup", "logo-cloud", "rating-summary",
+  "cart-summary", "avatar-upload", "notification-panel", "metric-row", "coupon-input",
 ];
 
 const set = new Set(VISUAL_SLUGS);

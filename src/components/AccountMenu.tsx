@@ -51,20 +51,28 @@ export default function AccountMenu() {
     router.push("/");
   };
 
-  const openHelp = () => {
+  // 会員解約は画面遷移せず、その場で確認だけ（デモはプランを無料に戻す）。
+  const cancelMembership = () => {
     setOpen(false);
-    window.dispatchEvent(new Event("cocre:open-tutorial"));
+    if (plan !== "vip") {
+      window.alert("いまは無料プランです。");
+      return;
+    }
+    if (window.confirm("VIP会員を解約しますか？（次の更新日まで機能は使えます）")) {
+      setPlan("free");
+      window.alert("解約しました。");
+    }
   };
 
   const linkItems: { icon: IconName; label: string; href: string }[] = [
     { icon: "user", label: "プロフィール編集", href: "/profile" },
+    { icon: "message", label: "ヘルプ・使い方", href: "/help" },
     { icon: "mail", label: "お問い合わせ", href: "/contact" },
     { icon: "trophy", label: "会員プラン", href: "/vip" },
   ];
   const actionItems: { icon: IconName; label: string; onClick: () => void }[] = [
     { icon: "credit-card", label: "支払方法の変更", onClick: openPortal },
-    { icon: "shield", label: "会員を解約", onClick: openPortal },
-    { icon: "info", label: "使い方をもう一度", onClick: openHelp },
+    { icon: "shield", label: "会員を解約", onClick: cancelMembership },
   ];
 
   return (

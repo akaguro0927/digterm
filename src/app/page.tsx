@@ -107,6 +107,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 体験セクション: さわって覚える（ヒーロー直後に配置） */}
+      <section className="border-y border-slate-200/70 bg-white py-14">
+        <div className="mx-auto max-w-5xl px-4">
+          <Reveal>
+            <div className="text-center">
+              <p className="font-display text-xs font-bold tracking-widest text-brand-600">TRY IT</p>
+              <h2 className="font-display mt-2 text-2xl font-extrabold sm:text-3xl">読むだけじゃない。さわって覚える。</h2>
+              <p className="mt-2 text-sm text-slate-500">
+                下のUIは説明画像ではなく、本物です。実際に押して動きを確かめてみてください。
+              </p>
+            </div>
+          </Reveal>
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {["modal", "toast", "accordion"].map((slug, i) => {
+              const t = getTerm(slug)!;
+              return (
+                <Reveal key={slug} delay={i * 110}>
+                  <div className="flex h-full flex-col">
+                    <LiveExample slug={t.slug} nameJa={t.nameJa} nameEn={t.nameEn} category={t.category} />
+                    <Link
+                      href={`/zukan/${t.slug}`}
+                      className="group mt-3 flex items-center justify-between rounded-2xl bg-[#faf8f2] px-4 py-3 ring-1 ring-slate-200/70 transition hover:bg-brand-50"
+                    >
+                      <span>
+                        <span className="font-display text-sm font-extrabold">{t.nameJa}</span>
+                        <span className="ml-2 text-[11px] uppercase tracking-wide text-slate-400">{t.nameEn}</span>
+                      </span>
+                      <span className="flex items-center gap-1 text-xs font-bold text-brand-600">
+                        解説を読む
+                        <Icon name="arrow-right" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
+                      </span>
+                    </Link>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* はじめての人向け: 学習の道のり */}
       <section className="mx-auto max-w-5xl px-4 pt-14">
         <Reveal>
@@ -146,76 +186,35 @@ export default function Home() {
         </Reveal>
       </section>
 
-      {/* 収録カテゴリ */}
-      <section className="mx-auto max-w-5xl px-4 py-16">
+      {/* 収録カテゴリ（辞書の索引風） */}
+      <section className="mx-auto max-w-3xl px-4 py-16">
         <Reveal>
-          <h2 className="font-display text-center text-2xl font-extrabold">
-            現在 <span className="text-brand-600">{visualCount}</span> 語を収録
+          <p className="font-display text-center text-xs font-bold tracking-widest text-brand-500">INDEX ・ 索引</p>
+          <h2 className="font-display mt-1 text-center text-2xl font-extrabold sm:text-3xl">
+            ぜんぶで <span className="text-brand-600">{visualCount}</span> 語
           </h2>
-          <p className="mt-2 text-center text-sm text-slate-500">気になるカテゴリから覗いてみよう</p>
+          <p className="mt-2 text-center text-sm text-slate-500">調べたいカテゴリから引いてみよう</p>
         </Reveal>
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mt-8 overflow-hidden rounded-3xl border-2 border-[#e7ddc8] bg-[#fdfbf5] shadow-[0_4px_0_#e7ddc8]">
           {categories.map((c, i) => (
-            <Reveal key={c.key} delay={i * 90}>
-              {/* 押せるボタンだと一目でわかる立体タイル */}
+            <Reveal key={c.key} delay={i * 70}>
               <Link
                 href={`/zukan?category=${c.key}`}
-                className="group block rounded-3xl border-2 border-[#e7ddc8] bg-white p-5 text-center shadow-[0_4px_0_#e7ddc8] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_6px_0_#e7ddc8] active:translate-y-1 active:shadow-none"
+                className="group flex items-center gap-4 border-b border-[#eee5d3] px-5 py-4 transition last:border-b-0 hover:bg-white"
               >
-                <span
-                  className={`mx-auto flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${c.tile} ${c.tileText}`}
-                >
-                  <Icon name={c.icon} className="h-6 w-6" />
+                <span className="font-mono text-[11px] font-bold text-slate-300">{String(i + 1).padStart(2, "0")}</span>
+                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${c.tile} ${c.tileText}`}>
+                  <Icon name={c.icon} className="h-5 w-5" />
                 </span>
-                <p className="font-display mt-3 text-3xl font-extrabold text-slate-800">{c.count}</p>
-                <p className="mt-0.5 text-sm font-medium text-slate-500">{c.label}</p>
-                <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-bold text-brand-600 transition group-hover:bg-brand-100">
-                  のぞく
-                  <Icon name="arrow-right" className="h-3 w-3" strokeWidth={2.5} />
+                <span className="min-w-0 flex-1">
+                  <span className="font-display block font-extrabold text-slate-800">{c.label}</span>
+                  <span className="text-xs text-slate-400">{c.count} 語収録</span>
                 </span>
+                <span className="font-display hidden text-sm font-bold text-brand-600 sm:inline">引く</span>
+                <Icon name="chevron-right" className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-brand-500" />
               </Link>
             </Reveal>
           ))}
-        </div>
-      </section>
-
-      {/* 体験セクション: 実際に触れるデモ */}
-      <section className="border-y border-slate-200/70 bg-white py-16">
-        <div className="mx-auto max-w-5xl px-4">
-          <Reveal>
-            <div className="text-center">
-              <p className="font-display text-xs font-bold tracking-widest text-brand-600">TRY IT</p>
-              <h2 className="font-display mt-2 text-2xl font-extrabold">読むだけじゃない。さわって覚える。</h2>
-              <p className="mt-2 text-sm text-slate-500">
-                下のUIは説明画像ではなく、本物です。実際に押して動きを確かめてみてください。
-              </p>
-            </div>
-          </Reveal>
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {["modal", "toast", "accordion"].map((slug, i) => {
-              const t = getTerm(slug)!;
-              return (
-                <Reveal key={slug} delay={i * 110}>
-                  <div className="flex h-full flex-col">
-                    <LiveExample slug={t.slug} nameJa={t.nameJa} nameEn={t.nameEn} category={t.category} />
-                    <Link
-                      href={`/zukan/${t.slug}`}
-                      className="group mt-3 flex items-center justify-between rounded-2xl bg-[#faf8f2] px-4 py-3 ring-1 ring-slate-200/70 transition hover:bg-brand-50"
-                    >
-                      <span>
-                        <span className="font-display text-sm font-extrabold">{t.nameJa}</span>
-                        <span className="ml-2 text-[11px] uppercase tracking-wide text-slate-400">{t.nameEn}</span>
-                      </span>
-                      <span className="flex items-center gap-1 text-xs font-bold text-brand-600">
-                        解説を読む
-                        <Icon name="arrow-right" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
-                      </span>
-                    </Link>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
         </div>
       </section>
 

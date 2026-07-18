@@ -46,6 +46,36 @@ export default function LearnPage() {
         <JourneyBoard />
       </div>
 
+      {/* 腕試し・復習（章末テストの通し受験＋弱点復習） */}
+      <div className="mx-auto mt-8 max-w-2xl px-4">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/learn/marathon"
+            className="card-pop flex items-center gap-3 p-4 transition hover:-translate-y-0.5"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <Icon name="trophy" className="h-5 w-5" />
+            </span>
+            <span>
+              <span className="font-display block text-sm font-extrabold text-slate-800">通し復習（腕試し）</span>
+              <span className="block text-xs text-slate-400">章末テストをまとめて連続でチャレンジ</span>
+            </span>
+          </Link>
+          <Link
+            href="/learn/review"
+            className="card-pop flex items-center gap-3 p-4 transition hover:-translate-y-0.5"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
+              <Icon name="flame" className="h-5 w-5" />
+            </span>
+            <span>
+              <span className="font-display block text-sm font-extrabold text-slate-800">弱点復習</span>
+              <span className="block text-xs text-slate-400">間違えた問題だけ、もう一度</span>
+            </span>
+          </Link>
+        </div>
+      </div>
+
       {/* 賞（狭い列）。※旧「図鑑の必修コース」は各レッスン末尾の“図鑑で実物を見る”に吸収済み。 */}
       <div className="mx-auto max-w-2xl px-4">
         <AwardShelf />

@@ -1210,7 +1210,153 @@ function CopyButtonDemo() {
   );
 }
 
+function ColorSwatchDemo() {
+  const cols = ["#0f172a", "#ef4444", "#3b82f6", "#22c55e", "#f59e0b"];
+  const [c, setC] = useState(cols[2]);
+  return (
+    <div className="text-center">
+      <div className="flex justify-center gap-2">
+        {cols.map((x) => (
+          <button key={x} onClick={() => setC(x)} className={`h-8 w-8 rounded-lg ring-2 ring-offset-2 ${c === x ? "ring-slate-400" : "ring-transparent"}`} style={{ background: x }} />
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">色の候補を並べる＝色見本</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（グラフ・LP・状態 2026-07-18k） ----
+  "color-swatch": () => <ColorSwatchDemo />,
+  "line-chart": () => (
+    <div className="w-full max-w-xs">
+      <svg viewBox="0 0 120 50" className="w-full">
+        <polyline points="4,40 24,28 44,34 64,18 84,24 104,8 116,14" fill="none" stroke="#1fc866" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        {[[4, 40], [24, 28], [44, 34], [64, 18], [84, 24], [104, 8], [116, 14]].map(([x, y], i) => (
+          <circle key={i} cx={x} cy={y} r="2" fill="#1fc866" />
+        ))}
+      </svg>
+      <p className="mt-1 text-center text-[10px] text-slate-400">推移を線で見せる＝折れ線グラフ</p>
+    </div>
+  ),
+  sparkline: () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-3 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <div>
+          <p className="text-[10px] text-slate-400">アクセス</p>
+          <p className="font-display text-lg font-extrabold text-slate-800">1,240</p>
+        </div>
+        <svg viewBox="0 0 80 24" className="h-6 flex-1">
+          <polyline points="2,18 14,14 26,16 38,8 50,12 62,4 78,9" fill="none" stroke="#1fc866" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">数値の隣に置く極小グラフ＝スパークライン</p>
+    </div>
+  ),
+  "comparison-table": () => (
+    <div className="w-full max-w-xs">
+      <div className="overflow-hidden rounded-lg bg-white text-xs shadow-sm ring-1 ring-slate-200">
+        <div className="grid grid-cols-3 border-b border-slate-100 bg-slate-50 text-center font-bold text-slate-500">
+          <span className="px-2 py-1.5 text-left">機能</span>
+          <span className="px-2 py-1.5">無料</span>
+          <span className="px-2 py-1.5 text-brand-600">VIP</span>
+        </div>
+        {[
+          ["図鑑", true, true],
+          ["AI無制限", false, true],
+          ["広告なし", false, true],
+        ].map(([f, a, b]) => (
+          <div key={f as string} className="grid grid-cols-3 border-b border-slate-50 text-center last:border-0">
+            <span className="px-2 py-1.5 text-left text-slate-600">{f}</span>
+            <span className="px-2 py-1.5">{a ? <Icon name="check" className="mx-auto h-3.5 w-3.5 text-emerald-500" strokeWidth={3} /> : <span className="text-slate-300">−</span>}</span>
+            <span className="px-2 py-1.5">{b ? <Icon name="check" className="mx-auto h-3.5 w-3.5 text-brand-600" strokeWidth={3} /> : <span className="text-slate-300">−</span>}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">機能ごとに○×で比べる＝比較表</p>
+    </div>
+  ),
+  "feature-list": () => (
+    <div className="w-full max-w-xs">
+      <div className="space-y-1.5 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        {["広告なしで快適", "AIでしらべる無制限", "全レッスンが開放", "弱点復習が使える"].map((f) => (
+          <div key={f} className="flex items-center gap-2 text-sm text-slate-600">
+            <Icon name="check" className="h-4 w-4 shrink-0 text-brand-500" strokeWidth={3} />
+            {f}
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">チェックで特徴を列挙＝機能リスト</p>
+    </div>
+  ),
+  "coach-mark": () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="mx-auto inline-block">
+        <div className="rounded-lg bg-slate-800 px-3 py-2 text-[11px] font-medium text-white shadow-lg">ここから探せます</div>
+        <div className="mx-auto h-0 w-0 border-x-[6px] border-t-[6px] border-x-transparent border-t-slate-800" />
+        <span className="mt-1 inline-block rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white ring-4 ring-brand-200">検索</span>
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">対象を指して使い方を案内＝コーチマーク</p>
+    </div>
+  ),
+  "filter-panel": () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <p className="text-[11px] font-bold text-slate-700">絞り込み</p>
+        <div className="mt-2">
+          <p className="text-[9px] font-bold text-slate-400">カテゴリ</p>
+          {["UI部品", "レイアウト"].map((c) => (
+            <label key={c} className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
+              <span className="h-3.5 w-3.5 rounded border border-slate-300" />
+              {c}
+            </label>
+          ))}
+        </div>
+        <div className="mt-2">
+          <p className="text-[9px] font-bold text-slate-400">レベル</p>
+          {["初級", "中級"].map((c) => (
+            <label key={c} className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
+              <span className={`h-3.5 w-3.5 rounded border ${c === "初級" ? "border-brand-500 bg-brand-500" : "border-slate-300"}`} />
+              {c}
+            </label>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">条件で結果を絞る＝絞り込みパネル</p>
+    </div>
+  ),
+  "back-button": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <button className="inline-flex items-center gap-1 text-sm font-bold text-slate-500">
+          <Icon name="chevron-left" className="h-4 w-4" />
+          戻る
+        </button>
+        <div className="mt-2 h-2 w-1/2 rounded bg-slate-100" />
+        <div className="mt-1.5 h-2 rounded bg-slate-100" />
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">前の画面へ戻る＝戻るボタン</p>
+    </div>
+  ),
+  "offline-banner": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center justify-center gap-2 rounded-lg bg-slate-700 px-3 py-2 text-xs font-bold text-white">
+        <span className="h-2 w-2 rounded-full bg-rose-400" />
+        オフラインです。接続を確認してください
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">接続なしを知らせる帯＝オフライン表示</p>
+    </div>
+  ),
+  "tag-cloud": () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+        {[["CSS", 22], ["React", 16], ["初心者", 14], ["flexbox", 18], ["UI", 12], ["デザイン", 15], ["JS", 20]].map(([t, s]) => (
+          <span key={t as string} className="font-bold text-brand-600" style={{ fontSize: `${s}px`, opacity: 0.5 + (s as number) / 44 }}>{t}</span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">人気ほど大きく＝タグクラウド</p>
+    </div>
+  ),
   // ---- UI部品 追加（LP・メディア 2026-07-18j） ----
   "quantity-stepper": () => <QuantityDemo />,
   "password-strength": () => <PasswordStrengthDemo />,

@@ -71,6 +71,9 @@ export const VISUAL_SLUGS: readonly string[] = [
   // 2026-07-18j LP・メディア（+10）
   "quantity-stepper", "pricing-table", "testimonial", "social-icons", "loading-dots",
   "password-strength", "copy-button", "audio-player", "table-of-contents", "reading-progress",
+  // 2026-07-18k グラフ・LP・状態（+10）
+  "line-chart", "sparkline", "comparison-table", "feature-list", "coach-mark",
+  "filter-panel", "back-button", "color-swatch", "offline-banner", "tag-cloud",
 ];
 
 const set = new Set(VISUAL_SLUGS);

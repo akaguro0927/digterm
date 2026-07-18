@@ -68,6 +68,9 @@ export const VISUAL_SLUGS: readonly string[] = [
   // 2026-07-18i チャット・情報表示（+10）
   "chat-bubble", "typing-indicator", "cookie-banner", "announcement-bar", "dark-mode-toggle",
   "relative-time", "code-inline", "highlight-mark", "key-value-list", "view-count",
+  // 2026-07-18j LP・メディア（+10）
+  "quantity-stepper", "pricing-table", "testimonial", "social-icons", "loading-dots",
+  "password-strength", "copy-button", "audio-player", "table-of-contents", "reading-progress",
 ];
 
 const set = new Set(VISUAL_SLUGS);

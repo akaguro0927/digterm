@@ -1162,7 +1162,164 @@ function DarkModeToggleDemo() {
   );
 }
 
+function QuantityDemo() {
+  const [n, setN] = useState(1);
+  return (
+    <div className="text-center">
+      <div className="inline-flex items-center rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <button onClick={() => setN(Math.max(1, n - 1))} className="px-3 py-2 text-lg font-bold text-slate-500 hover:bg-slate-50">−</button>
+        <span className="font-display w-10 text-center font-extrabold text-slate-800">{n}</span>
+        <button onClick={() => setN(n + 1)} className="px-3 py-2 text-lg font-bold text-slate-500 hover:bg-slate-50">＋</button>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">−と＋で個数を増減＝数量ステッパー</p>
+    </div>
+  );
+}
+
+function PasswordStrengthDemo() {
+  const [v, setV] = useState("abc");
+  const score = (v.length >= 8 ? 1 : 0) + (/[A-Z]/.test(v) ? 1 : 0) + (/[0-9]/.test(v) ? 1 : 0) + (/[^A-Za-z0-9]/.test(v) ? 1 : 0);
+  const labels = ["弱い", "弱い", "普通", "強い", "最強"];
+  const colors = ["bg-rose-400", "bg-rose-400", "bg-amber-400", "bg-emerald-400", "bg-emerald-500"];
+  return (
+    <div className="w-full max-w-xs">
+      <input value={v} onChange={(e) => setV(e.target.value)} className="w-full rounded-lg bg-white px-3 py-2 text-sm outline-none ring-1 ring-slate-300 focus:ring-2 focus:ring-blue-500" />
+      <div className="mt-2 flex gap-1">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className={`h-1.5 flex-1 rounded-full ${i < score ? colors[score] : "bg-slate-200"}`} />
+        ))}
+      </div>
+      <p className="mt-1 text-right text-[11px] font-bold text-slate-500">{v ? labels[score] : ""}</p>
+      <p className="mt-1 text-center text-[10px] text-slate-400">安全度を色バーで＝パスワード強度</p>
+    </div>
+  );
+}
+
+function CopyButtonDemo() {
+  const [done, setDone] = useState(false);
+  return (
+    <div className="text-center">
+      <div className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2">
+        <span className="font-mono text-xs text-slate-600">COCRE-AB12CD</span>
+        <button onClick={() => { setDone(true); setTimeout(() => setDone(false), 1200); }} className="rounded bg-white px-2 py-1 text-[10px] font-bold text-brand-600 ring-1 ring-slate-200">
+          {done ? "コピー済" : "コピー"}
+        </button>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">押すとコピー＆通知＝コピーボタン</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（LP・メディア 2026-07-18j） ----
+  "quantity-stepper": () => <QuantityDemo />,
+  "password-strength": () => <PasswordStrengthDemo />,
+  "copy-button": () => <CopyButtonDemo />,
+  "pricing-table": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-2">
+        <div className="flex-1 rounded-xl border-2 border-slate-200 bg-white p-3 text-center">
+          <p className="text-xs font-bold text-slate-500">無料</p>
+          <p className="font-display text-xl font-extrabold text-slate-800">¥0</p>
+          <p className="mt-1 text-[10px] text-slate-400">図鑑・問題集</p>
+        </div>
+        <div className="relative flex-1 rounded-xl border-2 border-brand-500 bg-brand-50 p-3 text-center">
+          <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-brand-500 px-2 py-0.5 text-[8px] font-bold text-white">人気</span>
+          <p className="text-xs font-bold text-brand-600">VIP</p>
+          <p className="font-display text-xl font-extrabold text-slate-800">¥480<span className="text-[10px]">/月</span></p>
+          <p className="mt-1 text-[10px] text-slate-400">AI無制限・広告なし</p>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">プランを並べて比べる＝料金表</p>
+    </div>
+  ),
+  testimonial: () => (
+    <div className="w-full max-w-xs rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+      <div className="flex items-center gap-0.5 text-sm text-amber-400">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <span key={i}>★</span>
+        ))}
+      </div>
+      <p className="mt-2 text-xs leading-relaxed text-slate-600">「名前がわからない部品もすぐ見つかって、勉強がはかどりました！」</p>
+      <div className="mt-3 flex items-center gap-2">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-brand-600">
+          <Icon name="user" className="h-4 w-4" />
+        </span>
+        <span className="text-[11px] font-bold text-slate-500">たろうさん</span>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">利用者の声を紹介＝口コミカード</p>
+    </div>
+  ),
+  "social-icons": () => (
+    <div className="text-center">
+      <div className="flex justify-center gap-2">
+        {[
+          ["X", "bg-slate-900"],
+          ["L", "bg-[#06c755]"],
+          ["I", "bg-gradient-to-br from-fuchsia-500 to-amber-400"],
+          ["@", "bg-blue-500"],
+        ].map(([t, c]) => (
+          <span key={t as string} className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-white ${c}`}>{t}</span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">SNSへ飛ぶアイコン列＝SNSアイコン</p>
+    </div>
+  ),
+  "loading-dots": () => (
+    <div className="text-center">
+      <div className="flex justify-center gap-1.5">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="h-3 w-3 animate-bounce rounded-full bg-brand-500" style={{ animationDelay: `${i * 0.15}s` }} />
+        ))}
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">点3つで処理中＝ローディングドット</p>
+    </div>
+  ),
+  "audio-player": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-3 rounded-full bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-500 text-white">▶</span>
+        <div className="min-w-0 flex-1">
+          <div className="h-1.5 rounded-full bg-slate-100">
+            <div className="h-full w-1/3 rounded-full bg-brand-500" />
+          </div>
+          <div className="mt-1 flex justify-between text-[9px] text-slate-400">
+            <span>0:42</span>
+            <span>2:15</span>
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">再生バー付きで音声＝音声プレーヤー</p>
+    </div>
+  ),
+  "table-of-contents": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <p className="mb-1.5 text-[10px] font-bold text-slate-400">目次</p>
+        {[
+          ["1. はじめに", false],
+          ["2. 使い方", true],
+          ["3. よくある質問", false],
+        ].map(([t, active]) => (
+          <div key={t as string} className={`border-l-2 py-1 pl-2 text-xs ${active ? "border-brand-500 font-bold text-brand-600" : "border-slate-200 text-slate-500"}`}>{t}</div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">見出し一覧で飛べる＝目次</p>
+    </div>
+  ),
+  "reading-progress": () => (
+    <div className="w-full max-w-xs">
+      <div className="h-1 rounded-full bg-slate-100">
+        <div className="h-full w-3/5 rounded-full bg-brand-500" />
+      </div>
+      <div className="mt-2 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        {[100, 90, 95, 80, 60].map((w, i) => (
+          <div key={i} className="mb-1.5 h-2 rounded bg-slate-100" style={{ width: `${w}%` }} />
+        ))}
+      </div>
+      <p className="mt-1 text-center text-[10px] text-slate-400">上部バーで読了度＝読書進捗バー</p>
+    </div>
+  ),
   // ---- UI部品 追加（チャット・情報表示 2026-07-18i） ----
   "dark-mode-toggle": () => <DarkModeToggleDemo />,
   "chat-bubble": () => (

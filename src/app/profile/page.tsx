@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { useProfile, saveProfile, type Profile } from "@/lib/profile";
 import { useAuth } from "@/lib/supabase/AuthProvider";
+import { useSeen, useClearedNodes, useQuizAttempts, useFavorites } from "@/lib/userStore";
+import { computeXp, levelInfo } from "@/lib/level";
+import { levelProgressList } from "@/data/journey";
 
 const CERT_SAMPLES = ["基本情報技術者", "応用情報技術者", "ITパスポート", "AWS SAA", "ウェブデザイン技能士"];
 
@@ -13,6 +16,15 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const [form, setForm] = useState<Profile>(saved);
   const [done, setDone] = useState(false);
+
+  // 学習の進捗と連動した Lv・称号・コース制覇（level.ts と同じ算出。保存なし）
+  const seen = useSeen();
+  const cleared = useClearedNodes();
+  const attempts = useQuizAttempts();
+  const favs = useFavorites();
+  const quizCorrect = attempts.reduce((s, a) => s + a.score, 0);
+  const info = levelInfo(computeXp(seen.length, cleared.length, quizCorrect, favs.length));
+  const masteredCourses = levelProgressList(cleared).filter((c) => c.total > 0 && c.done === c.total);
 
   useEffect(() => {
     setForm(saved);
@@ -60,11 +72,27 @@ export default function ProfilePage() {
           </span>
           <div className="min-w-0">
             <p className="font-display truncate text-xl font-extrabold">{form.displayName.trim() || "名前未設定"}</p>
-            <p className="mt-0.5 flex items-center gap-2 text-xs text-brand-100">
+            <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-brand-100">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 font-bold">
+                <Icon name="zap" className="h-3 w-3" />
+                Lv{info.level}・{info.title}
+              </span>
               {form.experienceYears ? <span className="rounded-full bg-white/20 px-2 py-0.5 font-bold">IT歴 {form.experienceYears}年</span> : <span className="text-brand-200/80">経験年数 未設定</span>}
             </p>
           </div>
         </div>
+
+        {/* 学習の道のり制覇バッジ（コースを全クリアで点灯） */}
+        {masteredCourses.length > 0 && (
+          <div className="relative mt-3 flex flex-wrap gap-1.5">
+            {masteredCourses.map((c) => (
+              <span key={c.level} className="inline-flex items-center gap-1 rounded-full bg-amber-300/25 px-2.5 py-1 text-[11px] font-bold ring-1 ring-amber-200/40">
+                <Icon name="trophy" className="h-3 w-3" />
+                {c.label}制覇
+              </span>
+            ))}
+          </div>
+        )}
         {form.bio.trim() && <p className="relative mt-3 text-sm leading-relaxed text-brand-50">{form.bio}</p>}
         {certList.length > 0 && (
           <div className="relative mt-3 flex flex-wrap gap-1.5">

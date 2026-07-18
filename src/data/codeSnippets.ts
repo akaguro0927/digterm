@@ -380,4 +380,138 @@ blockquote {
   <button>週</button>
   <button>月</button>
 </div>`,
+
+  select: `<style>
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.field select {
+  padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff;
+}
+</style>
+
+<label class="field">
+  都道府県
+  <select>
+    <option>東京都</option>
+    <option>大阪府</option>
+    <option>福岡県</option>
+  </select>
+</label>`,
+
+  "radio-button": `<style>
+.radios label { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.radios input { width: 18px; height: 18px; accent-color: #1fc866; }
+</style>
+
+<div class="radios">
+  <label><input type="radio" name="plan" checked>無料プラン</label>
+  <label><input type="radio" name="plan">VIPプラン</label>
+</div>`,
+
+  "range-slider": `<style>
+.range { width: 220px; accent-color: #1fc866; }
+</style>
+
+<input class="range" type="range" min="0" max="100" value="60">`,
+
+  banner: `<style>
+.banner {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: #1fc866; color: #fff; font-size: 14px;
+}
+.banner button {
+  border: none; background: rgba(255,255,255,.2); color: #fff;
+  padding: 6px 12px; border-radius: 6px; cursor: pointer;
+}
+</style>
+
+<div class="banner">
+  <span>いまなら初月無料キャンペーン中！</span>
+  <button>詳しく</button>
+</div>`,
+
+  "price-tag": `<style>
+.price .cur { font-size: 14px; color: #6b7280; }
+.price .num { font-size: 32px; font-weight: bold; color: #111827; }
+.price .unit { font-size: 13px; color: #6b7280; }
+.price .old { font-size: 13px; color: #9ca3af; text-decoration: line-through; margin-left: 6px; }
+</style>
+
+<div class="price">
+  <span class="cur">¥</span><span class="num">980</span><span class="unit">/月</span>
+  <span class="old">¥1,480</span>
+</div>`,
+
+  kbd: `<style>
+kbd {
+  font-family: monospace; font-size: 13px;
+  background: #f3f4f6; border: 1px solid #d1d5db; border-bottom-width: 2px;
+  border-radius: 6px; padding: 2px 7px;
+}
+</style>
+
+保存するには <kbd>Ctrl</kbd> + <kbd>S</kbd>`,
+
+  callout: `<style>
+.callout {
+  padding: 14px 16px; background: #eff6ff;
+  border-left: 4px solid #3b82f6; border-radius: 8px;
+  font-size: 14px; color: #1e3a8a;
+}
+</style>
+
+<div class="callout">
+  <strong>ヒント：</strong>ショートカットを使うと速く操作できます。
+</div>`,
+
+  "back-to-top": `<style>
+.totop {
+  position: fixed; right: 20px; bottom: 20px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #1fc866; color: #fff; border: none; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2); font-size: 18px;
+}
+</style>
+
+<a href="#top"><button class="totop">↑</button></a>`,
+
+  "close-button": `<style>
+.close {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: none; background: #f1f5f9; color: #475569;
+  font-size: 18px; cursor: pointer;
+}
+.close:hover { background: #e2e8f0; }
+</style>
+
+<button class="close" aria-label="閉じる">×</button>`,
+
+  "list-group": `<style>
+.list {
+  list-style: none; margin: 0; padding: 0; width: 220px;
+  border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;
+}
+.list li { padding: 12px 14px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+.list li:last-child { border-bottom: none; }
+</style>
+
+<ul class="list">
+  <li>プロフィール</li>
+  <li>お知らせ</li>
+  <li>設定</li>
+</ul>`,
+
+  "link-text": `<style>
+.link { color: #1fc866; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+</style>
+
+くわしくは <a class="link" href="#">こちら</a> をご覧ください。`,
+
+  heading: `<style>
+h1 { font-size: 28px; margin: 0 0 4px; color: #111827; }
+.lead { color: #6b7280; font-size: 14px; margin: 0; }
+</style>
+
+<h1>ページの見出し</h1>
+<p class="lead">補足のリード文がここに入ります。</p>`,
 };

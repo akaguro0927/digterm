@@ -99,6 +99,17 @@ create table if not exists public.subscriptions (
   current_period_end     timestamptz
 );
 
+-- ---------- 買い切り（lifetime）購入。正は Stripe。Webhookで追記 ----------
+create table if not exists public.purchases (
+  id                uuid primary key default gen_random_uuid(),
+  user_id           uuid not null references auth.users(id) on delete cascade,
+  stripe_session_id text unique,                 -- Checkout Session id（冪等キー）
+  product           text not null default 'lifetime',
+  status            text not null default 'paid' check (status in ('paid','refunded')),
+  purchased_at      timestamptz not null default now()
+);
+create index if not exists purchases_user_idx on public.purchases (user_id);
+
 -- ============================================================
 -- Row Level Security
 -- ============================================================
@@ -113,6 +124,7 @@ alter table public.quiz_results     enable row level security;
 alter table public.journey_progress enable row level security;
 alter table public.seen_terms       enable row level security;
 alter table public.subscriptions    enable row level security;
+alter table public.purchases        enable row level security;
 
 -- ポリシー（再実行OK：あれば消してから作り直す）
 -- 公開読み取り（カテゴリ・用語・画像）
@@ -137,6 +149,9 @@ create policy "own seen_terms"    on public.seen_terms    for all using (auth.ui
 -- サブスクは読み取りのみ（書き込みは service_role のWebhookが行う）
 drop policy if exists "read own subscription" on public.subscriptions;
 create policy "read own subscription" on public.subscriptions for select using (auth.uid() = user_id);
+-- 買い切りも読み取りのみ（書き込みは service_role のWebhookが行う）
+drop policy if exists "read own purchases" on public.purchases;
+create policy "read own purchases" on public.purchases for select using (auth.uid() = user_id);
 
 -- ============================================================
 -- 新規ユーザー登録時に profiles 行を自動作成

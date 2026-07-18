@@ -42,23 +42,24 @@ export default function VipPage() {
   const [busy, setBusy] = useState(false);
 
   // 申し込み: Stripe が設定済みなら Checkout へ、未設定ならデモ切替。
-  const startCheckout = async () => {
+  // plan="vip"（サブスク）/ "lifetime"（買い切り）で商品とモードを切り替える。
+  const startCheckout = async (targetPlan: "vip" | "lifetime") => {
     setBusy(true);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user?.email }),
+        body: JSON.stringify({ email: user?.email, userId: user?.id, plan: targetPlan }),
       });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url as string;
         return;
       }
-      // 未設定（demo）＝ローカルで VIP を有効化して体験
-      setPlan("vip");
+      // 未設定（demo）＝ローカルでプランを有効化して体験
+      setPlan(targetPlan);
     } catch {
-      setPlan("vip");
+      setPlan(targetPlan);
     } finally {
       setBusy(false);
     }
@@ -124,7 +125,7 @@ export default function VipPage() {
               <p className="mt-1 text-xs text-slate-500">年額なら {yen(PRICE.yearly)}（約2.7ヶ月分お得）</p>
               <p className="mt-3 text-xs text-slate-500">全コース＋弱点復習＋<strong>AI無制限</strong>＋広告なし。いつでも解約OK。</p>
               <button
-                onClick={startCheckout}
+                onClick={() => startCheckout("vip")}
                 disabled={busy}
                 className="btn-3d font-display mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-extrabold text-white disabled:opacity-50"
                 style={{ ["--edge" as string]: "#b45309" }}
@@ -145,12 +146,13 @@ export default function VipPage() {
               <p className="mt-1 text-xs text-slate-500">一度きりの支払い・月額なし</p>
               <p className="mt-3 text-xs text-slate-500">中級・上級コースを<strong>ずっと閲覧</strong>＋広告なし。※AI無制限は含みません。</p>
               <button
-                onClick={() => setPlan("lifetime")}
-                className="btn-3d font-display mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-extrabold text-white"
+                onClick={() => startCheckout("lifetime")}
+                disabled={busy}
+                className="btn-3d font-display mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-extrabold text-white disabled:opacity-50"
                 style={{ ["--edge" as string]: "#12a854" }}
               >
                 <Icon name="book-open" className="h-4 w-4" />
-                買い切りで手に入れる
+                {busy ? "準備中…" : "買い切りで手に入れる"}
               </button>
             </div>
           </div>

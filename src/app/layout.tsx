@@ -10,6 +10,7 @@ import AwardCelebration from "@/components/AwardCelebration";
 import HelpButton from "@/components/HelpButton";
 import AuthProvider from "@/lib/supabase/AuthProvider";
 import SupabaseSync from "@/lib/supabase/SupabaseSync";
+import PlanSync from "@/lib/plan/PlanSync";
 import MainNav from "@/components/MainNav";
 
 const noto = Noto_Sans_JP({
@@ -54,6 +55,7 @@ export default function RootLayout({
         <AwardCelebration />
         <AuthProvider>
         <SupabaseSync />
+        <PlanSync />
         <header className="sticky top-0 z-50 border-b border-slate-200/60 bg-white/85 backdrop-blur-md">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5">
             <Link href="/" className="group flex shrink-0 items-center gap-2.5">

@@ -25,7 +25,7 @@ M1（図鑑プロトタイプ）完了。問題集4モード・実力試験・**
 - 各レッスンは `story`(物語)＋`takeaways`＋任意の `codeSample`(写経・CodeBlock)＋`practice`(ミニ1問)＋`relatedSlugs`(図鑑への相互リンク)。テストは `deepDive`(合格後の深掘り)を持ち、合格で `awards.ts` のバッジ獲得（TestViewが差分表示）。コース目次は `/curriculum`。
 - **story本文の図鑑リンクは自動**（`src/lib/linkify.tsx` の `linkifyStory`）：誤検出防止のため対象を各レッスンの `relatedSlugs` に限定し、用語名（nameJa＋aliases）が本文に出た最初の1回だけ図鑑へ（新タブ）リンクする。手動でリンクを埋め込む必要はない。`MascotTeacher.lines` は `ReactNode[]`。
 - **旧「図鑑の必修コース(roadmap)」は廃止**し、各レッスン末尾の「図鑑で実物を見る」（`LessonNode.relatedSlugs`）に吸収。図鑑詳細ページ→レッスンの逆リンクは `lessonForSlug()`。`/map` は `/learn` へリダイレクト。
-- 買い切り(`lifetime`)は**型・課金設計のみ先行**（`plan.ts`／docs/05）。UI・Stripe実装はコンテンツ拡充後。
+- 課金は **Stripe のコード土台まで実装済**（サブスク=mode:subscription / 買い切りlifetime=mode:payment を `/api/stripe/checkout` の `plan` で切替、`/api/stripe/webhook` が service-role で `subscriptions`/`purchases` に反映、`PlanSync` がログイン時に実課金状態をプランへ反映）。**キー未設定なら checkout→`{demo:true}` / webhook→`{skipped:true}` で安全動作**。本番“有効化”（実キー・Webhook登録・schema再実行・通し確認）は docs/09 の本番前チェックリスト対象で未実施。
 お気に入り／学習記録／既読は**端末ローカル（localStorage）に先行実装**（キー不要・ローカルファースト。詳細は docs/08）。
 - **図鑑に表示するのは「実物デモがある用語」だけ**（`src/data/visualTerms.ts`）。**現在298語すべてにデモ実装済み＝デモ100%**（2026-07-19）。デモは `LiveExample.tsx` の `demos` レジストリに slug→図解Reactで定義し、`visualTerms.ts` の `VISUAL_SLUGS` に slug を追記して連動させる。新語を足したら両方に追加すること。
 - 触れる実例（LiveExample）は緑枠＋LIVEバッジで「触れるゾーン」と区別

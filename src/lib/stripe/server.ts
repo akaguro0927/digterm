@@ -10,9 +10,24 @@ export function getStripe(): Stripe | null {
   return cached;
 }
 
-/** 決済フローを本番稼働できる状態か（キー＋商品価格ID） */
+/** サブスク（VIP）を本番稼働できる状態か（キー＋サブスク価格ID） */
 export function isStripeConfigured(): boolean {
   return !!getStripe() && !!process.env.STRIPE_PRICE_ID;
+}
+
+/** 買い切り（lifetime）を本番稼働できる状態か（キー＋買い切り価格ID） */
+export function isLifetimeConfigured(): boolean {
+  return !!getStripe() && !!process.env.STRIPE_LIFETIME_PRICE_ID;
+}
+
+/** プランに対応する Stripe 価格ID。未設定なら undefined。 */
+export function priceIdForPlan(plan: "vip" | "lifetime"): string | undefined {
+  return plan === "lifetime" ? process.env.STRIPE_LIFETIME_PRICE_ID : process.env.STRIPE_PRICE_ID;
+}
+
+/** プランに対応する Checkout モード（サブスク or 一回課金）。 */
+export function checkoutModeForPlan(plan: "vip" | "lifetime"): "subscription" | "payment" {
+  return plan === "lifetime" ? "payment" : "subscription";
 }
 
 export const VIP_PRICE_LABEL = "月額 ¥480（予定）";

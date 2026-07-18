@@ -74,6 +74,23 @@ create table if not exists public.quiz_results (
 );
 create index if not exists quiz_results_user_idx on public.quiz_results (user_id, taken_at desc);
 
+-- ---------- すごろく学習の進捗（localStorage: cocre:journey:v1 の移行先） ----------
+create table if not exists public.journey_progress (
+  user_id    uuid not null references auth.users(id) on delete cascade,
+  node_id    text not null,          -- journey.ts のノードid（例 c1-l1 / m1-test）
+  cleared_at timestamptz not null default now(),
+  primary key (user_id, node_id)
+);
+create index if not exists journey_progress_user_idx on public.journey_progress (user_id);
+
+-- ---------- 既読の用語（localStorage: cocre:seen:v1 の移行先） ----------
+create table if not exists public.seen_terms (
+  user_id   uuid not null references auth.users(id) on delete cascade,
+  term_slug text not null,           -- terms.slug
+  seen_at   timestamptz not null default now(),
+  primary key (user_id, term_slug)
+);
+
 -- ---------- サブスク状態（正は Stripe。Webhookで同期） ----------
 create table if not exists public.subscriptions (
   user_id                uuid primary key references auth.users(id) on delete cascade,
@@ -90,10 +107,12 @@ create table if not exists public.subscriptions (
 alter table public.categories  enable row level security;
 alter table public.terms       enable row level security;
 alter table public.term_images enable row level security;
-alter table public.profiles      enable row level security;
-alter table public.favorites     enable row level security;
-alter table public.quiz_results  enable row level security;
-alter table public.subscriptions enable row level security;
+alter table public.profiles         enable row level security;
+alter table public.favorites        enable row level security;
+alter table public.quiz_results     enable row level security;
+alter table public.journey_progress enable row level security;
+alter table public.seen_terms       enable row level security;
+alter table public.subscriptions    enable row level security;
 
 -- ポリシー（再実行OK：あれば消してから作り直す）
 -- 公開読み取り（カテゴリ・用語・画像）
@@ -111,6 +130,10 @@ drop policy if exists "own favorites" on public.favorites;
 create policy "own favorites"     on public.favorites     for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 drop policy if exists "own quiz_results" on public.quiz_results;
 create policy "own quiz_results"  on public.quiz_results  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own journey_progress" on public.journey_progress;
+create policy "own journey_progress" on public.journey_progress for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own seen_terms" on public.seen_terms;
+create policy "own seen_terms"    on public.seen_terms    for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 -- サブスクは読み取りのみ（書き込みは service_role のWebhookが行う）
 drop policy if exists "read own subscription" on public.subscriptions;
 create policy "read own subscription" on public.subscriptions for select using (auth.uid() = user_id);

@@ -18,10 +18,14 @@ import {
   useFavorites,
   useQuizAttempts,
   useWeakClears,
+  useClearedNodes,
+  useJourneyWeak,
   computeStats,
   computeWeakSlugs,
   clearAllUserData,
 } from "@/lib/userStore";
+import { levelProgressList } from "@/data/journey";
+import { awards } from "@/data/awards";
 
 const MODE_META: Record<QuizMode, { icon: IconName; tile: string; bar: string }> = {
   beginner: { icon: "lightbulb", tile: "bg-emerald-50 text-emerald-600", bar: "bg-emerald-500" },
@@ -31,6 +35,21 @@ const MODE_META: Record<QuizMode, { icon: IconName; tile: string; bar: string }>
 };
 
 const MODE_ORDER: QuizMode[] = ["beginner", "intermediate", "advanced", "exam"];
+
+// コース別進捗バーの色（初級/中級/上級）
+const COURSE_BAR: Record<string, string> = {
+  beginner: "bg-emerald-500",
+  intermediate: "bg-sky-500",
+  advanced: "bg-violet-500",
+};
+
+// レベル → 制覇バッジ(award id) の対応
+const CLEAR_AWARD_ID: Record<string, string> = {
+  beginner: "beginner-clear",
+  intermediate: "intermediate-clear",
+  advanced: "advanced-clear",
+};
+const awardById = new Map(awards.map((a) => [a.id, a]));
 
 function formatDateTime(ms: number): string {
   const d = new Date(ms);
@@ -69,6 +88,9 @@ export default function MyPage() {
   const favSlugs = useFavorites();
   const attempts = useQuizAttempts();
   const weakClears = useWeakClears();
+  const clearedNodes = useClearedNodes();
+  const journeyWeak = useJourneyWeak();
+  const courseProgress = levelProgressList(clearedNodes);
   const stats = computeStats(attempts);
   const weakTerms = computeWeakSlugs(attempts, weakClears).filter((w) => getTerm(w.slug));
 
@@ -146,6 +168,51 @@ export default function MyPage() {
         <StudyCalendar />
       </div>
 
+      {/* コース別の進捗（すごろく学習） */}
+      <div className="card-pop mt-4 p-5 sm:p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="font-display flex items-center gap-2 text-lg font-extrabold">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <Icon name="flag" className="h-4 w-4" />
+            </span>
+            コースの進捗
+          </h2>
+          <Link href="/learn" className="flex items-center gap-1 text-xs font-bold text-brand-600 hover:underline">
+            道のりへ
+            <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
+          </Link>
+        </div>
+        <div className="mt-4 space-y-4">
+          {courseProgress.map((p) => {
+            const bar = COURSE_BAR[p.level];
+            const done = p.pct >= 100;
+            const clearAward = done ? awardById.get(CLEAR_AWARD_ID[p.level]) : undefined;
+            return (
+              <div key={p.level}>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-display flex items-center gap-2 font-extrabold text-slate-700">
+                    {p.label}
+                    {clearAward && (
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${clearAward.tint}`}>
+                        <Icon name={clearAward.icon} className="h-3 w-3" />
+                        {clearAward.title}
+                      </span>
+                    )}
+                  </span>
+                  <span className="font-display text-xs font-extrabold text-slate-500">
+                    {p.done}<span className="text-slate-300"> / {p.total}</span>
+                    <span className="ml-2 text-slate-400">{p.pct}%</span>
+                  </span>
+                </div>
+                <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-slate-100">
+                  <div className={`h-full rounded-full ${bar} transition-all duration-700`} style={{ width: `${p.pct}%` }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* 苦手復習への導線（誤答がある時だけ） */}
       {weakTerms.length > 0 && (
         <Link
@@ -160,6 +227,28 @@ export default function MyPage() {
               苦手な用語が <span className="text-rose-600">{weakTerms.length}</span> 個あります
             </p>
             <p className="mt-0.5 text-xs text-slate-500">間違えた用語だけを復習。正解すると消えていきます。</p>
+          </div>
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-rose-500 px-4 py-2 text-xs font-bold text-white transition group-hover:brightness-105">
+            復習する
+            <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
+          </span>
+        </Link>
+      )}
+
+      {/* レッスンの弱点復習（テストで間違えた問題があるとき） */}
+      {journeyWeak.length > 0 && (
+        <Link
+          href="/learn/review"
+          className="group mt-4 flex items-center gap-4 rounded-2xl border-2 border-rose-100 bg-rose-50/60 p-4 transition hover:border-rose-200 hover:bg-rose-50"
+        >
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-rose-500 shadow-sm">
+            <Icon name="flame" className="h-6 w-6" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-sm font-extrabold text-slate-800">
+              レッスンで間違えた問題が <span className="text-rose-600">{journeyWeak.length}</span> 問
+            </p>
+            <p className="mt-0.5 text-xs text-slate-500">テストの誤答だけを復習。正解すると消えていきます。</p>
           </div>
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-rose-500 px-4 py-2 text-xs font-bold text-white transition group-hover:brightness-105">
             復習する

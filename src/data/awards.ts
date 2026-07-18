@@ -16,6 +16,10 @@ function chapterDone(chapterId: string, cleared: readonly string[]): boolean {
   return ns.length > 0 && ns.every((n) => cleared.includes(n.id));
 }
 
+function chaptersDone(ids: string[], cleared: readonly string[]): boolean {
+  return ids.every((id) => chapterDone(id, cleared));
+}
+
 export const awards: Award[] = [
   {
     id: "first-step",
@@ -82,9 +86,91 @@ export const awards: Award[] = [
     earned: (c) => chapterDone("c6", c),
   },
   {
+    id: "beginner-clear",
+    title: "初級コース制覇",
+    desc: "初級コース（第1〜6章）を全クリア",
+    icon: "flag",
+    tint: "bg-emerald-100 text-emerald-600",
+    earned: (c) => chaptersDone(["c1", "c2", "c3", "c4", "c5", "c6"], c),
+  },
+  // ── 中級 ──
+  {
+    id: "bridge",
+    title: "準備OK",
+    desc: "「コードを書く準備」をクリア",
+    icon: "flag",
+    tint: "bg-lime-100 text-lime-600",
+    earned: (c) => chapterDone("b1", c),
+  },
+  {
+    id: "html-writer",
+    title: "HTMLが書ける",
+    desc: "中級「HTMLを書いてみる」をクリア",
+    icon: "code",
+    tint: "bg-orange-100 text-orange-600",
+    earned: (c) => chapterDone("m1", c),
+  },
+  {
+    id: "css-writer",
+    title: "見た目が作れる",
+    desc: "中級「CSSで見た目を作る」をクリア",
+    icon: "droplet",
+    tint: "bg-pink-100 text-pink-600",
+    earned: (c) => chapterDone("m2", c),
+  },
+  {
+    id: "js-writer",
+    title: "動きが作れる",
+    desc: "中級「JavaScriptで動かす」をクリア",
+    icon: "zap",
+    tint: "bg-yellow-100 text-yellow-600",
+    earned: (c) => chapterDone("m3", c),
+  },
+  {
+    id: "form-builder",
+    title: "フォーム職人",
+    desc: "中級「フォームを作る」をクリア",
+    icon: "user",
+    tint: "bg-fuchsia-100 text-fuchsia-600",
+    earned: (c) => chapterDone("m5", c),
+  },
+  {
+    id: "intermediate-clear",
+    title: "中級コース制覇",
+    desc: "中級コース（準備〜デバッグ）を全クリア",
+    icon: "component",
+    tint: "bg-cyan-100 text-cyan-600",
+    earned: (c) => chaptersDone(["b1", "m1", "m2", "m3", "m9", "m4", "m10", "m5", "m6", "m11", "m7", "m8"], c),
+  },
+  // ── 上級 ──
+  {
+    id: "react-dev",
+    title: "部品で作れる",
+    desc: "上級「部品を組み合わせる」をクリア",
+    icon: "component",
+    tint: "bg-blue-100 text-blue-600",
+    earned: (c) => chapterDone("a1", c),
+  },
+  {
+    id: "ai-buddy",
+    title: "AIを使いこなす",
+    desc: "上級「AIと組む開発」をクリア",
+    icon: "zap",
+    tint: "bg-purple-100 text-purple-600",
+    earned: (c) => chapterDone("a3", c),
+  },
+  {
+    id: "advanced-clear",
+    title: "上級コース制覇",
+    desc: "上級コース（React〜AI）を全クリア",
+    icon: "wrench",
+    tint: "bg-indigo-100 text-indigo-600",
+    earned: (c) => chaptersDone(["a1", "a2", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a3"], c),
+  },
+  {
     id: "complete",
-    title: "道のり制覇",
-    desc: "すべてのマスをクリア",
+    title: "全コース制覇",
+    desc: "すべてのマスをクリア（初級〜上級）",
     icon: "trophy",
     tint: "bg-brand-100 text-brand-600",
     earned: (c) => flatNodes.length > 0 && flatNodes.every((f) => c.includes(f.node.id)),

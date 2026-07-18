@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { terms, getTerm, termNo } from "@/data/terms";
+import { lessonForSlug } from "@/data/journey";
 import { categoryTheme, levelTheme } from "@/lib/categoryTheme";
 import LiveExample from "@/components/LiveExample";
 import CodeBlock from "@/components/CodeBlock";
@@ -56,6 +57,7 @@ export default async function TermPage({
   const related = (term.related ?? [])
     .map((s) => getTerm(s))
     .filter((t) => t !== undefined);
+  const lesson = lessonForSlug(term.slug); // 図鑑→レッスンの逆リンク
 
   return (
     <div>
@@ -154,6 +156,30 @@ export default async function TermPage({
             </Reveal>
           )}
         </div>
+
+        {/* レッスンで学ぶ（図鑑→すごろく学習への逆リンク） */}
+        {lesson && (
+          <Reveal>
+            <Link
+              href={`/learn/${lesson.nodeId}`}
+              className="group mt-8 flex items-center gap-4 rounded-2xl border-2 border-brand-100 bg-gradient-to-r from-brand-50 to-white p-4 transition hover:border-brand-200"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-sm">
+                <Icon name="flag" className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-sm font-extrabold text-slate-800">レッスンで学ぶ</p>
+                <p className="mt-0.5 truncate text-xs text-slate-500">
+                  {lesson.chapterTitle}「{lesson.lessonTitle}」で、この用語を物語で学べます
+                </p>
+              </div>
+              <span className="flex shrink-0 items-center gap-1 rounded-full bg-brand-500 px-4 py-2 text-xs font-bold text-white transition group-hover:brightness-105">
+                受ける
+                <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
+              </span>
+            </Link>
+          </Reveal>
+        )}
 
         {/* 関連用語 */}
         {related.length > 0 && (

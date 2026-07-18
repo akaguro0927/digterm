@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
-import { markNodeCleared } from "@/lib/userStore";
+import { markNodeCleared, useClearedNodes, recordJourneyMiss, resolveJourneyMiss } from "@/lib/userStore";
 import { flatNodes, type TestNode } from "@/data/journey";
+import { awards } from "@/data/awards";
 
 function nextHrefAfter(id: string): string {
   const i = flatNodes.findIndex((f) => f.node.id === id);
@@ -19,10 +20,15 @@ export default function TestView({ node }: { node: TestNode }) {
   const [correct, setCorrect] = useState(0);
   const [finished, setFinished] = useState(false);
 
+  const cleared = useClearedNodes();
   const q = qs[idx];
   const answered = picked !== null;
   const rate = correct / qs.length;
   const passed = rate >= node.passRate;
+
+  // このテスト合格で“新たに獲得”した賞（クリア前後の差分）
+  const without = cleared.filter((id) => id !== node.id);
+  const newlyEarned = passed ? awards.filter((a) => a.earned(cleared) && !a.earned(without)) : [];
 
   // 合格したらこのノードをクリア扱いに（1回だけ）
   useEffect(() => {
@@ -32,7 +38,12 @@ export default function TestView({ node }: { node: TestNode }) {
   const pick = (i: number) => {
     if (answered) return;
     setPicked(i);
-    if (i === q.answer) setCorrect((c) => c + 1);
+    if (i === q.answer) {
+      setCorrect((c) => c + 1);
+      resolveJourneyMiss(node.id, idx, true); // 正解したら弱点から消す
+    } else {
+      recordJourneyMiss(node.id, idx); // 間違えたら弱点に登録
+    }
   };
   const next = () => {
     if (idx + 1 >= qs.length) setFinished(true);
@@ -70,6 +81,39 @@ export default function TestView({ node }: { node: TestNode }) {
         <p className="mt-5 font-medium text-slate-600">
           {passed ? "つぎのマスが解放されたよ。この調子！" : "おしい！レッスンをおさらいして、もう一度チャレンジ。"}
         </p>
+
+        {/* 新しく獲得した賞 */}
+        {newlyEarned.length > 0 && (
+          <div className="animate-pop-in mt-6 rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-200">
+            <p className="font-display flex items-center justify-center gap-1.5 text-sm font-extrabold text-amber-700">
+              <Icon name="trophy" className="h-4 w-4" />
+              賞を{newlyEarned.length}こ 獲得！
+            </p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              {newlyEarned.map((a) => (
+                <span
+                  key={a.id}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${a.tint}`}
+                >
+                  <Icon name={a.icon} className="h-3.5 w-3.5" />
+                  {a.title}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* もっと知る（深掘り） */}
+        {passed && node.deepDive && (
+          <div className="mt-5 rounded-2xl bg-slate-50 p-5 text-left ring-1 ring-slate-200">
+            <p className="font-display flex items-center gap-1.5 text-sm font-extrabold text-slate-700">
+              <Icon name="lightbulb" className="h-4 w-4 text-brand-600" />
+              もっと知る
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">{node.deepDive}</p>
+          </div>
+        )}
+
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           {passed ? (
             <Link

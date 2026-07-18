@@ -1267,7 +1267,636 @@ function InlineEditDemo() {
   );
 }
 
+function PollDemo() {
+  const opts: [string, number][] = [
+    ["きなこ", 62],
+    ["あんこ", 38],
+  ];
+  const [voted, setVoted] = useState<string | null>(null);
+  return (
+    <div className="w-full max-w-xs">
+      <p className="mb-2 text-center text-xs font-bold text-slate-700">どっち派？</p>
+      <div className="space-y-2">
+        {opts.map(([n, p]) => (
+          <button key={n} onClick={() => setVoted(n)} className="relative w-full overflow-hidden rounded-lg bg-slate-100 px-3 py-2 text-left text-sm">
+            {voted && <div className="absolute inset-y-0 left-0 bg-brand-200" style={{ width: `${p}%` }} />}
+            <span className="relative flex justify-between font-bold text-slate-700">
+              <span>{n}</span>
+              {voted && <span>{p}%</span>}
+            </span>
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">選ぶと割合が見える＝投票</p>
+    </div>
+  );
+}
+
+// ===== 概念用語の図解デモ（2026-07-19 追加バッチ：デモ未実装だった語を埋める）=====
+
+function ConceptVariableDemo() {
+  const vals = [0, 5, 42, 99];
+  const [i, setI] = useState(0);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="inline-flex items-stretch overflow-hidden rounded-xl shadow-sm ring-1 ring-slate-200">
+        <span className="flex items-center bg-slate-100 px-3 text-sm font-bold text-slate-500">count</span>
+        <span className="flex w-16 items-center justify-center bg-white py-3 font-display text-2xl font-extrabold text-slate-800">{vals[i]}</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">名前つきの箱に値が入る。中身は入れ替えられる</p>
+      <button onClick={() => setI((i + 1) % vals.length)} className="mt-2 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        値を変える
+      </button>
+    </div>
+  );
+}
+
+function ConceptStateDemo() {
+  const [n, setN] = useState(0);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="mx-auto flex w-32 flex-col items-center gap-1 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <span className="text-[10px] font-bold text-slate-400">state</span>
+        <span className="font-display text-3xl font-extrabold text-slate-800">{n}</span>
+      </div>
+      <button onClick={() => setN((v) => v + 1)} className="mt-2 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        +1
+      </button>
+      <p className="mt-1 text-[10px] text-slate-400">状態が変わると、画面が自動で描き直される</p>
+    </div>
+  );
+}
+
+function ConceptGitDemo() {
+  const [commits, setCommits] = useState(["最初のページ", "色を変えた"]);
+  return (
+    <div className="w-full max-w-xs">
+      <div className="rounded-xl bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <div className="flex flex-col gap-2">
+          {commits.map((c, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <span className="h-3 w-3 shrink-0 rounded-full bg-emerald-500 ring-2 ring-emerald-100" />
+              <span className="truncate text-xs text-slate-600">{c}</span>
+              {i === commits.length - 1 && <span className="ml-auto rounded bg-emerald-50 px-1.5 text-[9px] font-bold text-emerald-600">最新</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+      <button
+        onClick={() => setCommits((cs) => [...cs, `変更 ${cs.length + 1}`])}
+        className="mt-2 w-full rounded-lg bg-slate-800 px-4 py-1.5 text-sm font-bold text-white hover:bg-slate-700"
+      >
+        コミット（セーブ）する
+      </button>
+      <p className="mt-1 text-center text-[10px] text-slate-400">変更を記録＝いつでも戻れるセーブ地点</p>
+    </div>
+  );
+}
+
+function ConceptHashDemo() {
+  const [hashed, setHashed] = useState(false);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-2">
+        <span className="rounded-lg bg-white px-3 py-2 font-mono text-xs text-slate-700 shadow-sm ring-1 ring-slate-200">pass123</span>
+        <Icon name="arrow-right" className="h-4 w-4 text-slate-400" />
+        <span className={`rounded-lg px-3 py-2 font-mono text-xs shadow-sm ring-1 transition ${hashed ? "bg-slate-800 text-emerald-300 ring-slate-700" : "bg-slate-50 text-slate-300 ring-slate-200"}`}>
+          {hashed ? "a9$Fk2!xQ" : "????????"}
+        </span>
+      </div>
+      <button onClick={() => setHashed((h) => !h)} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        {hashed ? "もとに戻す" : "ハッシュ化する"}
+      </button>
+      <p className="mt-1 text-[10px] text-slate-400">元に戻せない形にして保存。漏れても安心</p>
+    </div>
+  );
+}
+
+function ConceptTypeScriptDemo() {
+  const [wrong, setWrong] = useState(false);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded-lg bg-slate-900 p-3 text-left font-mono text-[11px] leading-relaxed text-slate-100">
+        <div><span className="text-sky-300">let</span> age: <span className="text-emerald-300">number</span></div>
+        <div>
+          age = {wrong ? <span className="text-rose-300">&quot;二十&quot;</span> : <span className="text-amber-300">20</span>}
+          {wrong && <span className="ml-1 text-rose-400">← 型エラー！</span>}
+        </div>
+      </div>
+      <button onClick={() => setWrong((w) => !w)} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        {wrong ? "正しい値に直す" : "わざと文字を入れる"}
+      </button>
+      <p className="mt-1 text-[10px] text-slate-400">種類ちがいを、実行前に警告してくれる</p>
+    </div>
+  );
+}
+
+function ConceptFetchDemo() {
+  const [phase, setPhase] = useState<"idle" | "loading" | "done">("idle");
+  const run = () => {
+    setPhase("loading");
+    setTimeout(() => setPhase("done"), 900);
+  };
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="min-h-[3.5rem] rounded-lg bg-white p-3 text-left font-mono text-[11px] shadow-sm ring-1 ring-slate-200">
+        {phase === "idle" && <span className="text-slate-400">// ボタンで取ってくる</span>}
+        {phase === "loading" && <span className="text-slate-500">読み込み中…</span>}
+        {phase === "done" && (
+          <span className="text-slate-700">{"{ "}<span className="text-blue-600">&quot;temp&quot;</span>: 24 {"}"}</span>
+        )}
+      </div>
+      <button onClick={run} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50" disabled={phase === "loading"}>
+        {phase === "done" ? "もう一度 fetch" : "fetch でデータ取得"}
+      </button>
+      <p className="mt-1 text-[10px] text-slate-400">お願い→待つ→JSONが返ってくる（非同期）</p>
+    </div>
+  );
+}
+
+function ConceptDeployDemo() {
+  const [live, setLive] = useState(false);
+  return (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex w-16 flex-col items-center gap-1 rounded-xl bg-white p-2.5 shadow-sm ring-1 ring-slate-200">
+          <Icon name="monitor" className="h-5 w-5 text-slate-500" />
+          <span className="text-[9px] font-bold text-slate-500">自分のPC</span>
+        </div>
+        <div className="flex-1 text-center">
+          <Icon name="arrow-right" className={`mx-auto h-4 w-4 transition ${live ? "text-emerald-500" : "text-slate-300"}`} />
+          <span className="text-[9px] text-slate-400">デプロイ</span>
+        </div>
+        <div className={`flex w-16 flex-col items-center gap-1 rounded-xl p-2.5 shadow-sm ring-1 transition ${live ? "bg-emerald-50 ring-emerald-200" : "bg-white ring-slate-200"}`}>
+          <Icon name="database" className={`h-5 w-5 ${live ? "text-emerald-500" : "text-slate-400"}`} />
+          <span className="text-[9px] font-bold text-slate-500">ネット上</span>
+        </div>
+      </div>
+      <div className={`mt-2 rounded-lg py-1.5 text-center font-mono text-[10px] transition ${live ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-300"}`}>
+        {live ? "https://my-site.app 公開中！" : "まだ公開されていない"}
+      </div>
+      <button onClick={() => setLive((v) => !v)} className="mt-2 w-full rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        {live ? "取り下げる" : "本番に公開する"}
+      </button>
+    </div>
+  );
+}
+
+function ConceptArrayDemo() {
+  const pool = ["いちご", "ぶどう", "もも", "なし", "かき"];
+  const [items, setItems] = useState(["りんご", "みかん", "ばなな"]);
+  const add = () => setItems((xs) => (xs.length >= 6 ? xs : [...xs, pool[(xs.length - 3) % pool.length]]));
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {items.map((v, i) => (
+          <div key={i} className="flex flex-col items-center">
+            <span className="rounded-lg bg-white px-2 py-2 text-xs font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{v}</span>
+            <span className="mt-1 font-mono text-[10px] text-slate-400">[{i}]</span>
+          </div>
+        ))}
+      </div>
+      <button onClick={add} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50" disabled={items.length >= 6}>
+        push で末尾に追加
+      </button>
+      <p className="mt-1 text-[10px] text-slate-400">同じ種類をならびで持つ。数え始めは0番から（全{items.length}件）</p>
+    </div>
+  );
+}
+
+function ConceptLoopDemo() {
+  const [active, setActive] = useState(-1);
+  const run = () => {
+    setActive(0);
+    [1, 2].forEach((n, k) => setTimeout(() => setActive(n), (k + 1) * 500));
+    setTimeout(() => setActive(-1), 1800);
+  };
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-2">
+        {[0, 1, 2].map((n) => (
+          <span
+            key={n}
+            className={`flex h-9 w-9 items-center justify-center rounded-full font-display text-sm font-extrabold ring-1 transition ${
+              active === n ? "scale-110 bg-blue-600 text-white ring-blue-600" : "bg-blue-50 text-blue-600 ring-blue-100"
+            }`}
+          >
+            {n + 1}
+          </span>
+        ))}
+      </div>
+      <button onClick={run} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        くり返し実行
+      </button>
+      <p className="mt-1 text-[10px] text-slate-400">全部に同じ処理を、1件ずつ自動でくり返す（for）</p>
+    </div>
+  );
+}
+
+function ConceptFunctionDemo() {
+  const [a, setA] = useState(2);
+  const [b, setB] = useState(3);
+  const [result, setResult] = useState<number | null>(null);
+  const clamp = (n: number) => Math.max(0, Math.min(9, n));
+  const fields: [string, number, (n: number) => void][] = [
+    ["a", a, setA],
+    ["b", b, setB],
+  ];
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-4">
+        {fields.map(([label, value, set]) => (
+          <div key={label} className="flex flex-col items-center gap-1">
+            <span className="font-mono text-[10px] text-slate-400">{label}</span>
+            <div className="flex items-center gap-1">
+              <button onClick={() => { set(clamp(value - 1)); setResult(null); }} className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">−</button>
+              <span className="w-7 rounded-md bg-white py-1 text-center font-mono text-xs font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{value}</span>
+              <button onClick={() => { set(clamp(value + 1)); setResult(null); }} className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">+</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button onClick={() => setResult(a + b)} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 font-mono text-xs font-bold text-white hover:bg-blue-700">
+        add({a}, {b}) を実行
+      </button>
+      <div className="mt-3 flex items-center justify-center gap-2">
+        <span className="font-mono text-[11px] text-slate-400">return</span>
+        <Icon name="arrow-right" className="h-4 w-4 text-slate-400" />
+        <span className={`rounded-lg px-3 py-1.5 font-mono text-sm font-bold ring-1 transition ${result === null ? "bg-slate-50 text-slate-300 ring-slate-200" : "bg-emerald-50 text-emerald-600 ring-emerald-100"}`}>
+          {result === null ? "?" : result}
+        </span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">材料（引数）を入れて実行すると、答え（戻り値）が返る</p>
+    </div>
+  );
+}
+
+function ConceptPropsDemo() {
+  const labels = ["送信", "削除", "OK"];
+  const variants = [
+    { key: "blue", cls: "bg-blue-600", name: "primary" },
+    { key: "rose", cls: "bg-rose-500", name: "danger" },
+    { key: "slate", cls: "bg-slate-700", name: "neutral" },
+  ];
+  const [label, setLabel] = useState(labels[0]);
+  const [variant, setVariant] = useState(variants[0]);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded-lg bg-slate-900 p-2 text-left font-mono text-[10px] text-slate-100">
+        &lt;Button label=<span className="text-amber-300">&quot;{label}&quot;</span> variant=<span className="text-sky-300">&quot;{variant.name}&quot;</span> /&gt;
+      </div>
+      <div className="my-1 text-slate-300">↓</div>
+      <button className={`mx-auto block rounded-lg px-5 py-2 text-sm font-bold text-white transition ${variant.cls}`}>{label}</button>
+      <div className="mt-3 space-y-1.5">
+        <div className="flex items-center justify-center gap-1">
+          <span className="mr-1 w-12 text-right font-mono text-[10px] text-slate-400">label</span>
+          {labels.map((l) => (
+            <button key={l} onClick={() => setLabel(l)} className={`rounded-md px-2 py-1 text-[10px] font-bold ring-1 transition ${label === l ? "bg-blue-50 text-blue-600 ring-blue-200" : "bg-white text-slate-400 ring-slate-200"}`}>{l}</button>
+          ))}
+        </div>
+        <div className="flex items-center justify-center gap-1">
+          <span className="mr-1 w-12 text-right font-mono text-[10px] text-slate-400">variant</span>
+          {variants.map((v) => (
+            <button key={v.key} onClick={() => setVariant(v)} aria-label={v.name} className={`h-6 w-6 rounded-md transition ${v.cls} ${variant.key === v.key ? "ring-2 ring-slate-700 ring-offset-1" : "opacity-50"}`} />
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">外から渡す設定（props）で中身と見た目が変わる</p>
+    </div>
+  );
+}
+
+function ConceptSeoDemo() {
+  const [optimized, setOptimized] = useState(false);
+  const rows = optimized
+    ? [
+        { t: "Co-Cre | フロント用語図鑑", me: true },
+        { t: "別の用語サイト", me: false },
+        { t: "まとめ記事", me: false },
+      ]
+    : [
+        { t: "別の用語サイト", me: false },
+        { t: "まとめ記事", me: false },
+        { t: "Co-Cre | フロント用語図鑑", me: true },
+      ];
+  return (
+    <div className="w-full max-w-xs">
+      <div className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        {rows.map((row, i) => (
+          <div key={row.t} className="flex items-center gap-2 py-1">
+            <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${i === 0 ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-400"}`}>{i + 1}</span>
+            <span className={`truncate text-xs ${row.me ? "font-bold text-blue-600" : "text-slate-400"}`}>{row.t}</span>
+            {row.me && <span className="ml-auto shrink-0 rounded bg-blue-50 px-1.5 text-[9px] font-bold text-blue-500">あなた</span>}
+          </div>
+        ))}
+      </div>
+      <button onClick={() => setOptimized((v) => !v)} className="mt-2 w-full rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        {optimized ? "対策をやめる" : "SEO対策する"}
+      </button>
+      <p className="mt-2 text-center text-[10px] text-slate-400">検索で上位に出る工夫＝SEO（対策で順位が上がる）</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- 概念用語の図解（2026-07-19）----
+  variable: () => <ConceptVariableDemo />,
+  state: () => <ConceptStateDemo />,
+  git: () => <ConceptGitDemo />,
+  hash: () => <ConceptHashDemo />,
+  typescript: () => <ConceptTypeScriptDemo />,
+  fetch: () => <ConceptFetchDemo />,
+  async: () => <ConceptFetchDemo />,
+  deploy: () => <ConceptDeployDemo />,
+  hosting: () => <ConceptDeployDemo />,
+  array: () => <ConceptArrayDemo />,
+  loop: () => <ConceptLoopDemo />,
+  function: () => <ConceptFunctionDemo />,
+  argument: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded-lg bg-slate-900 p-3 text-left font-mono text-[11px] text-slate-100">
+        greet(<span className="rounded bg-amber-400/20 px-1 text-amber-300">&quot;あやと&quot;</span>)
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">関数に渡す“材料”＝引数（ハイライト部分）</p>
+    </div>
+  ),
+  "return-value": () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded-lg bg-slate-900 p-3 text-left font-mono text-[11px] text-slate-100">
+        <span className="text-sky-300">return</span> <span className="rounded bg-emerald-400/20 px-1 text-emerald-300">a + b</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">関数が外に返す“答え”＝戻り値（ハイライト部分）</p>
+    </div>
+  ),
+  component: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex justify-center gap-2">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white">ボタン</span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">1回つくった部品を、何度も使い回す</p>
+    </div>
+  ),
+  props: () => <ConceptPropsDemo />,
+  tailwind: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded bg-slate-900 p-2 text-left font-mono text-[10px] text-slate-100">
+        class=&quot;<span className="text-sky-300">p-4</span> <span className="text-emerald-300">bg-blue-600</span> <span className="text-amber-300">rounded-xl</span> text-white&quot;
+      </div>
+      <div className="my-1 text-center text-sm text-slate-300">↓</div>
+      <div className="mx-auto w-24 rounded-xl bg-blue-600 p-4 text-xs font-bold text-white">箱</div>
+      <p className="mt-2 text-[10px] text-slate-400">小さなクラスを並べて見た目を作る</p>
+    </div>
+  ),
+  https: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="mx-auto flex w-fit items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
+        <Icon name="lock" className="h-4 w-4 text-emerald-500" />
+        <span className="font-mono text-xs text-slate-600">https://co-cre.app</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">鍵マーク＝通信が暗号化されていて安全</p>
+    </div>
+  ),
+  xss: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded-lg bg-white p-2.5 text-left shadow-sm ring-1 ring-slate-200">
+        <span className="font-mono text-[10px] text-rose-500 line-through">&lt;script&gt;悪いコード&lt;/script&gt;</span>
+        <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+          <Icon name="check" className="h-3 w-3" strokeWidth={3} />
+          エスケープして無害化
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">入力をそのまま信用しない（XSS対策）</p>
+    </div>
+  ),
+  ci: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold">
+        <span className="rounded bg-slate-100 px-2 py-1 text-slate-600">コミット</span>
+        <Icon name="arrow-right" className="h-3.5 w-3.5 text-slate-400" />
+        <span className="rounded bg-blue-50 px-2 py-1 text-blue-600">自動テスト</span>
+        <Icon name="arrow-right" className="h-3.5 w-3.5 text-slate-400" />
+        <span className="inline-flex items-center gap-0.5 rounded bg-emerald-50 px-2 py-1 text-emerald-600"><Icon name="check" className="h-3 w-3" strokeWidth={3} />OK</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">変更のたび自動でテスト＝壊れの見張り番</p>
+    </div>
+  ),
+  seo: () => <ConceptSeoDemo />,
+  ogp: () => (
+    <div className="w-full max-w-[15rem]">
+      <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="flex h-16 items-center justify-center bg-gradient-to-br from-emerald-400 to-emerald-600 text-sm font-extrabold text-white">Co-Cre</div>
+        <div className="p-2">
+          <p className="truncate text-xs font-bold text-slate-700">フロントエンド用語図鑑</p>
+          <p className="truncate text-[10px] text-slate-400">co-cre.app</p>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">SNSでリンクを貼ると出るプレビュー＝OGP</p>
+    </div>
+  ),
+  debug: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded-lg bg-slate-900 p-3 text-left font-mono text-[11px] text-slate-100">
+        <div className="text-slate-400">console.log(total)</div>
+        <div className="mt-1 flex items-center gap-1"><Icon name="search" className="h-3 w-3 text-amber-300" /><span className="text-amber-300">total = 0 ← 期待とちがう！</span></div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">中身をのぞいて不具合の原因を探す＝デバッグ</p>
+    </div>
+  ),
+  class: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-col items-center gap-1">
+          <span className="rounded-lg border-2 border-dashed border-slate-300 px-3 py-2 text-xs font-bold text-slate-500">設計図</span>
+          <span className="text-[9px] text-slate-400">class</span>
+        </div>
+        <Icon name="arrow-right" className="h-4 w-4 text-slate-400" />
+        <div className="flex gap-1.5">
+          {["A", "B"].map((c) => (
+            <span key={c} className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold text-white">{c}</span>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">1つの設計図から、実体を何個も作る＝クラス</p>
+    </div>
+  ),
+  framework: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="mx-auto w-32 rounded-lg border-2 border-blue-200 bg-blue-50/50 p-2">
+        <div className="rounded bg-white py-1 text-[9px] font-bold text-slate-400 ring-1 ring-slate-200">用意された土台</div>
+        <div className="mt-1 grid grid-cols-2 gap-1">
+          <div className="rounded bg-blue-600 py-1.5 text-[9px] text-white">部品</div>
+          <div className="rounded bg-blue-600 py-1.5 text-[9px] text-white">部品</div>
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">骨組みが最初からある道具＝フレームワーク</p>
+    </div>
+  ),
+  library: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-2">
+        <span className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-500">道具箱</span>
+        <Icon name="arrow-right" className="h-4 w-4 text-slate-400" />
+        <div className="flex gap-1">
+          {["日付", "グラフ", "通信"].map((t) => (
+            <span key={t} className="rounded bg-emerald-50 px-1.5 py-1 text-[9px] font-bold text-emerald-600 ring-1 ring-emerald-100">{t}</span>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">便利な部品を取り出して使う＝ライブラリ</p>
+    </div>
+  ),
+  ux: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-500">
+        <span className="rounded bg-slate-100 px-2 py-1">見つける</span>
+        <Icon name="arrow-right" className="h-3 w-3 text-slate-400" />
+        <span className="rounded bg-slate-100 px-2 py-1">迷わない</span>
+        <Icon name="arrow-right" className="h-3 w-3 text-slate-400" />
+        <span className="inline-flex items-center gap-0.5 rounded bg-emerald-50 px-2 py-1 text-emerald-600"><Icon name="check" className="h-3 w-3" strokeWidth={3} />できた！</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">使う人の“気持ちよさ”全体＝UX（体験）</p>
+    </div>
+  ),
+  // ---- UI部品 追加（SNS・EC・ゲーム 2026-07-18n） ----
+  poll: () => <PollDemo />,
+  leaderboard: () => (
+    <div className="w-full max-w-xs">
+      <div className="divide-y divide-slate-100 rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        {[
+          ["1", "たろう", "980", "bg-amber-400"],
+          ["2", "はなこ", "840", "bg-slate-300"],
+          ["3", "けん", "760", "bg-amber-600"],
+        ].map(([r, n, s, c]) => (
+          <div key={r} className="flex items-center gap-3 px-3 py-2">
+            <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${c}`}>{r}</span>
+            <span className="flex-1 text-sm text-slate-700">{n}</span>
+            <span className="font-display text-sm font-extrabold text-slate-800">{s}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">順位・スコアを並べる＝ランキング表</p>
+    </div>
+  ),
+  receipt: () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="rounded-lg bg-white p-3 font-mono text-[11px] text-slate-600 shadow-sm ring-1 ring-slate-200">
+        <p className="text-center font-bold">ご購入明細</p>
+        <div className="my-1 border-t border-dashed border-slate-200" />
+        {[
+          ["コーヒー", "¥480"],
+          ["ケーキ", "¥520"],
+        ].map(([k, v]) => (
+          <div key={k} className="flex justify-between">
+            <span>{k}</span>
+            <span>{v}</span>
+          </div>
+        ))}
+        <div className="my-1 border-t border-dashed border-slate-200" />
+        <div className="flex justify-between font-bold text-slate-800">
+          <span>合計</span>
+          <span>¥1,000</span>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">品目と合計の明細＝レシート</p>
+    </div>
+  ),
+  ticket: () => (
+    <div className="w-full max-w-xs">
+      <div className="relative flex overflow-hidden rounded-xl bg-brand-500 text-white shadow-lg">
+        <div className="flex-1 p-3">
+          <p className="text-[10px] opacity-80">2026.08.01 18:00</p>
+          <p className="font-display font-extrabold">Co-Cre LIVE</p>
+          <p className="text-[10px] opacity-80">席 A-12</p>
+        </div>
+        <div className="flex w-16 items-center justify-center border-l-2 border-dashed border-white/40">
+          <div className="h-10 w-10 rounded bg-white" />
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">切り取り線つきの入場券＝チケット</p>
+    </div>
+  ),
+  hashtag: () => (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {["#初心者", "#CSS", "#毎日学習", "#フロントエンド"].map((t) => (
+          <span key={t} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-600">{t}</span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">#で話題をまとめる＝ハッシュタグ</p>
+    </div>
+  ),
+  wishlist: () => (
+    <div className="w-full max-w-xs">
+      <div className="grid grid-cols-2 gap-2">
+        {["bg-rose-100", "bg-sky-100"].map((c, i) => (
+          <div key={i} className="relative rounded-lg bg-white p-2 shadow-sm ring-1 ring-slate-200">
+            <div className={`h-12 rounded ${c}`} />
+            <p className="mt-1 truncate text-[10px] font-bold text-slate-600">商品名</p>
+            <p className="text-[10px] text-slate-400">¥1,980</p>
+            <Icon name="heart" className="absolute right-2 top-2 h-4 w-4 text-rose-500" />
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">保存した物のカード一覧＝お気に入り一覧</p>
+    </div>
+  ),
+  "profile-header": () => (
+    <div className="w-full max-w-xs">
+      <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="h-14 bg-gradient-to-r from-brand-400 to-sky-400" />
+        <div className="px-3 pb-3">
+          <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 text-brand-600 ring-4 ring-white">
+            <Icon name="user" className="h-6 w-6" />
+          </span>
+          <p className="mt-1 font-display font-extrabold text-slate-800">あかぐろ</p>
+          <div className="mt-1 flex gap-4 text-[10px] text-slate-400">
+            <span><b className="text-slate-700">128</b> フォロー</span>
+            <span><b className="text-slate-700">340</b> フォロワー</span>
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">カバー＋アイコン＋数値＝プロフィールヘッダー</p>
+    </div>
+  ),
+  "points-badge": () => (
+    <div className="text-center">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 ring-1 ring-amber-200">
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-white">P</span>
+        <span className="font-display font-extrabold text-amber-700">1,200<span className="ml-0.5 text-xs">pt</span></span>
+      </span>
+      <p className="mt-2 text-[10px] text-slate-400">コイン＋数字で残高＝ポイント表示</p>
+    </div>
+  ),
+  "pull-quote": () => (
+    <div className="w-full max-w-xs">
+      <p className="text-[11px] leading-relaxed text-slate-500">…だからこそ、まず名前を知ることが大切です。</p>
+      <blockquote className="my-2 border-y-2 border-brand-200 py-2 text-center font-display text-lg font-extrabold leading-snug text-brand-700">
+        「名前がわかれば、
+        <br />
+        調べられる。」
+      </blockquote>
+      <p className="text-[11px] leading-relaxed text-slate-500">調べられれば、作れるようになります。…</p>
+      <p className="mt-2 text-center text-[10px] text-slate-400">一文を大きく抜き出す＝引用（大）</p>
+    </div>
+  ),
+  "order-tracking": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center">
+        {["注文", "発送", "配達中", "完了"].map((s, i, arr) => (
+          <div key={s} className="flex flex-1 items-center">
+            <div className="flex flex-col items-center">
+              <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ${i <= 2 ? "bg-brand-500 text-white" : "bg-slate-200 text-slate-400"}`}>{i <= 2 ? "✓" : ""}</span>
+              <span className="mt-1 text-[8px] text-slate-500">{s}</span>
+            </div>
+            {i < arr.length - 1 && <span className={`mx-0.5 h-0.5 flex-1 ${i < 2 ? "bg-brand-400" : "bg-slate-200"}`} />}
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">配送の進み具合＝配送状況</p>
+    </div>
+  ),
   // ---- UI部品 追加（ログイン・EC・通知 2026-07-18m） ----
   "social-login": () => (
     <div className="w-full max-w-xs space-y-2">

@@ -80,6 +80,15 @@ export const VISUAL_SLUGS: readonly string[] = [
   // 2026-07-18m ログイン・EC・通知（+10）
   "social-login", "or-divider", "newsletter-signup", "logo-cloud", "rating-summary",
   "cart-summary", "avatar-upload", "notification-panel", "metric-row", "coupon-input",
+  // 2026-07-18n SNS・EC・ゲーム（+10）
+  "poll", "leaderboard", "receipt", "ticket", "hashtag",
+  "wishlist", "profile-header", "points-badge", "pull-quote", "order-tracking",
+  // 2026-07-19 概念用語の図解デモ（+23：すごろく中上級の用語を図鑑にも）
+  "variable", "state", "git", "hash", "typescript", "fetch", "async", "deploy",
+  "hosting", "array", "loop", "function", "argument", "return-value", "component",
+  "props", "tailwind", "https", "xss", "ci", "seo", "ogp", "debug",
+  // 2026-07-19b 残りの概念語（+4）でデモ100%達成
+  "class", "framework", "library", "ux",
 ];
 
 const set = new Set(VISUAL_SLUGS);

@@ -45,6 +45,24 @@ export default async function ZukanPage({
         </span>
       </Link>
 
+      {/* 学習の道のりへの導線（図鑑→レッスン） */}
+      <Link
+        href="/learn"
+        className="group mt-3 flex items-center gap-3 rounded-2xl border-2 border-brand-100 bg-brand-50/50 p-4 transition hover:border-brand-200"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-brand-600">
+          <Icon name="flag" className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-sm font-extrabold text-slate-800">物語で学ぶ「学習の道のり」</p>
+          <p className="text-[11px] text-slate-500">用語をただ調べるだけじゃなく、順番に読んで→テストで身につける。無料で書き始められる</p>
+        </div>
+        <span className="flex shrink-0 items-center gap-1 rounded-full bg-brand-500 px-4 py-2 text-xs font-bold text-white transition group-hover:brightness-105">
+          はじめる
+          <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
+        </span>
+      </Link>
+
       <AdSlot className="mt-4" />
       <ZukanBrowser initialCategory={initialCategory} />
     </div>

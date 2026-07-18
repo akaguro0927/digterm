@@ -20,6 +20,7 @@ const JOURNEY_KEY = "cocre:journey:v1"; // クリアしたすごろくノード�
 const STREAK_KEY = "cocre:streak:v1"; // 連続学習日数＋今日の目標
 const ACTIVITY_KEY = "cocre:activity-log:v1"; // 日付(YYYY-MM-DD)→学習回数（カレンダー用）
 const WEAKCLEAR_KEY = "cocre:weak-clears:v1"; // 苦手復習で正解した回数（slug→count）
+const JOURNEY_WEAK_KEY = "cocre:journey-weak:v1"; // レッスンテストで間違えた問題（"nodeId#問番号"の配列）
 const MAX_ATTEMPTS = 200; // 直近200件だけ保持（localStorage肥大化を防ぐ）
 
 export const DAILY_GOAL_DEFAULT = 3; // 1日の目標アクション数
@@ -87,6 +88,7 @@ let journeySnapshot: readonly string[] = EMPTY_JOURNEY;
 let streakSnapshot: StreakData = EMPTY_STREAK;
 let weakClearsSnapshot: Record<string, number> = EMPTY_WEAKCLEARS;
 let activitySnapshot: Record<string, number> = EMPTY_ACTIVITY;
+let journeyWeakSnapshot: readonly string[] = EMPTY_JOURNEY;
 let hydrated = false;
 
 function ensureHydrated() {
@@ -98,6 +100,7 @@ function ensureHydrated() {
   streakSnapshot = read<StreakData>(STREAK_KEY, EMPTY_STREAK);
   weakClearsSnapshot = read<Record<string, number>>(WEAKCLEAR_KEY, {});
   activitySnapshot = read<Record<string, number>>(ACTIVITY_KEY, {});
+  journeyWeakSnapshot = read<string[]>(JOURNEY_WEAK_KEY, []);
   hydrated = true;
 }
 
@@ -116,6 +119,7 @@ function onStorage(e: StorageEvent) {
   if (e.key === STREAK_KEY || e.key === null) streakSnapshot = read<StreakData>(STREAK_KEY, EMPTY_STREAK);
   if (e.key === WEAKCLEAR_KEY || e.key === null) weakClearsSnapshot = read<Record<string, number>>(WEAKCLEAR_KEY, {});
   if (e.key === ACTIVITY_KEY || e.key === null) activitySnapshot = read<Record<string, number>>(ACTIVITY_KEY, {});
+  if (e.key === JOURNEY_WEAK_KEY || e.key === null) journeyWeakSnapshot = read<string[]>(JOURNEY_WEAK_KEY, []);
   emit();
 }
 
@@ -132,6 +136,8 @@ function subscribe(cb: () => void) {
 export interface RemoteHook {
   favorite?: (slug: string, on: boolean) => void;
   quiz?: (attempt: QuizAttempt) => void;
+  journey?: (nodeId: string) => void; // すごろく1マスクリア
+  seen?: (slug: string) => void; // 用語を既読にした
 }
 let remoteHook: RemoteHook | null = null;
 export function setRemoteHook(h: RemoteHook | null) {
@@ -190,7 +196,20 @@ export function markSeen(slug: string) {
   seenSnapshot = [...seenSnapshot, slug];
   persist(SEEN_KEY, seenSnapshot);
   emit();
+  remoteHook?.seen?.(slug);
   recordActivity(); // 用語を読んだら学習1回とカウント
+}
+
+// sync 層用（非フックの現在値取得 / 一括置換）
+export function getSeenNow(): readonly string[] {
+  ensureHydrated();
+  return seenSnapshot;
+}
+export function replaceSeen(list: string[]) {
+  ensureHydrated();
+  seenSnapshot = [...new Set(list)];
+  persist(SEEN_KEY, seenSnapshot);
+  emit();
 }
 
 export function useSeen(): readonly string[] {
@@ -302,7 +321,20 @@ export function markNodeCleared(nodeId: string) {
   journeySnapshot = [...journeySnapshot, nodeId];
   persist(JOURNEY_KEY, journeySnapshot);
   emit();
+  remoteHook?.journey?.(nodeId);
   recordActivity(); // マスをクリアしたら学習1回とカウント
+}
+
+// sync 層用（非フックの現在値取得 / 一括置換）
+export function getClearedNodesNow(): readonly string[] {
+  ensureHydrated();
+  return journeySnapshot;
+}
+export function replaceClearedNodes(list: string[]) {
+  ensureHydrated();
+  journeySnapshot = [...new Set(list)];
+  persist(JOURNEY_KEY, journeySnapshot);
+  emit();
 }
 
 export function useClearedNodes(): readonly string[] {
@@ -311,6 +343,55 @@ export function useClearedNodes(): readonly string[] {
     () => {
       ensureHydrated();
       return journeySnapshot;
+    },
+    () => EMPTY_JOURNEY
+  );
+}
+
+// ============ レッスンテストの弱点（間違えた問題）============
+// キー形式: "nodeId#問番号"（例 "c1-test#2"）。正解し直すと消える。
+
+function weakKey(nodeId: string, qIndex: number): string {
+  return `${nodeId}#${qIndex}`;
+}
+
+/** テストで間違えた問題を記録（重複は追加しない） */
+export function recordJourneyMiss(nodeId: string, qIndex: number) {
+  ensureHydrated();
+  const k = weakKey(nodeId, qIndex);
+  if (journeyWeakSnapshot.includes(k)) return;
+  journeyWeakSnapshot = [...journeyWeakSnapshot, k];
+  persist(JOURNEY_WEAK_KEY, journeyWeakSnapshot);
+  emit();
+}
+
+/** 弱点復習の結果を反映（正解したら弱点から消す） */
+export function resolveJourneyMiss(nodeId: string, qIndex: number, correct: boolean) {
+  ensureHydrated();
+  if (!correct) return;
+  const k = weakKey(nodeId, qIndex);
+  if (!journeyWeakSnapshot.includes(k)) return;
+  journeyWeakSnapshot = journeyWeakSnapshot.filter((x) => x !== k);
+  persist(JOURNEY_WEAK_KEY, journeyWeakSnapshot);
+  emit();
+}
+
+/** 弱点の {nodeId, qIndex} 一覧を返す */
+export function parseJourneyWeak(keys: readonly string[]): { nodeId: string; qIndex: number }[] {
+  return keys
+    .map((k) => {
+      const [nodeId, q] = k.split("#");
+      return { nodeId, qIndex: Number(q) };
+    })
+    .filter((w) => w.nodeId && Number.isInteger(w.qIndex));
+}
+
+export function useJourneyWeak(): readonly string[] {
+  return useSyncExternalStore(
+    subscribe,
+    () => {
+      ensureHydrated();
+      return journeyWeakSnapshot;
     },
     () => EMPTY_JOURNEY
   );
@@ -454,6 +535,7 @@ export function clearAllUserData() {
   streakSnapshot = EMPTY_STREAK;
   weakClearsSnapshot = EMPTY_WEAKCLEARS;
   activitySnapshot = EMPTY_ACTIVITY;
+  journeyWeakSnapshot = EMPTY_JOURNEY;
   if (isBrowser) {
     try {
       window.localStorage.removeItem(FAV_KEY);
@@ -463,6 +545,7 @@ export function clearAllUserData() {
       window.localStorage.removeItem(STREAK_KEY);
       window.localStorage.removeItem(WEAKCLEAR_KEY);
       window.localStorage.removeItem(ACTIVITY_KEY);
+      window.localStorage.removeItem(JOURNEY_WEAK_KEY);
     } catch {
       /* 無視 */
     }

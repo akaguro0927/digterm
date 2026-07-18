@@ -183,9 +183,10 @@ export default function Home() {
                   <Icon name="trophy" className="h-3 w-3" />
                   Co-Cre VIP
                 </span>
-                <h2 className="font-display mt-3 text-2xl font-extrabold">もっと本気で覚えるなら</h2>
+                <h2 className="font-display mt-3 text-2xl font-extrabold">“作れる人”になるコースへ</h2>
                 <p className="mt-2 max-w-md text-sm leading-relaxed text-amber-50">
-                  弱点復習・全レッスン・AIでしらべる無制限・広告なし。無料でも「調べる」はずっと使えます。
+                  中級・上級コース（CSS/JS・フォーム・React・AIと組む開発）が開放。弱点復習・AI無制限・広告なしも。
+                  買い切りプランも用意しています。
                 </p>
               </div>
               <span
@@ -214,11 +215,17 @@ export default function Home() {
                   <Icon name="flag" className="h-3 w-3" />
                   はじめての人はここから
                 </span>
-                <h2 className="font-display mt-3 text-2xl font-extrabold">学習の道のりを歩こう</h2>
+                <h2 className="font-display mt-3 text-2xl font-extrabold">無料で“書き始め”られる</h2>
                 <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-500">
-                  キャラのコクリが物語で案内。AI・プログラミングの基礎から、
-                  「読んで→テストで8割」ずつ進むと、かんたんなサイトが作れるようになるよ。
+                  キャラのコクリが物語で案内。AI・プログラミングの基礎（初級）から、
+                  <strong className="text-slate-700">はじめてのHTMLを書く中級の入口まで、ぜんぶ無料</strong>。
+                  「読んで→テストで8割」ずつ、手を動かして進めるよ。
                 </p>
+                <div className="mt-3 flex flex-wrap gap-1.5 text-[11px] font-bold">
+                  <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-brand-700 ring-1 ring-brand-100">初級：用語を知る</span>
+                  <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-orange-700 ring-1 ring-orange-100">中級の入口：コードを書く</span>
+                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-slate-500">登録不要</span>
+                </div>
               </div>
               <span
                 className="btn-3d font-display inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-500 px-6 py-3 text-sm font-extrabold text-white"

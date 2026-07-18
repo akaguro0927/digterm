@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Icon } from "@/components/icons";
 import { Eye, useEyeTracking } from "@/components/mascotEyes";
 
@@ -36,7 +36,7 @@ export default function MascotTeacher({
   onComplete,
   ctaLabel = "よし、つぎへ！",
 }: {
-  lines: string[];
+  lines: ReactNode[];
   onComplete: () => void;
   ctaLabel?: string;
 }) {

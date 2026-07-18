@@ -6,8 +6,12 @@ import { getSupabaseClient } from "@/lib/supabase/client";
 import {
   getFavoritesNow,
   getQuizAttemptsNow,
+  getClearedNodesNow,
+  getSeenNow,
   replaceFavorites,
   replaceQuizAttempts,
+  replaceClearedNodes,
+  replaceSeen,
   setRemoteHook,
   type QuizAttempt,
 } from "@/lib/userStore";
@@ -20,10 +24,10 @@ function quizKey(a: Pick<QuizAttempt, "takenAt" | "mode" | "score" | "total">) {
 const swallow = () => {}; // 同期失敗はUIを止めない（ローカルは常に正）
 
 /**
- * ログイン中、お気に入り・クイズ成績を Supabase と同期する。
+ * ログイン中、お気に入り・クイズ成績・すごろく進捗・既読を Supabase と同期する。
  * - 初回ログイン時: ローカルとリモートをマージ（和集合）してローカルへ反映＋不足分をリモートへ送る
  * - 以降の更新: userStore の書き込みフック経由で Supabase にも反映
- * ※ 既読(seen)はまだ専用テーブルが無いためローカルのみ（今後テーブル追加で同期予定）
+ * ※ テーブル未作成（schema.sql 未実行）でも、失敗は swallow するので動作は壊れない（ローカルは常に正）。
  */
 export default function SupabaseSync() {
   const { user } = useAuth();
@@ -58,6 +62,16 @@ export default function SupabaseSync() {
             wrong_slugs: a.wrongSlugs,
             taken_at: new Date(a.takenAt).toISOString(),
           })
+          .then(swallow, swallow);
+      },
+      journey: (nodeId) => {
+        sb.from("journey_progress")
+          .upsert({ user_id: uid, node_id: nodeId }, { onConflict: "user_id,node_id" })
+          .then(swallow, swallow);
+      },
+      seen: (slug) => {
+        sb.from("seen_terms")
+          .upsert({ user_id: uid, term_slug: slug }, { onConflict: "user_id,term_slug" })
           .then(swallow, swallow);
       },
     });
@@ -103,6 +117,30 @@ export default function SupabaseSync() {
             }))
           )
           .then(swallow, swallow);
+      }
+
+      // --- すごろく学習の進捗（クリアしたマス） ---
+      const jRes = await sb.from("journey_progress").select("node_id");
+      if (cancelled) return;
+      const remoteJourney = (jRes.data ?? []).map((r) => r.node_id as string);
+      const localJourney = [...getClearedNodesNow()];
+      replaceClearedNodes([...new Set([...remoteJourney, ...localJourney])]);
+      const remoteJourneySet = new Set(remoteJourney);
+      const journeyToPush = localJourney.filter((id) => !remoteJourneySet.has(id)).map((id) => ({ user_id: uid, node_id: id }));
+      if (journeyToPush.length) {
+        sb.from("journey_progress").upsert(journeyToPush, { onConflict: "user_id,node_id" }).then(swallow, swallow);
+      }
+
+      // --- 既読の用語 ---
+      const sRes = await sb.from("seen_terms").select("term_slug");
+      if (cancelled) return;
+      const remoteSeen = (sRes.data ?? []).map((r) => r.term_slug as string);
+      const localSeen = [...getSeenNow()];
+      replaceSeen([...new Set([...remoteSeen, ...localSeen])]);
+      const remoteSeenSet = new Set(remoteSeen);
+      const seenToPush = localSeen.filter((s) => !remoteSeenSet.has(s)).map((s) => ({ user_id: uid, term_slug: s }));
+      if (seenToPush.length) {
+        sb.from("seen_terms").upsert(seenToPush, { onConflict: "user_id,term_slug" }).then(swallow, swallow);
       }
     })();
 

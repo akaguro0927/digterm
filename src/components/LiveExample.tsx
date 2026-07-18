@@ -1598,6 +1598,80 @@ function ConceptSeoDemo() {
   );
 }
 
+function ConceptComponentDemo() {
+  const [n, setN] = useState(3);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex min-h-[4rem] flex-wrap items-center justify-center gap-2">
+        {Array.from({ length: n }).map((_, i) => (
+          <span key={i} className="animate-pop-in rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white">ボタン</span>
+        ))}
+      </div>
+      <div className="mt-3 flex items-center justify-center gap-2">
+        <button onClick={() => setN((v) => Math.max(1, v - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">−</button>
+        <span className="w-16 font-mono text-xs text-slate-500">×{n} 個</span>
+        <button onClick={() => setN((v) => Math.min(6, v + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700">+</button>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">1回つくった部品（Button）を、何度でも置ける</p>
+    </div>
+  );
+}
+
+function ConceptHttpsDemo() {
+  const [secure, setSecure] = useState(true);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className={`mx-auto flex w-fit items-center gap-2 rounded-full px-3 py-2 shadow-sm ring-1 transition ${secure ? "bg-white ring-slate-200" : "bg-rose-50 ring-rose-200"}`}>
+        {secure ? (
+          <Icon name="lock" className="h-4 w-4 text-emerald-500" />
+        ) : (
+          <Icon name="x" className="h-4 w-4 text-rose-500" strokeWidth={3} />
+        )}
+        <span className="font-mono text-xs text-slate-600">
+          <span className={secure ? "text-emerald-600" : "text-rose-500"}>{secure ? "https" : "http"}</span>://co-cre.app
+        </span>
+      </div>
+      <div className={`mt-2 rounded-lg py-1.5 text-[10px] font-bold transition ${secure ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+        {secure ? "通信は暗号化されていて安全" : "保護されていない通信（盗み見の危険）"}
+      </div>
+      <button onClick={() => setSecure((v) => !v)} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        {secure ? "http に切り替える" : "https に戻す"}
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">鍵マーク＝暗号化。http は保護なし</p>
+    </div>
+  );
+}
+
+function ConceptClassDemo() {
+  const names = ["A", "B", "C", "D"];
+  const [items, setItems] = useState<string[]>([]);
+  const add = () => setItems((xs) => (xs.length >= names.length ? xs : [...xs, names[xs.length]]));
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-col items-center gap-1">
+          <span className="rounded-lg border-2 border-dashed border-slate-300 px-3 py-2 text-xs font-bold text-slate-500">設計図</span>
+          <span className="font-mono text-[9px] text-slate-400">class</span>
+        </div>
+        <Icon name="arrow-right" className="h-4 w-4 text-slate-400" />
+        <div className="flex min-h-[2rem] min-w-[6rem] flex-wrap items-center gap-1.5">
+          {items.length === 0 ? (
+            <span className="text-[10px] text-slate-300">まだ実体なし</span>
+          ) : (
+            items.map((c) => (
+              <span key={c} className="animate-pop-in flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold text-white">{c}</span>
+            ))
+          )}
+        </div>
+      </div>
+      <button onClick={add} disabled={items.length >= names.length} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 font-mono text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-50">
+        new で実体をつくる
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">1つの設計図から、実体（インスタンス）を何個も作る</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
   // ---- 概念用語の図解（2026-07-19）----
   variable: () => <ConceptVariableDemo />,
@@ -1628,16 +1702,7 @@ const demos: Record<string, () => ReactNode> = {
       <p className="mt-2 text-[10px] text-slate-400">関数が外に返す“答え”＝戻り値（ハイライト部分）</p>
     </div>
   ),
-  component: () => (
-    <div className="w-full max-w-xs text-center">
-      <div className="flex justify-center gap-2">
-        {[0, 1, 2].map((i) => (
-          <span key={i} className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white">ボタン</span>
-        ))}
-      </div>
-      <p className="mt-2 text-[10px] text-slate-400">1回つくった部品を、何度も使い回す</p>
-    </div>
-  ),
+  component: () => <ConceptComponentDemo />,
   props: () => <ConceptPropsDemo />,
   tailwind: () => (
     <div className="w-full max-w-xs text-center">
@@ -1649,15 +1714,7 @@ const demos: Record<string, () => ReactNode> = {
       <p className="mt-2 text-[10px] text-slate-400">小さなクラスを並べて見た目を作る</p>
     </div>
   ),
-  https: () => (
-    <div className="w-full max-w-xs text-center">
-      <div className="mx-auto flex w-fit items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
-        <Icon name="lock" className="h-4 w-4 text-emerald-500" />
-        <span className="font-mono text-xs text-slate-600">https://co-cre.app</span>
-      </div>
-      <p className="mt-2 text-[10px] text-slate-400">鍵マーク＝通信が暗号化されていて安全</p>
-    </div>
-  ),
+  https: () => <ConceptHttpsDemo />,
   xss: () => (
     <div className="w-full max-w-xs text-center">
       <div className="rounded-lg bg-white p-2.5 text-left shadow-sm ring-1 ring-slate-200">
@@ -1704,23 +1761,7 @@ const demos: Record<string, () => ReactNode> = {
       <p className="mt-2 text-[10px] text-slate-400">中身をのぞいて不具合の原因を探す＝デバッグ</p>
     </div>
   ),
-  class: () => (
-    <div className="w-full max-w-xs text-center">
-      <div className="flex items-center justify-center gap-3">
-        <div className="flex flex-col items-center gap-1">
-          <span className="rounded-lg border-2 border-dashed border-slate-300 px-3 py-2 text-xs font-bold text-slate-500">設計図</span>
-          <span className="text-[9px] text-slate-400">class</span>
-        </div>
-        <Icon name="arrow-right" className="h-4 w-4 text-slate-400" />
-        <div className="flex gap-1.5">
-          {["A", "B"].map((c) => (
-            <span key={c} className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold text-white">{c}</span>
-          ))}
-        </div>
-      </div>
-      <p className="mt-2 text-[10px] text-slate-400">1つの設計図から、実体を何個も作る＝クラス</p>
-    </div>
-  ),
+  class: () => <ConceptClassDemo />,
   framework: () => (
     <div className="w-full max-w-xs text-center">
       <div className="mx-auto w-32 rounded-lg border-2 border-blue-200 bg-blue-50/50 p-2">

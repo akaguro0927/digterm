@@ -1225,7 +1225,152 @@ function ColorSwatchDemo() {
   );
 }
 
+function ChecklistDemo() {
+  const items = ["会員登録", "プロフィール入力", "最初のレッスン"];
+  const [done, setDone] = useState<string[]>(["会員登録"]);
+  const t = (x: string) => setDone(done.includes(x) ? done.filter((d) => d !== x) : [...done, x]);
+  return (
+    <div className="w-full max-w-xs">
+      <div className="space-y-1 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        {items.map((x) => {
+          const on = done.includes(x);
+          return (
+            <button key={x} onClick={() => t(x)} className="flex w-full items-center gap-2 rounded px-1 py-1.5 text-left hover:bg-slate-50">
+              <span className={`flex h-5 w-5 items-center justify-center rounded border-2 ${on ? "border-brand-500 bg-brand-500 text-white" : "border-slate-300"}`}>
+                {on && <Icon name="check" className="h-3 w-3" strokeWidth={4} />}
+              </span>
+              <span className={`text-sm ${on ? "text-slate-400 line-through" : "text-slate-600"}`}>{x}</span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">チェックで済/未済＝チェックリスト</p>
+    </div>
+  );
+}
+
+function InlineEditDemo() {
+  const [editing, setEditing] = useState(false);
+  const [v, setV] = useState("あかぐろ");
+  return (
+    <div className="text-center">
+      {editing ? (
+        <input autoFocus value={v} onChange={(e) => setV(e.target.value)} onBlur={() => setEditing(false)} onKeyDown={(e) => e.key === "Enter" && setEditing(false)} className="rounded-lg bg-white px-3 py-1.5 text-sm outline-none ring-2 ring-blue-500" />
+      ) : (
+        <button onClick={() => setEditing(true)} className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 hover:bg-slate-100">
+          <span>{v}</span>
+          <Icon name="pencil" className="h-3.5 w-3.5 text-slate-400" />
+        </button>
+      )}
+      <p className="mt-2 text-[10px] text-slate-400">その場で書き換え＝その場編集（押してみて）</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（グラフ・状態・編集 2026-07-18l） ----
+  checklist: () => <ChecklistDemo />,
+  "inline-edit": () => <InlineEditDemo />,
+  "area-chart": () => (
+    <div className="w-full max-w-xs">
+      <svg viewBox="0 0 120 50" className="w-full">
+        <polygon points="4,42 4,38 28,28 52,32 76,16 100,22 116,10 116,42" fill="#1fc866" fillOpacity="0.18" />
+        <polyline points="4,38 28,28 52,32 76,16 100,22 116,10" fill="none" stroke="#1fc866" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <p className="mt-1 text-center text-[10px] text-slate-400">線の下を塗って量感＝エリアチャート</p>
+    </div>
+  ),
+  heatmap: () => (
+    <div className="w-full max-w-xs">
+      <div className="grid grid-cols-10 gap-0.5">
+        {Array.from({ length: 50 }).map((_, i) => {
+          const l = [0, 1, 2, 3][Math.floor(Math.abs(Math.sin(i * 1.7)) * 4)];
+          const c = ["bg-slate-100", "bg-brand-200", "bg-brand-400", "bg-brand-600"][l];
+          return <span key={i} className={`aspect-square rounded-sm ${c}`} />;
+        })}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">色の濃さで大小＝ヒートマップ</p>
+    </div>
+  ),
+  "map-pin": () => (
+    <div className="w-full max-w-xs">
+      <div className="relative h-28 overflow-hidden rounded-lg bg-emerald-50">
+        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(#d1fae5 1px,transparent 1px),linear-gradient(90deg,#d1fae5 1px,transparent 1px)", backgroundSize: "20px 20px" }} />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full">
+          <div className="flex h-8 w-8 rotate-45 items-center justify-center rounded-full rounded-bl-none bg-rose-500 shadow-lg">
+            <span className="h-2.5 w-2.5 -rotate-45 rounded-full bg-white" />
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">地図上で場所を指す＝地図ピン</p>
+    </div>
+  ),
+  "skeleton-loader": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-3 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <div className="h-12 w-12 shrink-0 animate-pulse rounded-lg bg-slate-200" />
+        <div className="flex-1 space-y-2 py-1">
+          <div className="h-3 w-3/4 animate-pulse rounded bg-slate-200" />
+          <div className="h-3 w-1/2 animate-pulse rounded bg-slate-200" />
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">形だけ先に灰色で＝スケルトン</p>
+    </div>
+  ),
+  "maintenance-page": () => (
+    <div className="w-full max-w-xs rounded-lg bg-white p-5 text-center shadow-sm ring-1 ring-slate-200">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-500">
+        <Icon name="settings" className="h-6 w-6" />
+      </span>
+      <p className="mt-2 font-display font-extrabold text-slate-800">メンテナンス中</p>
+      <p className="mt-1 text-[11px] text-slate-500">
+        ただいま更新作業中です。
+        <br />
+        15:00 頃に再開予定です。
+      </p>
+      <p className="mt-3 text-[10px] text-slate-400">一時停止のお知らせ＝メンテナンス画面</p>
+    </div>
+  ),
+  "currency-input": () => (
+    <div className="w-full max-w-xs">
+      <label className="text-xs font-bold text-slate-500">予算</label>
+      <div className="mt-1 flex items-center rounded-lg bg-white ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-blue-500">
+        <span className="pl-3 text-slate-400">¥</span>
+        <input defaultValue="10,000" className="w-full bg-transparent px-2 py-2 text-sm outline-none" />
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">¥付きで金額を入れる＝金額入力</p>
+    </div>
+  ),
+  "onboarding-slides": () => (
+    <div className="w-full max-w-[13rem] text-center">
+      <div className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+          <Icon name="search" className="h-8 w-8" />
+        </div>
+        <p className="mt-2 text-sm font-bold text-slate-700">名前を調べよう</p>
+        <p className="mt-1 text-[10px] text-slate-400">うろ覚えでも見つかります</p>
+        <div className="mt-3 flex justify-center gap-1.5">
+          {[true, false, false].map((a, i) => (
+            <span key={i} className={`h-1.5 rounded-full ${a ? "w-4 bg-brand-500" : "w-1.5 bg-slate-200"}`} />
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">初回の紹介スライド＝オンボーディング</p>
+    </div>
+  ),
+  "list-group": () => (
+    <div className="w-full max-w-xs">
+      <div className="divide-y divide-slate-100 rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        {["アカウント", "通知", "プライバシー", "ヘルプ"].map((x) => (
+          <div key={x} className="flex items-center justify-between px-3 py-2.5 text-sm text-slate-600">
+            <span>{x}</span>
+            <Icon name="chevron-right" className="h-4 w-4 text-slate-300" />
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">枠でまとめた縦リスト＝リストグループ</p>
+    </div>
+  ),
   // ---- UI部品 追加（グラフ・LP・状態 2026-07-18k） ----
   "color-swatch": () => <ColorSwatchDemo />,
   "line-chart": () => (

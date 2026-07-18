@@ -147,6 +147,59 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Co-Cre のつかいかた（体験の直後に配置） */}
+      <section className="py-16">
+        <div className="mx-auto max-w-5xl px-4">
+          <Reveal>
+            <h2 className="font-display text-center text-2xl font-extrabold sm:text-3xl">Co-Cre のつかいかた</h2>
+          </Reveal>
+          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+            {features.map((f, i) => (
+              <Reveal key={f.title} delay={i * 120}>
+                <div className="card-pop h-full p-6">
+                  <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${f.tile}`}>
+                    <Icon name={f.icon} className="h-5.5 w-5.5" />
+                  </span>
+                  <h3 className="font-display mt-4 font-extrabold">{f.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{f.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VIP会員の案内 */}
+      <section className="mx-auto max-w-5xl px-4 pb-4">
+        <Reveal>
+          <Link
+            href="/vip"
+            className="group relative block overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-400 to-amber-600 p-7 text-white shadow-lg shadow-amber-500/25 transition duration-200 hover:-translate-y-0.5 sm:p-9"
+          >
+            <div className="bg-dots pointer-events-none absolute inset-0 opacity-10" aria-hidden />
+            <div className="relative flex flex-wrap items-center justify-between gap-5">
+              <div className="min-w-0">
+                <span className="font-display inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold ring-1 ring-white/30">
+                  <Icon name="trophy" className="h-3 w-3" />
+                  Co-Cre VIP
+                </span>
+                <h2 className="font-display mt-3 text-2xl font-extrabold">もっと本気で覚えるなら</h2>
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-amber-50">
+                  弱点復習・全レッスン・AIでしらべる無制限・広告なし。無料でも「調べる」はずっと使えます。
+                </p>
+              </div>
+              <span
+                className="btn-3d font-display inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-amber-700"
+                style={{ ["--edge" as string]: "rgba(0,0,0,0.18)" }}
+              >
+                VIPを見る
+                <Icon name="arrow-right" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
+              </span>
+            </div>
+          </Link>
+        </Reveal>
+      </section>
+
       {/* はじめての人向け: 学習の道のり */}
       <section className="mx-auto max-w-5xl px-4 pt-14">
         <Reveal>
@@ -215,28 +268,6 @@ export default function Home() {
               </Link>
             </Reveal>
           ))}
-        </div>
-      </section>
-
-      {/* 特徴 */}
-      <section className="py-16">
-        <div className="mx-auto max-w-5xl px-4">
-          <Reveal>
-            <h2 className="font-display text-center text-2xl font-extrabold">Co-Cre のつかいかた</h2>
-          </Reveal>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {features.map((f, i) => (
-              <Reveal key={f.title} delay={i * 120}>
-                <div className="card-pop h-full p-6">
-                  <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${f.tile}`}>
-                    <Icon name={f.icon} className="h-5.5 w-5.5" />
-                  </span>
-                  <h3 className="font-display mt-4 font-extrabold">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{f.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 

@@ -514,4 +514,157 @@ h1 { font-size: 28px; margin: 0 0 4px; color: #111827; }
 
 <h1>ページの見出し</h1>
 <p class="lead">補足のリード文がここに入ります。</p>`,
+
+  "empty-state": `<style>
+.empty { text-align: center; padding: 32px; color: #9ca3af; }
+.empty .circle {
+  width: 56px; height: 56px; margin: 0 auto 12px;
+  border-radius: 50%; background: #f3f4f6;
+}
+.empty p { margin: 0; font-size: 14px; }
+</style>
+
+<div class="empty">
+  <div class="circle"></div>
+  <p>まだ何もありません</p>
+</div>`,
+
+  notification: `<style>
+.notif {
+  display: flex; gap: 10px; width: 260px; padding: 12px;
+  background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.notif .dot { width: 8px; height: 8px; margin-top: 6px; border-radius: 50%; background: #1fc866; }
+.notif .title { font-size: 14px; font-weight: bold; }
+.notif .time { font-size: 12px; color: #9ca3af; }
+</style>
+
+<div class="notif">
+  <span class="dot"></span>
+  <div>
+    <div class="title">新しいコメントが届きました</div>
+    <div class="time">たった今</div>
+  </div>
+</div>`,
+
+  snackbar: `<style>
+.snack {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  width: 300px; padding: 12px 16px; background: #1f2937; color: #fff;
+  border-radius: 8px; font-size: 14px;
+}
+.snack button { border: none; background: none; color: #6ee7b7; font-weight: bold; cursor: pointer; }
+</style>
+
+<div class="snack">
+  <span>削除しました</span>
+  <button>元に戻す</button>
+</div>`,
+
+  "split-button": `<style>
+.split { display: inline-flex; }
+.split .main, .split .more {
+  border: none; background: #1fc866; color: #fff; padding: 8px 14px; cursor: pointer;
+}
+.split .main { border-radius: 8px 0 0 8px; font-weight: bold; }
+.split .more { border-radius: 0 8px 8px 0; border-left: 1px solid rgba(255,255,255,.3); }
+</style>
+
+<div class="split">
+  <button class="main">保存</button>
+  <button class="more">▾</button>
+</div>`,
+
+  "like-button": `<style>
+.like {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid #fecaca; background: #fef2f2; color: #ef4444;
+  padding: 6px 12px; border-radius: 999px; font-size: 14px; cursor: pointer;
+}
+</style>
+
+<button class="like">♥ 128</button>`,
+
+  "file-upload": `<style>
+.drop {
+  width: 260px; padding: 28px; text-align: center;
+  border: 2px dashed #cbd5e1; border-radius: 12px; color: #6b7280; font-size: 14px;
+}
+.drop input { display: none; }
+.drop label { color: #1fc866; font-weight: bold; cursor: pointer; }
+</style>
+
+<div class="drop">
+  ここにドラッグ、または
+  <label for="f">ファイルを選択</label>
+  <input id="f" type="file">
+</div>`,
+
+  "char-counter": `<style>
+.counter { width: 240px; }
+.counter textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px; }
+.counter .num { text-align: right; font-size: 12px; color: #9ca3af; }
+</style>
+
+<div class="counter">
+  <textarea rows="2">こんにちは</textarea>
+  <div class="num">5 / 140</div>
+</div>`,
+
+  "required-mark": `<style>
+.label { font-size: 14px; font-weight: bold; }
+.req { color: #ef4444; margin-left: 4px; font-size: 12px; }
+</style>
+
+<label class="label">メールアドレス<span class="req">必須</span></label>`,
+
+  "error-message": `<style>
+.err-field input { border: 1px solid #ef4444; border-radius: 8px; padding: 8px 10px; width: 220px; }
+.err-msg { margin-top: 4px; color: #ef4444; font-size: 12px; }
+</style>
+
+<div class="err-field">
+  <input type="email" value="bad-email">
+  <p class="err-msg">正しいメールアドレスを入力してください</p>
+</div>`,
+
+  "status-dot": `<style>
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; }
+.status .dot { width: 9px; height: 9px; border-radius: 50%; background: #22c55e; }
+</style>
+
+<span class="status"><span class="dot"></span>オンライン</span>`,
+
+  thumbnail: `<style>
+.thumbs { display: flex; gap: 8px; }
+.thumbs img {
+  width: 56px; height: 56px; object-fit: cover; border-radius: 8px;
+  border: 2px solid transparent; cursor: pointer;
+}
+.thumbs img.active { border-color: #1fc866; }
+</style>
+
+<div class="thumbs">
+  <img class="active" src="1.jpg" alt="">
+  <img src="2.jpg" alt="">
+  <img src="3.jpg" alt="">
+</div>`,
+
+  toolbar: `<style>
+.toolbar {
+  display: inline-flex; gap: 2px; background: #f8fafc;
+  border: 1px solid #e2e8f0; border-radius: 8px; padding: 4px;
+}
+.toolbar button {
+  border: none; background: none; width: 32px; height: 32px;
+  border-radius: 6px; cursor: pointer;
+}
+.toolbar button:hover { background: #e2e8f0; }
+</style>
+
+<div class="toolbar">
+  <button style="font-weight:bold">B</button>
+  <button style="font-style:italic">I</button>
+  <button style="text-decoration:underline">U</button>
+</div>`,
 };

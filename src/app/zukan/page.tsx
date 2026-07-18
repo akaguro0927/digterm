@@ -4,11 +4,28 @@ import ZukanBrowser from "@/components/ZukanBrowser";
 import AdSlot from "@/components/AdSlot";
 import { Icon } from "@/components/icons";
 import { CATEGORY_LABELS, type Category } from "@/data/terms";
+import { flatNodes, levels } from "@/data/journey";
+import { normalize, type LessonIndexItem } from "@/lib/search";
 
 export const metadata: Metadata = {
   title: "用語図鑑",
   description: "フロントエンド用語・UI部品名を実例つきで検索できる図鑑。",
 };
+
+// レッスン横断検索用の軽量索引（サーバー側で1回だけ作る。journey本体は
+// クライアントに渡さず、この正規化済みテキストだけを ZukanBrowser へ prop で渡す）。
+const lessonIndex: LessonIndexItem[] = flatNodes
+  .filter((f) => f.node.type === "lesson")
+  .map((f) => {
+    const levelLabel = levels.find((l) => l.level === f.chapter.level)?.label ?? "";
+    const node = f.node as Extract<typeof f.node, { type: "lesson" }>;
+    const blob = normalize(
+      [node.title, f.chapter.title, f.chapter.subtitle, node.intro, ...node.takeaways]
+        .filter(Boolean)
+        .join(" "),
+    );
+    return { nodeId: node.id, title: node.title, chapterTitle: f.chapter.title, levelLabel, blob };
+  });
 
 export default async function ZukanPage({
   searchParams,
@@ -64,7 +81,7 @@ export default async function ZukanPage({
       </Link>
 
       <AdSlot className="mt-4" />
-      <ZukanBrowser initialCategory={initialCategory} />
+      <ZukanBrowser initialCategory={initialCategory} lessons={lessonIndex} />
     </div>
   );
 }

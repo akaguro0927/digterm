@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { terms, termNo, type Category } from "@/data/terms";
-import { matchTerm, suggestTerms } from "@/lib/search";
+import { matchTerm, suggestTerms, matchLesson, type LessonIndexItem } from "@/lib/search";
 import { categoryTheme, levelTheme } from "@/lib/categoryTheme";
 import { Icon } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -13,8 +13,10 @@ type CategoryFilter = Category | "all";
 
 export default function ZukanBrowser({
   initialCategory = "all",
+  lessons = [],
 }: {
   initialCategory?: CategoryFilter;
+  lessons?: LessonIndexItem[];
 }) {
   const PAGE_SIZE = 30; // 重くならないよう初期は30語だけ描画し、以降はまとめて追加ロード
 
@@ -41,6 +43,12 @@ export default function ZukanBrowser({
   const suggestions = useMemo(
     () => (query.trim() && filtered.length === 0 ? suggestTerms(query, visibleTerms) : []),
     [query, filtered.length, visibleTerms]
+  );
+
+  // 検索クエリがあるとき、用語だけでなくレッスンも横断ヒットさせる
+  const lessonHits = useMemo(
+    () => (query.trim() ? lessons.filter((l) => matchLesson(l, query)).slice(0, 6) : []),
+    [query, lessons]
   );
 
   // 絞り込みが変わったら表示件数をリセット（先頭30語から）
@@ -137,6 +145,36 @@ export default function ZukanBrowser({
           </button>
         ))}
       </div>
+
+      {/* レッスン横断ヒット（検索時のみ・用語とは別枠で） */}
+      {lessonHits.length > 0 && (
+        <div className="mt-6 rounded-2xl border-2 border-brand-100 bg-brand-50/40 p-4">
+          <p className="font-display flex items-center gap-1.5 text-xs font-bold tracking-widest text-brand-600">
+            <Icon name="flag" className="h-3.5 w-3.5" />
+            レッスンでも学べる
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {lessonHits.map((l) => (
+              <Link
+                key={l.nodeId}
+                href={`/learn/${l.nodeId}`}
+                className="group flex items-center gap-2 rounded-xl bg-white px-3 py-2.5 ring-1 ring-brand-100 transition hover:-translate-y-0.5 hover:ring-brand-300"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                  <Icon name="book-open" className="h-4 w-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-bold text-slate-700 group-hover:text-brand-600">{l.title}</span>
+                  <span className="block truncate text-[11px] text-slate-400">
+                    {l.levelLabel}・{l.chapterTitle}
+                  </span>
+                </span>
+                <Icon name="arrow-right" className="h-4 w-4 shrink-0 text-brand-400" strokeWidth={2.5} />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <p className="mt-6 text-sm text-slate-500">
         <span className="font-display text-lg font-extrabold text-brand-600">{filtered.length}</span> 語が見つかりました

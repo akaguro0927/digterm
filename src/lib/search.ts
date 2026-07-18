@@ -66,6 +66,24 @@ function similarity(q: string, term: Term): number {
   return best;
 }
 
+// ── レッスン横断検索 ──
+// 図鑑の検索窓から、用語だけでなくレッスンも一緒に探せるようにする。
+// journey.ts は巨大なので、サーバー側で作った軽量な索引（blob は正規化済み）を
+// クライアントへ prop で渡す前提。ここでは索引の型と一致判定だけを持つ。
+export interface LessonIndexItem {
+  nodeId: string;
+  title: string;
+  chapterTitle: string;
+  levelLabel: string;
+  blob: string; // 事前に normalize 済みの検索対象テキスト（title＋章＋intro＋takeaways）
+}
+
+export function matchLesson(item: LessonIndexItem, query: string): boolean {
+  const q = normalize(query);
+  if (!q) return false; // クエリ空ならレッスンは出さない（図鑑がメイン）
+  return item.blob.includes(q);
+}
+
 /**
  * 「これですか？」候補。ヒット0件のときに、綴り違い・あいまい表現から近い用語を返す。
  */

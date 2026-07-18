@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import PwaRegister from "@/components/PwaRegister";
 import { Noto_Sans_JP, M_PLUS_Rounded_1c } from "next/font/google";
 import "./globals.css";
 import CopyGuard from "@/components/CopyGuard";
@@ -32,6 +33,11 @@ export const metadata: Metadata = {
   },
   description:
     "「あの部品、名前がわからない」を解決。フロントエンド用語・UI部品名を実例つきで検索・学習できる図鑑アプリ Co-Cre。",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Co-Cre" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1fc866",
 };
 
 export default function RootLayout({
@@ -42,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${noto.variable} ${rounded.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
+        <PwaRegister />
         <CopyGuard />
         <GuidedTour />
         <AwardCelebration />

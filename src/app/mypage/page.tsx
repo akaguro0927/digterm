@@ -8,6 +8,7 @@ import { Icon, type IconName } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
 import StreakBar from "@/components/StreakBar";
 import LevelCard from "@/components/LevelCard";
+import ShareButton from "@/components/ShareButton";
 import StudyCalendar from "@/components/StudyCalendar";
 import AdSlot from "@/components/AdSlot";
 import { usePlan } from "@/lib/plan";
@@ -128,6 +129,11 @@ export default function MyPage() {
       {/* レベル・称号 */}
       <div className="mt-6">
         <LevelCard />
+      </div>
+
+      {/* 成果をシェア */}
+      <div className="mt-3">
+        <ShareButton />
       </div>
 
       {/* ストリーク＋今日の目標 */}

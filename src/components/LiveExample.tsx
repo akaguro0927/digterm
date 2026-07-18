@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import type { Category } from "@/data/terms";
 import { categoryTheme } from "@/lib/categoryTheme";
 import { codeSnippets } from "@/data/codeSnippets";
@@ -1672,6 +1672,95 @@ function ConceptClassDemo() {
   );
 }
 
+function ConceptXssDemo() {
+  const [escaped, setEscaped] = useState(true);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-[10px] text-slate-400">ユーザーが送ってきた入力：</p>
+      <div className="mt-1 rounded-lg bg-slate-900 p-2 text-left font-mono text-[10px] text-rose-300">&lt;script&gt;悪いコード&lt;/script&gt;</div>
+      <div className="my-1 text-[10px] text-slate-300">↓ 画面に出すと</div>
+      <div className={`rounded-lg p-2.5 text-left text-[11px] ring-1 transition ${escaped ? "bg-emerald-50 ring-emerald-200" : "bg-rose-50 ring-rose-200"}`}>
+        {escaped ? (
+          <span className="font-mono text-emerald-700">&lt;script&gt;悪いコード&lt;/script&gt;</span>
+        ) : (
+          <span className="font-bold text-rose-600">⚠ スクリプトが実行されてしまう！</span>
+        )}
+      </div>
+      <p className={`mt-2 text-[10px] font-bold ${escaped ? "text-emerald-600" : "text-rose-500"}`}>
+        {escaped ? "エスケープON＝ただの文字として表示（安全）" : "エスケープOFF＝コードとして動く（危険）"}
+      </p>
+      <button onClick={() => setEscaped((v) => !v)} className="mt-2 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        エスケープを{escaped ? "OFF" : "ON"}にする
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">入力をそのまま信用しない＝XSS対策</p>
+    </div>
+  );
+}
+
+function ConceptCiDemo() {
+  const [stage, setStage] = useState(-1); // -1:待機 0:コミット 1:テスト 2:完了
+  const run = () => {
+    setStage(0);
+    setTimeout(() => setStage(1), 500);
+    setTimeout(() => setStage(2), 1200);
+  };
+  const steps: { label: string; icon: IconName }[] = [
+    { label: "コミット", icon: "code" },
+    { label: "自動テスト", icon: "search" },
+    { label: "OK", icon: "check" },
+  ];
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold">
+        {steps.map((s, i) => (
+          <Fragment key={s.label}>
+            {i > 0 && <Icon name="arrow-right" className="h-3.5 w-3.5 text-slate-300" />}
+            <span className={`inline-flex items-center gap-0.5 rounded px-2 py-1 transition ${stage >= i ? (i === 2 ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600") : "bg-slate-100 text-slate-400"}`}>
+              <Icon name={s.icon} className="h-3 w-3" strokeWidth={i === 2 ? 3 : 2} />
+              {s.label}
+            </span>
+          </Fragment>
+        ))}
+      </div>
+      <button onClick={run} className="mt-3 rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-blue-700">
+        コミットして実行
+      </button>
+      <p className="mt-2 text-[10px] text-slate-400">変更のたび自動でテスト＝壊れの見張り番（CI）</p>
+    </div>
+  );
+}
+
+function ConceptTailwindDemo() {
+  const [p, setP] = useState(true);
+  const [bg, setBg] = useState(true);
+  const [round, setRound] = useState(true);
+  const toggles: [string, boolean, (v: boolean) => void][] = [
+    ["p-4", p, setP],
+    ["bg-blue-600", bg, setBg],
+    ["rounded-xl", round, setRound],
+  ];
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="rounded bg-slate-900 p-2 text-left font-mono text-[10px] text-slate-100">
+        class=&quot;
+        <span className={p ? "text-sky-300" : "text-slate-600 line-through"}>p-4</span>{" "}
+        <span className={bg ? "text-emerald-300" : "text-slate-600 line-through"}>bg-blue-600</span>{" "}
+        <span className={round ? "text-amber-300" : "text-slate-600 line-through"}>rounded-xl</span> text-white&quot;
+      </div>
+      <div className="my-2 text-slate-300">↓</div>
+      <div className={`mx-auto w-24 text-xs font-bold text-white ${p ? "p-4" : "p-1"} ${bg ? "bg-blue-600" : "bg-slate-300"} ${round ? "rounded-xl" : "rounded-none"}`}>箱</div>
+      <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+        {toggles.map(([label, val, set]) => (
+          <button key={label} onClick={() => set(!val)} className={`rounded-md px-2 py-1 font-mono text-[10px] font-bold ring-1 transition ${val ? "bg-blue-50 text-blue-600 ring-blue-200" : "bg-white text-slate-400 ring-slate-200"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">小さなクラスを足し引きして見た目を作る</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
   // ---- 概念用語の図解（2026-07-19）----
   variable: () => <ConceptVariableDemo />,
@@ -1704,41 +1793,10 @@ const demos: Record<string, () => ReactNode> = {
   ),
   component: () => <ConceptComponentDemo />,
   props: () => <ConceptPropsDemo />,
-  tailwind: () => (
-    <div className="w-full max-w-xs text-center">
-      <div className="rounded bg-slate-900 p-2 text-left font-mono text-[10px] text-slate-100">
-        class=&quot;<span className="text-sky-300">p-4</span> <span className="text-emerald-300">bg-blue-600</span> <span className="text-amber-300">rounded-xl</span> text-white&quot;
-      </div>
-      <div className="my-1 text-center text-sm text-slate-300">↓</div>
-      <div className="mx-auto w-24 rounded-xl bg-blue-600 p-4 text-xs font-bold text-white">箱</div>
-      <p className="mt-2 text-[10px] text-slate-400">小さなクラスを並べて見た目を作る</p>
-    </div>
-  ),
+  tailwind: () => <ConceptTailwindDemo />,
   https: () => <ConceptHttpsDemo />,
-  xss: () => (
-    <div className="w-full max-w-xs text-center">
-      <div className="rounded-lg bg-white p-2.5 text-left shadow-sm ring-1 ring-slate-200">
-        <span className="font-mono text-[10px] text-rose-500 line-through">&lt;script&gt;悪いコード&lt;/script&gt;</span>
-        <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-emerald-600">
-          <Icon name="check" className="h-3 w-3" strokeWidth={3} />
-          エスケープして無害化
-        </div>
-      </div>
-      <p className="mt-2 text-[10px] text-slate-400">入力をそのまま信用しない（XSS対策）</p>
-    </div>
-  ),
-  ci: () => (
-    <div className="w-full max-w-xs text-center">
-      <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold">
-        <span className="rounded bg-slate-100 px-2 py-1 text-slate-600">コミット</span>
-        <Icon name="arrow-right" className="h-3.5 w-3.5 text-slate-400" />
-        <span className="rounded bg-blue-50 px-2 py-1 text-blue-600">自動テスト</span>
-        <Icon name="arrow-right" className="h-3.5 w-3.5 text-slate-400" />
-        <span className="inline-flex items-center gap-0.5 rounded bg-emerald-50 px-2 py-1 text-emerald-600"><Icon name="check" className="h-3 w-3" strokeWidth={3} />OK</span>
-      </div>
-      <p className="mt-2 text-[10px] text-slate-400">変更のたび自動でテスト＝壊れの見張り番</p>
-    </div>
-  ),
+  xss: () => <ConceptXssDemo />,
+  ci: () => <ConceptCiDemo />,
   seo: () => <ConceptSeoDemo />,
   ogp: () => (
     <div className="w-full max-w-[15rem]">

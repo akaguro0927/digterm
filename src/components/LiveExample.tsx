@@ -1022,7 +1022,162 @@ function MultiSelectDemo() {
   );
 }
 
+function PasswordToggleDemo() {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center rounded-lg bg-white ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-blue-500">
+        <input type={show ? "text" : "password"} defaultValue="himitsu123" className="w-full bg-transparent px-3 py-2 text-sm outline-none" />
+        <button onClick={() => setShow(!show)} className="px-3 text-slate-400 hover:text-slate-600">
+          <Icon name="eye" className="h-4 w-4" />
+        </button>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">目のアイコンで表示切替＝パスワード表示切替</p>
+    </div>
+  );
+}
+
+function ChipFilterDemo() {
+  const opts = ["新着", "セール", "送料無料", "レビュー高"];
+  const [sel, setSel] = useState<string[]>(["セール"]);
+  const t = (o: string) => setSel(sel.includes(o) ? sel.filter((x) => x !== o) : [...sel, o]);
+  return (
+    <div className="w-full max-w-xs text-center">
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {opts.map((o) => (
+          <button key={o} onClick={() => t(o)} className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${sel.includes(o) ? "bg-brand-500 text-white" : "bg-white text-slate-500 ring-1 ring-slate-200"}`}>
+            {o}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">押して絞り込む＝フィルターチップ</p>
+    </div>
+  );
+}
+
+function RadioCardDemo() {
+  const opts: [string, string][] = [
+    ["無料", "¥0"],
+    ["VIP", "¥480/月"],
+  ];
+  const [sel, setSel] = useState("VIP");
+  return (
+    <div className="w-full max-w-xs">
+      <div className="flex gap-2">
+        {opts.map(([n, p]) => (
+          <button key={n} onClick={() => setSel(n)} className={`flex-1 rounded-xl border-2 p-3 text-center transition ${sel === n ? "border-brand-500 bg-brand-50" : "border-slate-200 bg-white"}`}>
+            <span className={`mx-auto mb-1 flex h-4 w-4 items-center justify-center rounded-full border-2 ${sel === n ? "border-brand-500" : "border-slate-300"}`}>
+              {sel === n && <span className="h-2 w-2 rounded-full bg-brand-500" />}
+            </span>
+            <p className="text-sm font-bold text-slate-700">{n}</p>
+            <p className="text-[10px] text-slate-400">{p}</p>
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">カードで1つ選ぶ＝選択カード</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（フォーム・通知など 2026-07-18g） ----
+  "password-toggle": () => <PasswordToggleDemo />,
+  "chip-filter": () => <ChipFilterDemo />,
+  "radio-card": () => <RadioCardDemo />,
+  "otp-input": () => (
+    <div className="text-center">
+      <div className="flex justify-center gap-2">
+        {[0, 1, 2, 3].map((i) => (
+          <span key={i} className={`flex h-11 w-9 items-center justify-center rounded-lg border-2 font-mono text-lg font-bold text-slate-700 ${i === 2 ? "border-blue-500" : "border-slate-200"}`}>
+            {i === 0 ? "4" : i === 1 ? "2" : i === 2 ? <span className="h-5 w-px animate-pulse bg-blue-500" /> : ""}
+          </span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">届いたコードを1マスずつ＝認証コード入力</p>
+    </div>
+  ),
+  "action-sheet": () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="space-y-1 rounded-2xl bg-white p-1.5 shadow-lg ring-1 ring-slate-200">
+        {["シェアする", "保存する", "削除する"].map((a) => (
+          <div key={a} className={`rounded-xl py-2.5 text-center text-sm font-bold ${a === "削除する" ? "text-rose-500" : "text-blue-600"}`}>{a}</div>
+        ))}
+      </div>
+      <div className="mt-1.5 rounded-2xl bg-white py-2.5 text-center text-sm font-bold text-slate-500 shadow-lg ring-1 ring-slate-200">キャンセル</div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">下から出る操作メニュー＝アクションシート</p>
+    </div>
+  ),
+  "confirm-dialog": () => (
+    <div className="w-full max-w-xs rounded-2xl bg-white p-5 text-center shadow-lg ring-1 ring-slate-200">
+      <p className="font-display font-extrabold text-slate-800">本当に削除しますか？</p>
+      <p className="mt-1 text-xs text-slate-500">この操作は取り消せません。</p>
+      <div className="mt-4 flex gap-2">
+        <button className="flex-1 rounded-lg bg-slate-100 py-2 text-sm font-bold text-slate-600">キャンセル</button>
+        <button className="flex-1 rounded-lg bg-rose-500 py-2 text-sm font-bold text-white">削除する</button>
+      </div>
+      <p className="mt-3 text-[10px] text-slate-400">はい/いいえで確認＝確認ダイアログ</p>
+    </div>
+  ),
+  "step-indicator": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center">
+        {["カート", "入力", "確認", "完了"].map((s, i, arr) => (
+          <div key={s} className="flex flex-1 items-center">
+            <div className="flex flex-col items-center">
+              <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${i <= 1 ? "bg-brand-500 text-white" : "bg-slate-200 text-slate-500"}`}>{i + 1}</span>
+              <span className="mt-1 text-[9px] text-slate-500">{s}</span>
+            </div>
+            {i < arr.length - 1 && <span className={`mx-1 h-0.5 flex-1 ${i < 1 ? "bg-brand-400" : "bg-slate-200"}`} />}
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">今どの段階かを示す＝ステップインジケーター</p>
+    </div>
+  ),
+  "toast-stack": () => (
+    <div className="w-full max-w-xs space-y-1.5">
+      {["コピーしました", "保存しました", "送信しました"].map((t, i) => (
+        <div key={t} className="flex items-center gap-2 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg" style={{ opacity: 1 - i * 0.22 }}>
+          <Icon name="check" className="h-3.5 w-3.5 text-emerald-300" strokeWidth={3} />
+          {t}
+        </div>
+      ))}
+      <p className="pt-1 text-center text-[10px] text-slate-400">通知を重ねて並べる＝トースト積み重ね</p>
+    </div>
+  ),
+  "search-history": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center gap-2 rounded-t-lg bg-white px-3 py-2 ring-1 ring-slate-300">
+        <Icon name="search" className="h-4 w-4 text-slate-400" />
+        <span className="text-sm text-slate-400">検索…</span>
+      </div>
+      <div className="rounded-b-lg bg-white py-1 shadow-md ring-1 ring-slate-200">
+        <p className="px-3 py-1 text-[9px] font-bold text-slate-400">最近の検索</p>
+        {["モーダル", "flexbox", "ハンバーガー"].map((s) => (
+          <div key={s} className="flex items-center justify-between px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50">
+            <span className="flex items-center gap-2">
+              <Icon name="search" className="h-3 w-3 text-slate-300" />
+              {s}
+            </span>
+            <Icon name="x" className="h-3 w-3 text-slate-300" />
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">前に調べた語の一覧＝検索履歴</p>
+    </div>
+  ),
+  "loading-bar": () => (
+    <div className="w-full max-w-xs">
+      <div className="overflow-hidden rounded bg-slate-100">
+        <div className="h-1 w-2/3 bg-gradient-to-r from-brand-400 to-brand-600" />
+      </div>
+      <div className="mt-2 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+        <div className="h-2 w-1/2 rounded bg-slate-100" />
+        <div className="mt-1.5 h-2 rounded bg-slate-100" />
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">画面上端で読込中を示す＝ローディングバー</p>
+    </div>
+  ),
   // ---- UI部品 追加（入力・表示 2026-07-18f） ----
   collapse: () => <CollapseDemo />,
   "multi-select": () => <MultiSelectDemo />,

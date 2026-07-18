@@ -70,7 +70,10 @@ export const codeSnippets: Record<string, string> = {
 </style>
 
 <span class="badge">
-  🔔
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+    <path d="M10 21a2 2 0 0 0 4 0"/>
+  </svg>
   <span class="count">3</span>
 </span>`,
 
@@ -211,5 +214,170 @@ blockquote {
 
 <div class="hamburger">
   <span></span><span></span><span></span>
+</div>`,
+
+  modal: `<style>
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.4);
+  display: grid; place-items: center;
+}
+.modal { width: 280px; background: #fff; border-radius: 12px; padding: 20px; }
+.modal button {
+  margin-top: 12px; padding: 8px 16px; border: none;
+  border-radius: 8px; background: #1fc866; color: #fff; font-weight: bold; cursor: pointer;
+}
+</style>
+
+<div class="overlay">
+  <div class="modal">
+    <h3>削除しますか？</h3>
+    <p>この操作は取り消せません。</p>
+    <button>削除する</button>
+  </div>
+</div>`,
+
+  toast: `<style>
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #1f2937; color: #fff; padding: 10px 18px;
+  border-radius: 999px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+</style>
+
+<div class="toast">保存しました</div>`,
+
+  tab: `<!-- ラジオボタンだけでJSなしのタブ -->
+<style>
+.tabs input { display: none; }
+.tabs label {
+  display: inline-block; padding: 8px 14px; cursor: pointer; color: #666;
+}
+.tabs input:checked + label {
+  color: #1fc866; border-bottom: 2px solid #1fc866;
+}
+</style>
+
+<div class="tabs">
+  <input type="radio" name="t" id="t1" checked><label for="t1">概要</label>
+  <input type="radio" name="t" id="t2"><label for="t2">レビュー</label>
+</div>`,
+
+  "text-field": `<style>
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.field input {
+  padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px;
+}
+.field input:focus { outline: none; border-color: #1fc866; }
+</style>
+
+<label class="field">
+  お名前
+  <input type="text" placeholder="山田 太郎">
+</label>`,
+
+  checkbox: `<style>
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: #1fc866; }
+</style>
+
+<label class="check">
+  <input type="checkbox" checked>
+  利用規約に同意する
+</label>`,
+
+  "toggle-switch": `<style>
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+.switch input { display: none; }
+.slider {
+  position: absolute; inset: 0; background: #cbd5e1;
+  border-radius: 999px; transition: .2s;
+}
+.slider::before {
+  content: ""; position: absolute; width: 20px; height: 20px;
+  left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s;
+}
+.switch input:checked + .slider { background: #1fc866; }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+</style>
+
+<label class="switch">
+  <input type="checkbox" checked>
+  <span class="slider"></span>
+</label>`,
+
+  alert: `<style>
+.alert {
+  padding: 12px 14px; border-radius: 8px; font-size: 14px;
+  background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;
+}
+</style>
+
+<div class="alert">
+  <strong>エラー：</strong>入力に誤りがあります。
+</div>`,
+
+  divider: `<style>
+.divider { display: flex; align-items: center; gap: 12px; color: #9ca3af; font-size: 13px; }
+.divider::before, .divider::after {
+  content: ""; flex: 1; height: 1px; background: #e5e7eb;
+}
+</style>
+
+<div class="divider">または</div>`,
+
+  rating: `<style>
+.stars { font-size: 22px; letter-spacing: 2px; }
+.stars .on { color: #f59e0b; }
+.stars .off { color: #d1d5db; }
+</style>
+
+<div class="stars">
+  <span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span><span class="off">★</span>
+</div>`,
+
+  "stat-card": `<style>
+.stat {
+  width: 160px; padding: 16px; background: #fff; border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.stat .label { font-size: 13px; color: #6b7280; }
+.stat .value { font-size: 28px; font-weight: bold; color: #111827; }
+.stat .up { font-size: 12px; color: #1fc866; }
+</style>
+
+<div class="stat">
+  <div class="label">今月の売上</div>
+  <div class="value">¥128,000</div>
+  <div class="up">▲ 12%</div>
+</div>`,
+
+  "skeleton-loader": `<style>
+.skel { width: 220px; }
+.skel div {
+  height: 12px; border-radius: 6px; margin-bottom: 8px;
+  background: linear-gradient(90deg, #eee, #f5f5f5, #eee);
+  background-size: 200% 100%; animation: shimmer 1.2s infinite;
+}
+.skel .short { width: 60%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+</style>
+
+<div class="skel">
+  <div></div><div></div><div class="short"></div>
+</div>`,
+
+  "segmented-control": `<style>
+.seg { display: inline-flex; background: #f1f5f9; border-radius: 999px; padding: 3px; }
+.seg button {
+  border: none; background: none; padding: 6px 16px;
+  border-radius: 999px; font-size: 13px; cursor: pointer; color: #475569;
+}
+.seg button.active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+</style>
+
+<div class="seg">
+  <button class="active">日</button>
+  <button>週</button>
+  <button>月</button>
 </div>`,
 };

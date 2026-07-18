@@ -69,6 +69,7 @@ export default function AccountMenu() {
     { icon: "message", label: "ヘルプ・使い方", href: "/help" },
     { icon: "mail", label: "お問い合わせ", href: "/contact" },
     { icon: "trophy", label: "会員プラン", href: "/vip" },
+    { icon: "user", label: "友達を招待（VIP7日）", href: "/invite" },
   ];
   const actionItems: { icon: IconName; label: string; onClick: () => void }[] = [
     { icon: "credit-card", label: "支払方法の変更", onClick: openPortal },

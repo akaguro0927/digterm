@@ -1079,7 +1079,163 @@ function RadioCardDemo() {
   );
 }
 
+function ReadMoreDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="w-full max-w-xs">
+      <p className="text-xs leading-relaxed text-slate-600">
+        この商品はとても使いやすく、毎日活躍しています。
+        {open && "デザインもシンプルで置き場所を選びません。バッテリーの持ちも良く、充電の手間が減りました。買ってよかったです。"}
+        {!open && (
+          <button onClick={() => setOpen(true)} className="ml-1 font-bold text-brand-600">…続きを読む</button>
+        )}
+      </p>
+      <p className="mt-2 text-center text-[10px] text-slate-400">途中で省略→展開＝もっと見る</p>
+    </div>
+  );
+}
+
+function CharCounterDemo() {
+  const [v, setV] = useState("こんにちは");
+  const max = 20;
+  const over = v.length > max;
+  return (
+    <div className="w-full max-w-xs">
+      <textarea value={v} onChange={(e) => setV(e.target.value)} rows={2} className={`w-full resize-none rounded-lg bg-white px-3 py-2 text-sm outline-none ring-1 ${over ? "ring-rose-400" : "ring-slate-300 focus:ring-2 focus:ring-blue-500"}`} />
+      <p className={`mt-1 text-right text-[11px] ${over ? "font-bold text-rose-500" : "text-slate-400"}`}>{v.length} / {max}</p>
+      <p className="mt-1 text-center text-[10px] text-slate-400">残り文字数を表示＝文字数カウンター</p>
+    </div>
+  );
+}
+
+function RatingInputDemo() {
+  const [n, setN] = useState(0);
+  const [hover, setHover] = useState(0);
+  return (
+    <div className="text-center">
+      <div className="flex justify-center gap-1 text-2xl">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <button key={i} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(0)} onClick={() => setN(i)} className={(hover || n) >= i ? "text-amber-400" : "text-slate-200"}>★</button>
+        ))}
+      </div>
+      <p className="mt-1 text-xs text-slate-500">{n ? `${n} をつけました` : "星を押して評価"}</p>
+      <p className="mt-2 text-[10px] text-slate-400">押して評価を入力＝星をつける</p>
+    </div>
+  );
+}
+
+function SwitchListDemo() {
+  const [on, setOn] = useState<Record<string, boolean>>({ 通知: true, ダークモード: false, 効果音: true });
+  return (
+    <div className="w-full max-w-xs">
+      <div className="divide-y divide-slate-100 rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        {Object.keys(on).map((k) => (
+          <div key={k} className="flex items-center justify-between px-3 py-2.5">
+            <span className="text-sm text-slate-600">{k}</span>
+            <button onClick={() => setOn({ ...on, [k]: !on[k] })} className={`relative h-5 w-9 rounded-full transition ${on[k] ? "bg-brand-500" : "bg-slate-300"}`}>
+              <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${on[k] ? "left-4" : "left-0.5"}`} />
+            </button>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">スイッチを並べた設定＝設定リスト</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（表示・入力の細部 2026-07-18h） ----
+  "read-more": () => <ReadMoreDemo />,
+  "char-counter": () => <CharCounterDemo />,
+  "rating-input": () => <RatingInputDemo />,
+  "switch-list": () => <SwitchListDemo />,
+  "progress-ring": () => (
+    <div className="text-center">
+      <div className="relative mx-auto h-24 w-24">
+        <svg viewBox="0 0 36 36" className="h-24 w-24 -rotate-90">
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e5e7eb" strokeWidth="3.5" />
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#1fc866" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="97.4" strokeDashoffset="31.2" />
+        </svg>
+        <span className="font-display absolute inset-0 flex items-center justify-center text-lg font-extrabold text-slate-800">68%</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">リングの埋まりで割合＝円形プログレス</p>
+    </div>
+  ),
+  "avatar-stack": () => (
+    <div className="text-center">
+      <div className="flex justify-center -space-x-3">
+        {["bg-rose-300", "bg-sky-300", "bg-amber-300", "bg-emerald-300"].map((c, i) => (
+          <span key={i} className={`flex h-10 w-10 items-center justify-center rounded-full text-white ring-2 ring-white ${c}`}>
+            <Icon name="user" className="h-5 w-5" />
+          </span>
+        ))}
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-500 ring-2 ring-white">+5</span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">アイコンを重ねて人数＝重なりアバター</p>
+    </div>
+  ),
+  "required-mark": () => (
+    <div className="w-full max-w-xs space-y-2">
+      <div>
+        <label className="text-xs font-bold text-slate-600">
+          メールアドレス <span className="rounded bg-rose-500 px-1.5 py-0.5 text-[9px] font-bold text-white">必須</span>
+        </label>
+        <div className="mt-1 h-8 rounded-lg bg-slate-50 ring-1 ring-slate-200" />
+      </div>
+      <div>
+        <label className="text-xs font-bold text-slate-600">
+          会社名 <span className="text-[10px] text-slate-400">任意</span>
+        </label>
+        <div className="mt-1 h-8 rounded-lg bg-slate-50 ring-1 ring-slate-200" />
+      </div>
+      <p className="text-center text-[10px] text-slate-400">必須の欄に付ける印＝必須マーク</p>
+    </div>
+  ),
+  "error-message": () => (
+    <div className="w-full max-w-xs">
+      <label className="text-xs font-bold text-slate-600">メールアドレス</label>
+      <input defaultValue="taro.example" className="mt-1 w-full rounded-lg bg-rose-50 px-3 py-2 text-sm outline-none ring-1 ring-rose-300" />
+      <p className="mt-1 flex items-center gap-1 text-[11px] text-rose-500">
+        <Icon name="x" className="h-3 w-3" strokeWidth={3} />
+        メールの形式が正しくありません
+      </p>
+      <p className="mt-2 text-center text-[10px] text-slate-400">欄の下に赤字で知らせる＝エラーメッセージ</p>
+    </div>
+  ),
+  "sticky-cta": () => (
+    <div className="w-full max-w-[13rem]">
+      <div className="relative h-32 overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="space-y-1.5 p-2.5">
+          {[90, 70, 80, 60].map((w, i) => (
+            <div key={i} className="h-2 rounded bg-slate-100" style={{ width: `${w}%` }} />
+          ))}
+        </div>
+        <div className="absolute inset-x-0 bottom-0 border-t border-slate-100 bg-white p-2">
+          <div className="rounded-lg bg-brand-500 py-2 text-center text-xs font-bold text-white">購入する ¥1,980</div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">下に貼り付く行動ボタン＝固定CTAバー</p>
+    </div>
+  ),
+  "badge-dot": () => (
+    <div className="text-center">
+      <div className="flex justify-center gap-6">
+        {[
+          ["bell", "通知"],
+          ["mail", "メッセージ"],
+        ].map(([ic, label]) => (
+          <span key={label as string} className="relative inline-flex flex-col items-center gap-1">
+            <span className="relative">
+              <Icon name={ic as IconName} className="h-7 w-7 text-slate-600" />
+              <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
+            </span>
+            <span className="text-[9px] text-slate-400">{label}</span>
+          </span>
+        ))}
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">数字なしの赤ポチ＝通知ドット</p>
+    </div>
+  ),
   // ---- UI部品 追加（フォーム・通知など 2026-07-18g） ----
   "password-toggle": () => <PasswordToggleDemo />,
   "chip-filter": () => <ChipFilterDemo />,

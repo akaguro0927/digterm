@@ -1143,7 +1143,134 @@ function SwitchListDemo() {
   );
 }
 
+function DarkModeToggleDemo() {
+  const [dark, setDark] = useState(false);
+  return (
+    <div className="text-center">
+      <div className={`mx-auto w-44 rounded-xl p-4 transition ${dark ? "bg-slate-800" : "bg-white ring-1 ring-slate-200"}`}>
+        <div className="flex items-center justify-between">
+          <span className={`text-sm font-bold ${dark ? "text-white" : "text-slate-700"}`}>{dark ? "ダーク" : "ライト"}</span>
+          <button onClick={() => setDark(!dark)} className={`relative h-6 w-11 rounded-full transition ${dark ? "bg-brand-500" : "bg-slate-300"}`}>
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${dark ? "left-5" : "left-0.5"}`} />
+          </button>
+        </div>
+        <div className={`mt-3 h-2 rounded ${dark ? "bg-slate-600" : "bg-slate-100"}`} />
+        <div className={`mt-1.5 h-2 w-2/3 rounded ${dark ? "bg-slate-600" : "bg-slate-100"}`} />
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">明暗を切り替える＝ダークモード切替</p>
+    </div>
+  );
+}
+
 const demos: Record<string, () => ReactNode> = {
+  // ---- UI部品 追加（チャット・情報表示 2026-07-18i） ----
+  "dark-mode-toggle": () => <DarkModeToggleDemo />,
+  "chat-bubble": () => (
+    <div className="w-full max-w-xs space-y-2">
+      <div className="flex justify-start">
+        <span className="max-w-[70%] rounded-2xl rounded-tl-sm bg-slate-100 px-3 py-2 text-xs text-slate-700">これ何て名前？</span>
+      </div>
+      <div className="flex justify-end">
+        <span className="max-w-[70%] rounded-2xl rounded-tr-sm bg-brand-500 px-3 py-2 text-xs text-white">ハンバーガーメニューだよ</span>
+      </div>
+      <p className="pt-1 text-center text-[10px] text-slate-400">左右の吹き出しで会話＝チャット吹き出し</p>
+    </div>
+  ),
+  "typing-indicator": () => (
+    <div className="text-center">
+      <span className="inline-flex items-center gap-1 rounded-2xl rounded-tl-sm bg-slate-100 px-3 py-2.5">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="h-2 w-2 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: `${i * 0.15}s` }} />
+        ))}
+      </span>
+      <p className="mt-2 text-[10px] text-slate-400">相手が入力中＝入力中インジケーター</p>
+    </div>
+  ),
+  "cookie-banner": () => (
+    <div className="w-full max-w-xs">
+      <div className="rounded-xl bg-slate-800 p-3 text-white shadow-lg">
+        <p className="text-[11px] leading-relaxed">当サイトはCookieを使用します。同意いただけますか？</p>
+        <div className="mt-2 flex gap-2">
+          <button className="flex-1 rounded-lg bg-brand-500 py-1.5 text-[11px] font-bold">同意する</button>
+          <button className="rounded-lg bg-white/10 px-3 py-1.5 text-[11px]">設定</button>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">Cookie同意を求める帯＝クッキー同意バー</p>
+    </div>
+  ),
+  "announcement-bar": () => (
+    <div className="w-full max-w-xs">
+      <div className="flex items-center justify-between gap-2 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-3 py-2 text-white">
+        <span className="text-[11px] font-bold">送料無料キャンペーン中！</span>
+        <Icon name="x" className="h-3.5 w-3.5 text-white/70" />
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">最上部の告知帯＝お知らせバー</p>
+    </div>
+  ),
+  "relative-time": () => (
+    <div className="w-full max-w-xs space-y-1.5">
+      {[
+        ["たった今", "たろう"],
+        ["5分前", "はなこ"],
+        ["3日前", "けん"],
+      ].map(([t, n]) => (
+        <div key={n as string} className="flex items-center justify-between rounded-lg bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200">
+          <span className="text-xs text-slate-600">{n} さんの投稿</span>
+          <span className="text-[10px] text-slate-400">{t}</span>
+        </div>
+      ))}
+      <p className="pt-1 text-center text-[10px] text-slate-400">今からの近さで示す＝相対時刻</p>
+    </div>
+  ),
+  "code-inline": () => (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-sm leading-relaxed text-slate-600">
+        ターミナルで <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[13px] text-rose-600">npm install</code> を実行します。
+      </p>
+      <p className="mt-3 text-[10px] text-slate-400">文中のコードを目立たせる＝インラインコード</p>
+    </div>
+  ),
+  "highlight-mark": () => (
+    <div className="w-full max-w-xs text-center">
+      <p className="text-sm leading-relaxed text-slate-700">
+        ここで大事なのは <mark className="rounded bg-amber-200 px-1">実際に触ること</mark> です。
+      </p>
+      <p className="mt-3 text-[10px] text-slate-400">背景色で強調＝ハイライト（マーカー）</p>
+    </div>
+  ),
+  "key-value-list": () => (
+    <div className="w-full max-w-xs">
+      <div className="divide-y divide-slate-100 rounded-lg bg-white text-xs shadow-sm ring-1 ring-slate-200">
+        {[
+          ["サイズ", "M"],
+          ["色", "ブラック"],
+          ["重さ", "1.2 kg"],
+          ["保証", "1年"],
+        ].map(([k, v]) => (
+          <div key={k} className="flex justify-between px-3 py-2">
+            <span className="text-slate-400">{k}</span>
+            <span className="font-bold text-slate-700">{v}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-slate-400">項目名：値で整理＝項目リスト</p>
+    </div>
+  ),
+  "view-count": () => (
+    <div className="text-center">
+      <div className="inline-flex items-center gap-4 rounded-lg bg-white px-4 py-2 text-xs text-slate-500 shadow-sm ring-1 ring-slate-200">
+        <span className="flex items-center gap-1">
+          <Icon name="eye" className="h-4 w-4" />
+          1.2万
+        </span>
+        <span className="flex items-center gap-1">
+          <Icon name="heart" className="h-4 w-4" />
+          340
+        </span>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-400">見られた回数を表示＝閲覧数表示</p>
+    </div>
+  ),
   // ---- UI部品 追加（表示・入力の細部 2026-07-18h） ----
   "read-more": () => <ReadMoreDemo />,
   "char-counter": () => <CharCounterDemo />,

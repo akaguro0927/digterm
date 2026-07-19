@@ -7,7 +7,8 @@ import Image from "next/image";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import { Icon, type IconName } from "@/components/icons";
-import AuthMascot from "@/components/AuthMascot";
+import AuthCity from "@/components/AuthCity";
+import Confetti from "@/components/Confetti";
 
 type Mode = "login" | "signup";
 
@@ -64,8 +65,15 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [sentEmail, setSentEmail] = useState(false);
   const [peeking, setPeeking] = useState(false); // パスワード入力中はキャラが目をかくす
+  const [celebrating, setCelebrating] = useState(false); // 成功時：2秒喜んでから遷移
 
   const t = THEME[mode];
+
+  // 成功したら「喜ぶエフェクト」を約2秒見せてから画面遷移する
+  const finishTo = (path: string) => {
+    setCelebrating(true);
+    setTimeout(() => router.replace(path), 2000);
+  };
 
   // すでにログイン済みならマイページへ
   useEffect(() => {
@@ -100,12 +108,12 @@ export default function LoginPage() {
         if (!data.session) {
           setSentEmail(true);
         } else {
-          router.replace("/mypage");
+          finishTo("/mypage");
         }
       } else {
         const { error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        router.replace("/mypage");
+        finishTo("/mypage");
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -136,6 +144,22 @@ export default function LoginPage() {
     );
   }
 
+  // 成功時の「喜ぶ」演出（約2秒）→ このあと finishTo が遷移する
+  if (celebrating) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-white/85 px-4 text-center backdrop-blur-sm">
+        <Confetti count={36} />
+        <div className="animate-pop-in relative flex flex-col items-center">
+          <AuthCity mode={mode} peeking={false} celebrating />
+          <h1 className="font-display mt-4 text-2xl font-extrabold text-slate-800">ようこそ、Co-Cre へ！</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {mode === "signup" ? "登録できたよ。さっそくはじめよう！" : "ログインできたよ！"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto grid min-h-[80vh] max-w-4xl items-center gap-8 px-4 py-10 md:grid-cols-2">
       {/* 左：カーソルで動く相棒キャラ（パスワード入力中は目をかくす） */}
@@ -145,8 +169,8 @@ export default function LoginPage() {
         }`}
       >
         <div className="bg-dots pointer-events-none absolute inset-0 opacity-[0.06]" aria-hidden />
-        <AuthMascot mode={mode} peeking={peeking} />
-        <h2 className="font-display mt-4 text-xl font-extrabold text-slate-800">
+        <AuthCity mode={mode} peeking={peeking} />
+        <h2 className="font-display mt-2 text-xl font-extrabold text-slate-800">
           {mode === "login" ? "おかえり、まってたよ" : "いっしょに、はじめよう"}
         </h2>
         <p className="mt-1 text-sm text-slate-500">

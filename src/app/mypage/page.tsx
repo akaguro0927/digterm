@@ -523,6 +523,7 @@ export default function MyPage() {
             { icon: "shield", label: "プライバシーポリシー", href: "/legal/privacy" },
             { icon: "book", label: "利用規約", href: "/legal/terms" },
             { icon: "credit-card", label: "特定商取引法に基づく表記", href: "/legal/tokusho" },
+            { icon: "zap", label: "開発: キャラ・エフェクト確認", href: "/mascot-preview" },
           ].map((it) => (
             <Link
               key={it.label}

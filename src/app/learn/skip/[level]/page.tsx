@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Icon } from "@/components/icons";
+import LevelMascot from "@/components/LevelMascot";
 import { levels, type CourseLevel } from "@/data/journey";
 import { markNodeCleared } from "@/lib/userStore";
 import { levelNodeIds, levelTestQuestions, shuffle, SKIP_PASS, SKIP_COUNT } from "@/lib/skipTest";
@@ -27,6 +28,8 @@ export default function SkipTestPage() {
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [brokeCombo, setBrokeCombo] = useState(0);
   const [done, setDone] = useState(false);
 
   const total = questions.length;
@@ -57,7 +60,14 @@ export default function SkipTestPage() {
   const pick = (idx: number) => {
     if (picked !== null) return;
     setPicked(idx);
-    if (idx === q.answer) setCorrect((c) => c + 1);
+    if (idx === q.answer) {
+      setCorrect((c) => c + 1);
+      setCombo((c) => c + 1);
+      setBrokeCombo(0);
+    } else {
+      setBrokeCombo(combo >= 3 ? combo : 0);
+      setCombo(0);
+    }
   };
   const next = () => {
     if (i + 1 >= total) {
@@ -149,7 +159,17 @@ export default function SkipTestPage() {
       </div>
       <p className="mt-1 text-right text-[11px] text-slate-400">合格ライン：{need} / {total} 問（9割）</p>
 
-      <div className="card-pop mt-5 p-5">
+      {/* レベル別の相棒キャラ（回答で反応） */}
+      <LevelMascot
+        level={level}
+        reaction={picked === null ? "idle" : picked === q.answer ? "correct" : "wrong"}
+        combo={combo}
+        brokeCombo={brokeCombo}
+        nonce={i}
+        className="mt-4"
+      />
+
+      <div className="card-pop mt-4 p-5">
         <p className="font-display text-base font-extrabold leading-relaxed text-slate-800">{q.prompt}</p>
         <div className="mt-4 grid gap-2.5">
           {q.choices.map((c, idx) => {

@@ -75,10 +75,10 @@ export default function LoginPage() {
     setTimeout(() => router.replace(path), 2000);
   };
 
-  // すでにログイン済みならマイページへ
+  // すでにログイン済みならマイページへ（ただし成功演出の再生中は遷移しない＝演出を最後まで見せる）
   useEffect(() => {
-    if (!loading && user) router.replace("/mypage");
-  }, [loading, user, router]);
+    if (!loading && user && !celebrating) router.replace("/mypage");
+  }, [loading, user, router, celebrating]);
 
   const configured = isSupabaseConfigured();
 
@@ -147,14 +147,10 @@ export default function LoginPage() {
   // 成功時の「喜ぶ」演出（約2秒）→ このあと finishTo が遷移する
   if (celebrating) {
     return (
-      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-white/85 px-4 text-center backdrop-blur-sm">
-        <Confetti count={36} />
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-white/85 px-4 backdrop-blur-sm">
+        <Confetti count={40} />
         <div className="animate-pop-in relative flex flex-col items-center">
           <AuthCity mode={mode} peeking={false} celebrating />
-          <h1 className="font-display mt-4 text-2xl font-extrabold text-slate-800">ようこそ、Co-Cre へ！</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            {mode === "signup" ? "登録できたよ。さっそくはじめよう！" : "ログインできたよ！"}
-          </p>
         </div>
       </div>
     );

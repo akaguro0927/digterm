@@ -5,6 +5,7 @@ import Link from "next/link";
 import { categoryTheme } from "@/lib/categoryTheme";
 import { Icon } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
+import LevelMascot, { type MascotLevel } from "@/components/LevelMascot";
 import { recordQuizAttempt, recordReviewResult, recordActivity } from "@/lib/userStore";
 import {
   generateQuiz,
@@ -255,8 +256,19 @@ export default function QuizRunner({
   const mm = String(Math.floor(timeLeft / 60)).padStart(1, "0");
   const ss = String(timeLeft % 60).padStart(2, "0");
 
+  const mascotLevel: MascotLevel =
+    mode === "intermediate" ? "intermediate" : mode === "advanced" || mode === "exam" ? "advanced" : "beginner";
+
   return (
     <div>
+      {/* レベル別の相棒キャラ（回答で表情＆演出が変わる） */}
+      <LevelMascot
+        level={mascotLevel}
+        reaction={showFeedback ? (isCorrect ? "correct" : "wrong") : "idle"}
+        nonce={idx}
+        className="mb-3"
+      />
+
       {/* 進捗 + タイマー */}
       <div className="flex items-center gap-4">
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">

@@ -6,6 +6,7 @@ import { Icon } from "@/components/icons";
 import { markNodeCleared, useClearedNodes, recordJourneyMiss, resolveJourneyMiss } from "@/lib/userStore";
 import { flatNodes, type TestNode } from "@/data/journey";
 import { awards } from "@/data/awards";
+import LevelMascot from "@/components/LevelMascot";
 
 function nextHrefAfter(id: string): string {
   const i = flatNodes.findIndex((f) => f.node.id === id);
@@ -21,6 +22,7 @@ export default function TestView({ node }: { node: TestNode }) {
   const [finished, setFinished] = useState(false);
 
   const cleared = useClearedNodes();
+  const level = flatNodes.find((f) => f.node.id === node.id)?.chapter.level ?? "beginner";
   const q = qs[idx];
   const answered = picked !== null;
   const rate = correct / qs.length;
@@ -148,6 +150,14 @@ export default function TestView({ node }: { node: TestNode }) {
   // ===== 出題 =====
   return (
     <div>
+      {/* レベル別の相棒キャラ（回答で表情＆演出が変わる） */}
+      <LevelMascot
+        level={level}
+        reaction={answered ? (picked === q.answer ? "correct" : "wrong") : "idle"}
+        nonce={idx}
+        className="mb-3"
+      />
+
       {/* 進捗 */}
       <div className="flex items-center gap-4">
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">

@@ -100,6 +100,32 @@
   55% { transform: translateY(0) scale(0.97); }
   75% { transform: translateY(-6px) scale(1.01); }
 }
+/* キャラの反応：不正解でぷるぷる／正解で小さくジャンプ */
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-4px) rotate(-3deg); }
+  40% { transform: translateX(4px) rotate(3deg); }
+  60% { transform: translateX(-3px) rotate(-2deg); }
+  80% { transform: translateX(3px) rotate(2deg); }
+}
+@keyframes hop {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-12px); }
+  60% { transform: translateY(0); }
+  80% { transform: translateY(-4px); }
+}
+/* 正解時に周りに舞うキラキラ */
+@keyframes spark {
+  0% { opacity: 0; transform: translateY(6px) scale(0.4); }
+  40% { opacity: 1; transform: translateY(-6px) scale(1); }
+  100% { opacity: 0; transform: translateY(-20px) scale(0.7); }
+}
+/* 不正解時の汗／もやもや */
+@keyframes sweat {
+  0% { opacity: 0; transform: translateY(-4px) scale(0.8); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(16px) scale(1); }
+}
 
 body {
   /* 紙の図鑑らしい温かみのある背景色 */

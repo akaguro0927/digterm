@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@rive-app/react-canvas": "^4.29.5",
     "@supabase/supabase-js": "^2.110.6",
     "next": "^15.3.0",
     "react": "^19.0.0",

@@ -126,6 +126,21 @@
   30% { opacity: 1; }
   100% { opacity: 0; transform: translateY(16px) scale(1); }
 }
+/* ネコの尻尾がゆらゆら */
+@keyframes tail-wag {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(14deg); }
+}
+/* ロボットのアンテナ光が点滅 */
+@keyframes antenna-blip {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+/* ふわっと上下（キャラのアイドル） */
+@keyframes hover-bob {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
 
 body {
   /* 紙の図鑑らしい温かみのある背景色 */

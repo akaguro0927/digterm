@@ -80,6 +80,24 @@ export default async function ZukanPage({
         </span>
       </Link>
 
+      {/* Windowsコマンド図鑑への導線 */}
+      <Link
+        href="/commands"
+        className="group mt-3 flex items-center gap-3 rounded-2xl border-2 border-slate-200 bg-slate-50/60 p-4 transition hover:border-slate-300"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-emerald-300">
+          <Icon name="terminal" className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-sm font-extrabold text-slate-800">Windowsコマンド図鑑</p>
+          <p className="text-[11px] text-slate-500">「黒い画面」がこわい人へ。cd・dir・ping など開発で使うコマンドを実例つきで</p>
+        </div>
+        <span className="flex shrink-0 items-center gap-1 rounded-full bg-slate-800 px-4 py-2 text-xs font-bold text-white transition group-hover:brightness-110">
+          ひらく
+          <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
+        </span>
+      </Link>
+
       <AdSlot className="mt-4" />
       <ZukanBrowser initialCategory={initialCategory} lessons={lessonIndex} />
     </div>

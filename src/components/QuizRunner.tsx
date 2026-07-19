@@ -7,6 +7,7 @@ import { Icon } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
 import LevelMascot, { type MascotLevel } from "@/components/LevelMascot";
 import { recordQuizAttempt, recordReviewResult, recordActivity } from "@/lib/userStore";
+import { playCorrect, playWrong } from "@/lib/sfx";
 import {
   generateQuiz,
   generateReviewQuiz,
@@ -261,6 +262,8 @@ export default function QuizRunner({
     setBrokeCombo(!correct && combo >= 3 ? combo : 0);
     setCombo((c) => (correct ? c + 1 : 0));
     setPicked(given);
+    if (correct) playCorrect();
+    else playWrong();
   };
 
   const next = () => {

@@ -10,6 +10,7 @@ import StreakBar from "@/components/StreakBar";
 import LevelCard from "@/components/LevelCard";
 import ShareButton from "@/components/ShareButton";
 import StudyCalendar from "@/components/StudyCalendar";
+import SfxToggle from "@/components/SfxToggle";
 import AdSlot from "@/components/AdSlot";
 import { usePlan } from "@/lib/plan";
 import { useProfile, hasProfile } from "@/lib/profile";
@@ -523,6 +524,7 @@ export default function MyPage() {
             { icon: "shield", label: "プライバシーポリシー", href: "/legal/privacy" },
             { icon: "book", label: "利用規約", href: "/legal/terms" },
             { icon: "credit-card", label: "特定商取引法に基づく表記", href: "/legal/tokusho" },
+            { icon: "terminal", label: "Windowsコマンド図鑑", href: "/commands" },
             { icon: "zap", label: "開発: キャラ・エフェクト確認", href: "/mascot-preview" },
           ].map((it) => (
             <Link
@@ -537,6 +539,7 @@ export default function MyPage() {
               <Icon name="chevron-right" className="h-4 w-4 text-slate-300" />
             </Link>
           ))}
+          <SfxToggle />
         </div>
         <p className="mt-3 text-center text-[11px] text-slate-400">Co-Cre プロトタイプ版 v0.1</p>
       </section>

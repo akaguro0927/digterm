@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/components/icons";
 import LevelMascot from "@/components/LevelMascot";
 import { recordActivity, recordJourneyMiss, resolveJourneyMiss } from "@/lib/userStore";
+import { playCorrect, playWrong } from "@/lib/sfx";
 import { useHasPaidAccess } from "@/lib/plan";
 import {
   flatNodes,
@@ -107,9 +108,11 @@ export default function MarathonPage() {
     resolveJourneyMiss(current.nodeId, current.qIndex, ok); // 正解→弱点から消える
     if (ok) {
       setCorrect((c) => c + 1);
+      playCorrect();
     } else {
       recordJourneyMiss(current.nodeId, current.qIndex); // 不正解→弱点に登録
       setMisses((m) => m + 1);
+      playWrong();
     }
   };
 

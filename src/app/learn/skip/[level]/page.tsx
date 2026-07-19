@@ -8,6 +8,7 @@ import LevelMascot from "@/components/LevelMascot";
 import { levels, type CourseLevel } from "@/data/journey";
 import { markNodeCleared } from "@/lib/userStore";
 import { levelNodeIds, levelTestQuestions, shuffle, SKIP_PASS, SKIP_COUNT } from "@/lib/skipTest";
+import { playCorrect, playWrong } from "@/lib/sfx";
 
 const VALID: CourseLevel[] = ["beginner", "intermediate", "advanced"];
 
@@ -64,9 +65,11 @@ export default function SkipTestPage() {
       setCorrect((c) => c + 1);
       setCombo((c) => c + 1);
       setBrokeCombo(0);
+      playCorrect();
     } else {
       setBrokeCombo(combo >= 3 ? combo : 0);
       setCombo(0);
+      playWrong();
     }
   };
   const next = () => {

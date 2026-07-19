@@ -7,6 +7,7 @@ import { markNodeCleared, useClearedNodes, recordJourneyMiss, resolveJourneyMiss
 import { flatNodes, type TestNode } from "@/data/journey";
 import { awards } from "@/data/awards";
 import LevelMascot from "@/components/LevelMascot";
+import { playCorrect, playWrong } from "@/lib/sfx";
 
 function nextHrefAfter(id: string): string {
   const i = flatNodes.findIndex((f) => f.node.id === id);
@@ -47,10 +48,12 @@ export default function TestView({ node }: { node: TestNode }) {
       setCombo((c) => c + 1);
       setBrokeCombo(0);
       resolveJourneyMiss(node.id, idx, true); // 正解したら弱点から消す
+      playCorrect();
     } else {
       setBrokeCombo(combo >= 3 ? combo : 0); // コンボが途切れたら演出用に記録
       setCombo(0);
       recordJourneyMiss(node.id, idx); // 間違えたら弱点に登録
+      playWrong();
     }
   };
   const next = () => {

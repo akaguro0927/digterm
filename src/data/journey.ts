@@ -560,7 +560,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "サイト全体で共通のナビは「グローバルナビ」とも呼ぶよ。どのページでも同じ場所にいる、頼れる案内係。" },
       ],
       takeaways: ["上の帯＝ヘッダー / 看板マーク＝ロゴ", "行き先リンク集＝ナビゲーション"],
-      relatedSlugs: ["header", "footer"],
+      relatedSlugs: ["header", "footer", "sidebar", "hero-section", "global-navigation", "first-view", "toolbar", "mega-menu", "announcement-bar"],
     },
     {
       id: "c3-l2",
@@ -576,7 +576,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "名前を知らないと調べようがない。でも名前がわかれば一発で検索できる。これがこの図鑑のねらいだよ！" },
       ],
       takeaways: ["三本線＝ハンバーガーメニュー / 横から出る＝ドロワー", "くるくる回る＝スピナー（読み込み中）"],
-      relatedSlugs: ["hamburger-menu", "drawer", "spinner"],
+      relatedSlugs: ["hamburger-menu", "drawer", "spinner", "breadcrumb", "dropdown", "kebab-menu", "context-menu", "command-palette", "bottom-navigation", "dropdown-menu", "back-to-top", "back-button"],
     },
     {
       id: "c3-l3",
@@ -592,7 +592,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "丸い顔写真マークは「アバター」。ログイン中のユーザーを表すよ。押すとメニューが出ることが多い。" },
       ],
       takeaways: ["探す欄＝検索バー / 絵だけのボタン＝アイコンボタン", "右上の赤丸＝バッジ / 丸い顔＝アバター"],
-      relatedSlugs: ["badge", "avatar"],
+      relatedSlugs: ["badge", "avatar", "search-bar", "notification-bell", "status-dot", "avatar-stack", "badge-dot", "notification-panel", "profile-header", "points-badge"],
     },
     {
       id: "c3-test",
@@ -650,7 +650,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "ボタンの近くにペロッと開く小メニューは「ポップオーバー」。ちょい足しの選択肢を出すのに便利だよ。" },
       ],
       takeaways: ["真ん中で操作を止める＝モーダル / 自動で消える通知＝トースト", "乗せると出る説明＝ツールチップ"],
-      relatedSlugs: ["modal", "toast", "tooltip", "popover"],
+      relatedSlugs: ["modal", "toast", "tooltip", "popover", "banner", "bottom-sheet", "lightbox", "notification", "alert", "snackbar", "overlay", "close-button", "cookie-banner", "coach-mark", "action-sheet", "confirm-dialog", "toast-stack"],
     },
     {
       id: "c4-l2",
@@ -666,7 +666,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "どれも“場所を節約して、たくさん見せる”ための工夫なんだ。" },
       ],
       takeaways: ["見出しで切り替え＝タブ / 開閉できる＝アコーディオン", "横にスライド＝カルーセル"],
-      relatedSlugs: ["tab", "accordion", "carousel"],
+      relatedSlugs: ["tab", "accordion", "carousel", "pagination", "stepper", "segmented-control", "timeline", "collapse", "step-indicator", "callout", "ribbon"],
     },
     {
       id: "c4-l3",
@@ -682,7 +682,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "選択肢が下に開くやつは「プルダウン（セレクト）」。都道府県を選ぶ時なんかに便利。" },
       ],
       takeaways: ["文字入力＝入力欄 / 複数選択＝チェックボックス・1つ＝ラジオ", "オンオフ＝トグル / 一覧から選ぶ＝プルダウン"],
-      relatedSlugs: ["text-field", "checkbox", "radio-button", "toggle-switch", "select"],
+      relatedSlugs: ["text-field", "checkbox", "radio-button", "toggle-switch", "select", "placeholder", "date-picker", "range-slider", "floating-label", "file-upload", "autocomplete", "color-picker", "calendar", "multi-select", "time-picker", "otp-input", "password-toggle", "radio-card", "tag-input", "currency-input", "search-history", "quantity-stepper", "avatar-upload"],
     },
     {
       id: "c4-test",
@@ -740,7 +740,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "プロっぽさは、じつは余白で決まる。まよったら“もう少し空ける”が正解なことが多いよ。" },
       ],
       takeaways: ["外のすき間＝マージン / 内のすき間＝パディング", "余白をとると読みやすく、上品に見える"],
-      relatedSlugs: ["margin", "padding"],
+      relatedSlugs: ["margin", "padding", "divider", "whitespace", "gutter"],
     },
     {
       id: "c5-l2",
@@ -756,7 +756,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "並べ方に名前があると、AIにも「Flexで横に並べて」と正確にお願いできるよ。" },
       ],
       takeaways: ["一列にいい感じ＝Flexbox / 格子状＝グリッド", "真ん中ぞろえ＝センタリング"],
-      relatedSlugs: ["flexbox", "grid-layout"],
+      relatedSlugs: ["flexbox", "grid-layout", "masonry", "bento-grid"],
     },
     {
       id: "c5-l3",
@@ -772,7 +772,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "見やすさ＝やさしさ。だれでも読める配色を心がけよう。" },
       ],
       takeaways: ["色の組み合わせ＝配色 / 主役＝メイン・差し色＝アクセント", "明るさの差＝コントラスト（大きいほど読みやすい）"],
-      relatedSlugs: ["color-code", "color-swatch", "accessibility"],
+      relatedSlugs: ["color-code", "color-swatch", "accessibility", "gradient", "opacity", "line-height", "text-shadow", "watermark", "dark-mode-toggle"],
     },
     {
       id: "c5-test",
@@ -830,7 +830,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "料理でいうと段どりメモ。設計図があると、AIにも作りたい形を伝えやすいよ。" },
       ],
       takeaways: ["作る前にラフ図＝ワイヤーフレーム", "配置→骨組み→飾り、の順で作るとラク"],
-      relatedSlugs: ["wireframe"],
+      relatedSlugs: ["wireframe", "mockup", "lp", "onboarding-slides"],
     },
     {
       id: "c6-l2",
@@ -846,7 +846,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "スマホでも見やすいか、必ず確かめよう。使う人の多くはスマホだからね。" },
       ],
       takeaways: ["画面はばで自動変化＝レスポンシブ", "切り替えの境目＝ブレークポイント"],
-      relatedSlugs: ["responsive"],
+      relatedSlugs: ["responsive", "breakpoint", "sticky-header", "viewport", "media-query", "sticky-cta"],
     },
     {
       id: "c6-l3",
@@ -862,7 +862,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         { text: "ぜんぶ、ここまで覚えた名前ばかり。部品の名前がわかれば、サイトはこうして組み上がるんだ。すごいでしょ？" },
       ],
       takeaways: ["サイト＝覚えた部品の組み合わせ", "名前がわかると、作る手順もイメージできる"],
-      relatedSlugs: ["button", "form", "modal", "spinner", "toast"],
+      relatedSlugs: ["button", "form", "modal", "spinner", "toast", "fab", "tag", "progress-bar", "cta", "rating", "chip", "qr-code", "video-player", "audio-player", "gallery", "thumbnail", "review-star", "sort-button", "share-button", "bookmark-button", "follow-button", "speed-dial", "chip-filter", "read-more", "chat-bubble", "typing-indicator", "testimonial", "social-icons", "copy-button", "logo-cloud", "hashtag", "tag-cloud", "filter-panel", "split-button", "like-button", "countdown", "progress-ring"],
     },
     {
       id: "c6-test",
@@ -1046,7 +1046,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         answer: 1,
         explain: "段落は <p>。見出しは <h1>〜<h6> です。",
       },
-      relatedSlugs: ["semantic-html", "dom"],
+      relatedSlugs: ["semantic-html", "dom", "markup", "heading", "paragraph", "code-inline", "highlight-mark", "kbd"],
       codeSample: `<h1>今日のごはん</h1>
 <p>カレーを作りました。</p>
 <h2>材料</h2>
@@ -1072,7 +1072,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         answer: 1,
         explain: "<a href=\"…\"> で飛び先を指定します。画像の場所は src。",
       },
-      relatedSlugs: ["dom"],
+      relatedSlugs: ["dom", "link-text"],
       codeSample: `<!-- リンク -->
 <a href="https://example.com">サイトへ行く</a>
 
@@ -1099,7 +1099,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         answer: 1,
         explain: "<ul>（外）の中に <li>（項目）を入れます。",
       },
-      relatedSlugs: ["dom", "card"],
+      relatedSlugs: ["dom", "card", "section", "wrapper", "blockquote", "pull-quote"],
       codeSample: `<ul>
   <li>りんご</li>
   <li>みかん</li>
@@ -1172,7 +1172,7 @@ export const nodesByChapter: Record<string, JourneyNode[]> = {
         answer: 0,
         explain: "クラスは先頭に . をつけて .box と書きます。",
       },
-      relatedSlugs: ["flexbox"],
+      relatedSlugs: ["flexbox", "hover", "display", "pseudo-class", "pseudo-element", "specificity"],
       codeSample: `/* すべての h1 を緑に */
 h1 { color: green; }
 
@@ -1193,7 +1193,7 @@ h1 { color: green; }
         { text: "% は「親の何割か」。width: 50% なら親の半分。単位を使い分けると、崩れにくい見た目が作れるよ。" },
       ],
       takeaways: ["色=color(文字)/background(背景)", "px=そのままの大きさ / rem=基準の何倍", "%=親のサイズに対する割合"],
-      relatedSlugs: ["color-code", "rem-em"],
+      relatedSlugs: ["color-code", "rem-em", "font-family", "css-variable"],
       practice: {
         prompt: "文字の色を指定するプロパティは？",
         choices: ["background", "color", "border", "width"],
@@ -1228,7 +1228,7 @@ h1 { color: green; }
         answer: 1,
         explain: "内側の余白は padding。外側の間かくは margin です。",
       },
-      relatedSlugs: ["box-model", "margin", "padding"],
+      relatedSlugs: ["box-model", "margin", "padding", "z-index", "border-radius", "box-shadow", "aspect-ratio", "overflow", "position", "scrollbar"],
       codeSample: `.card {
   padding: 16px;              /* 内側の余白 */
   border: 2px solid #ddd;     /* 枠線 */
@@ -1293,7 +1293,7 @@ h1 { color: green; }
         { text: "初級で覚えた「JS=動き」を、ここで実際に書けるようにしていくよ。" },
       ],
       takeaways: ["変数=名前つきのデータの箱", "letで箱を用意して値を入れる", "値を変えられるから“動き”が作れる"],
-      relatedSlugs: ["variable"],
+      relatedSlugs: ["variable", "class"],
       practice: {
         prompt: "「データを入れておく名前つきの箱」は？",
         choices: ["関数", "変数", "属性", "タグ"],
@@ -1350,7 +1350,7 @@ greet("あやと"); // → "こんにちは、あやとさん！"`,
         answer: 1,
         explain: "条件で処理を分けるのは if（条件分岐）です。",
       },
-      relatedSlugs: ["button", "toggle-switch"],
+      relatedSlugs: ["button", "toggle-switch", "event"],
       codeSample: `button.addEventListener("click", () => {
   if (score >= 80) {
     alert("合格！");
@@ -1470,7 +1470,7 @@ for (const f of fruits) {
         { text: "filter（選ぶ）と map（作り変える）。この2つが使えると、一覧を扱うコードがぐっとプロっぽくなるよ。" },
       ],
       takeaways: ["末尾に追加=push", "条件で選ぶ=filter", "別の形に作り変える=map"],
-      relatedSlugs: ["array", "loop"],
+      relatedSlugs: ["array", "loop", "relative-time"],
       practice: {
         prompt: "「条件に合う要素だけ取り出す」のは？",
         choices: ["push", "filter", "map", "length"],
@@ -1546,7 +1546,7 @@ nums.map((n) => n * 2);          // [2, 4, 6, 8]（2倍に）`,
         answer: 1,
         explain: "データを取り寄せる窓口＝API。返事の多くはJSONです。",
       },
-      relatedSlugs: ["api", "backend"],
+      relatedSlugs: ["api", "backend", "rest-api"],
     },
     {
       id: "m4-l2",
@@ -1595,7 +1595,7 @@ nums.map((n) => n * 2);          // [2, 4, 6, 8]（2倍に）`,
         answer: 0,
         explain: "待ってから続ける＝非同期。await で素直に書けます。",
       },
-      relatedSlugs: ["async", "spinner", "toast"],
+      relatedSlugs: ["async", "spinner", "toast", "http-status", "offline-banner"],
       codeSample: `try {
   const res = await fetch("/api/weather"); // 待つ
   const data = await res.json();           // JSONに変換
@@ -1689,7 +1689,7 @@ console.log(data.temperature); // 取れたデータを使う`,
         { text: "中級で学んだ“部品・配列・くり返し・データ取得”が、ここで1本につながる。集大成の実感がわくはず。" },
       ],
       takeaways: ["APIの返事はたいてい配列", "map で1件ずつ画面に変換", "取る→回す→部品に流す が王道"],
-      relatedSlugs: ["array", "loop", "card"],
+      relatedSlugs: ["array", "loop", "card", "data-table", "stat-card", "bar-chart", "line-chart", "area-chart", "donut-chart", "sparkline", "gauge", "heatmap", "kanban", "pricing-table", "comparison-table", "price-tag", "view-count", "metric-row", "rating-summary", "leaderboard", "order-tracking", "receipt", "ticket", "wishlist", "cart-summary", "coupon", "map-pin"],
       practice: {
         prompt: "取ってきた配列を1件ずつ画面用に変換するのは？",
         choices: ["map", "fetch", "commit", "await"],
@@ -1787,7 +1787,7 @@ items.map((item) => \`<div class="card">\${item.name}</div>\`);`,
         answer: 1,
         explain: "required をつけると必須項目になります。",
       },
-      relatedSlugs: ["form", "text-field", "button"],
+      relatedSlugs: ["form", "text-field", "button", "comment-box", "char-counter", "required-mark", "rating-input", "password-strength", "inline-edit", "newsletter-signup", "or-divider", "coupon-input"],
       codeSample: `<form>
   <label>お名前
     <input type="text" required>
@@ -1815,7 +1815,7 @@ items.map((item) => \`<div class="card">\${item.name}</div>\`);`,
         answer: 1,
         explain: "いま打たれている文字は input.value で取れます。",
       },
-      relatedSlugs: ["form", "toast"],
+      relatedSlugs: ["form", "toast", "error-message", "social-login", "poll"],
       codeSample: `form.addEventListener("submit", (e) => {
   e.preventDefault();          // 再読み込みを止める
   const name = input.value;    // 入力値を取る
@@ -1941,7 +1941,7 @@ function toggle() {
         { text: "フラグで“切り替え”、リストで“ならび”。この2つで、たいていの画面の状態は表せるよ。" },
       ],
       takeaways: ["フラグ=true/falseの2択の状態", "リスト=配列で持つ“ならび”の状態", "状態が変わったら画面も更新する"],
-      relatedSlugs: ["list-group", "empty-state"],
+      relatedSlugs: ["list-group", "empty-state", "switch-list", "checklist", "infinite-scroll", "tree-view", "key-value-list", "feature-list"],
       practice: {
         prompt: "「表示する／しない」を1つで持つのに向くのは？",
         choices: ["フラグ(true/false)", "リスト(配列)", "画像", "リンク"],
@@ -2151,7 +2151,7 @@ const saved = JSON.parse(localStorage.getItem("todos")); // 復元`,
         { text: "CSSファイルを行ったり来たりせず、その場で見た目が決まる。だから速い。このアプリもTailwindで作られているよ。" },
       ],
       takeaways: ["用意された小クラスを組み合わせる方式", "代表=Tailwind（p-4, text-center など）", "1クラス=1役割。HTMLに直接書ける"],
-      relatedSlugs: ["tailwind", "flexbox", "padding"],
+      relatedSlugs: ["tailwind", "flexbox", "padding", "reset-css"],
       practice: {
         prompt: "ユーティリティCSS（Tailwind）の特徴は？",
         choices: ["巨大な1枚絵を描く", "小さなクラスを組み合わせて作る", "画像だけで作る", "JSでしか書けない"],
@@ -2177,7 +2177,7 @@ const saved = JSON.parse(localStorage.getItem("todos")); // 復元`,
         { text: "角丸は rounded、影は shadow。この“余白・色・flex・角丸/影”を押さえれば、たいていの見た目は組めるよ。" },
       ],
       takeaways: ["余白=p-（内）/ m-（外）", "色=text-（文字）/ bg-（背景）", "横ならび=flex + gap / 角丸=rounded"],
-      relatedSlugs: ["flexbox", "margin", "grid-layout"],
+      relatedSlugs: ["flexbox", "margin", "grid-layout", "vendor-prefix"],
       practice: {
         prompt: "Tailwindで「内側の余白」を付けるクラスは？",
         choices: ["m-4", "p-4", "flex", "text-center"],
@@ -2202,7 +2202,7 @@ const saved = JSON.parse(localStorage.getItem("todos")); // 復元`,
         { text: "接頭辞で“いつ効くか”を指定する——この考え方がわかれば、動きのある見た目もクラスだけで作れるよ。" },
       ],
       takeaways: ["画面幅=sm: md: lg: の接頭辞", "マウス乗せ=hover: / 押下=active:", "接頭辞で「いつ効くか」を指定する"],
-      relatedSlugs: ["responsive", "grid-layout"],
+      relatedSlugs: ["responsive", "grid-layout", "transition", "transform", "css-animation", "hover-effect", "animation", "transition-effect"],
       practice: {
         prompt: "「中くらいの画面以上でだけ3列」にする書き方は？",
         choices: ["grid-cols-3", "md:grid-cols-3", "hover:grid-cols-3", "bg-3"],
@@ -2394,7 +2394,7 @@ console.log(total); // 中身を確認 → 期待通り？`,
         answer: 1,
         explain: "作って使い回す部品＝コンポーネント。Reactが得意です。",
       },
-      relatedSlugs: ["component", "button", "card"],
+      relatedSlugs: ["component", "button", "card", "framework", "library"],
       codeSample: `// Button という部品を1回つくる
 function Button() {
   return <button>送信</button>;
@@ -2453,7 +2453,7 @@ function Button() {
         answer: 1,
         explain: "state が変わると、その部分が自動で再描画されます。",
       },
-      relatedSlugs: ["state", "modal", "accordion"],
+      relatedSlugs: ["state", "modal", "accordion", "drag-and-drop"],
       codeSample: `function Counter() {
   const [count, setCount] = useState(0); // 状態を持つ
   return (
@@ -2575,7 +2575,7 @@ npm install`,
         answer: 1,
         explain: "秘密の情報は環境変数へ。コードに書いてGitHubに上げないこと。",
       },
-      relatedSlugs: ["hosting", "environment-variable", "responsive", "wireframe"],
+      relatedSlugs: ["hosting", "environment-variable", "responsive", "wireframe", "npm", "bundler", "deploy", "not-found-page", "maintenance-page"],
       codeSample: `# ❌ コードに直接書かない（GitHubに秘密が漏れる）
 const apiKey = "sk-1234...";
 
@@ -2754,7 +2754,7 @@ expect(greet("あやと")).toBe("こんにちは、あやとさん！");`,
         { text: "「動けばOK」の一歩先へ。速さを意識できると、ぐっとプロっぽくなるよ。" },
       ],
       takeaways: ["遅いページは離脱される", "重い原因の代表=画像とデータ量", "速さは“縁の下のUX”＝思いやり"],
-      relatedSlugs: ["spinner", "responsive"],
+      relatedSlugs: ["spinner", "responsive", "ssr-csr"],
       practice: {
         prompt: "ページが重くなる代表的な原因は？",
         choices: ["大きすぎる画像やデータ量", "クラス名の長さ", "コメントの数", "変数名"],
@@ -2776,7 +2776,7 @@ expect(greet("あやと")).toBe("こんにちは、あやとさん！");`,
         { text: "全部いっぺんに読まない。これが軽さの合言葉。待たせる所には、初級で習ったスピナーを出すと親切だね。" },
       ],
       takeaways: ["画像は縮める＆軽い形式に", "遅延読み込み(lazy)で初速を上げる", "データは必要な分だけ取る（ページング）"],
-      relatedSlugs: ["spinner", "carousel"],
+      relatedSlugs: ["spinner", "carousel", "cache", "cdn"],
       practice: {
         prompt: "「画面に出るまで画像を読み込まない」工夫は？",
         choices: ["遅延読み込み(lazy)", "環境変数", "プルリクエスト", "バリデーション"],
@@ -2798,7 +2798,7 @@ expect(greet("あやと")).toBe("こんにちは、あやとさん！");`,
         { text: "測る→一番重い所を直す→また測る。この繰り返し。テストの章と同じで、“確かめてから進む”が上級の作法だよ。" },
       ],
       takeaways: ["推測で直さず、まず計測する", "計測ツール=Lighthouse など", "一番重いボトルネックから直す"],
-      relatedSlugs: ["lazy-loading", "skeleton-loader", "loading-bar"],
+      relatedSlugs: ["lazy-loading", "skeleton-loader", "loading-bar", "skeleton-screen", "loading-dots"],
       practice: {
         prompt: "パフォーマンス改善の正しい順序は？",
         choices: ["勘で直す", "まず計測してボトルネックを直す", "全部書き直す", "何もしない"],
@@ -3329,7 +3329,7 @@ add(2, "3"); // ← 型エラー！`,
         { text: "バラバラに見えるページは、たいてい近接がバラバラ。近づける・離すを意識するだけで、ぐっと整って見える。" },
       ],
       takeaways: ["関係あるもの=近く / ないもの=離す", "余白でグループを作る（近接）", "見出しは“下の本文”に近づける"],
-      relatedSlugs: ["margin", "wireframe"],
+      relatedSlugs: ["margin", "wireframe", "ux"],
       practice: {
         prompt: "「近接」の考え方として正しいのは？",
         choices: ["全部を等間隔にする", "関係あるものを近づける", "余白をなくす", "色で分ける"],
@@ -3351,7 +3351,7 @@ add(2, "3"); // ← 型エラー！`,
         { text: "「なんか散らかって見える」の正体は、たいてい整列不足。線を意識するだけで解決するよ。" },
       ],
       takeaways: ["要素は見えない線にそろえる（整列）", "迷ったら左ぞろえ", "Flex/グリッドがそろえる道具"],
-      relatedSlugs: ["flexbox", "grid-layout"],
+      relatedSlugs: ["flexbox", "grid-layout", "z-pattern"],
       practice: {
         prompt: "「整列」で散らかりを防ぐには？",
         choices: ["バラバラに置く", "見えない線にそろえる", "色を増やす", "余白をなくす"],
@@ -3463,7 +3463,7 @@ add(2, "3"); // ← 型エラー！`,
         { text: "検索エンジンは、この“見出しの骨組み”を読んで内容を理解する。正しいタグ＝そのままSEOなんだ。" },
       ],
       takeaways: ["titleタグ=検索結果の看板", "meta description=紹介文", "正しい見出し構造(h1→h2)で内容を伝える"],
-      relatedSlugs: ["seo", "semantic-html"],
+      relatedSlugs: ["seo", "semantic-html", "table-of-contents", "reading-progress"],
       practice: {
         prompt: "検索結果に大きく出る“看板”になるのは？",
         choices: ["titleタグ", "背景色", "画像のsize", "コメント"],
@@ -3487,7 +3487,7 @@ add(2, "3"); // ← 型エラー！`,
         { text: "結局、速くて・見やすくて・役に立つ。“いいサイト”を作ることが、最強のSEO。近道はないんだ。" },
       ],
       takeaways: ["表示速度・スマホ対応もSEOに効く", "良いサイトからのリンク=信頼", "結局“いいサイト”が最強のSEO"],
-      relatedSlugs: ["seo", "responsive"],
+      relatedSlugs: ["seo", "responsive", "favicon", "ogp"],
       practice: {
         prompt: "SEOで有利になる土台として正しいのは？",
         choices: ["表示が速く・スマホで見やすい", "色が多い", "文字が小さい", "画像だけ"],
@@ -3617,7 +3617,7 @@ WHERE people >= 4;`,
         "ログイン後の通行証＝トークン（JWT）やセッション",
         "APIキー・CORSは安全の門番、Webhookは出来事の自動通知",
       ],
-      relatedSlugs: ["authentication", "jwt", "session", "authorization", "api-key", "cors", "webhook"],
+      relatedSlugs: ["authentication", "jwt", "session", "authorization", "api-key", "cors", "webhook", "cookie"],
       practice: {
         prompt: "「誰か」を確認するのが認証。「何をしていいか」の許可は？",
         choices: ["認可", "認証", "セッション", "CORS"],

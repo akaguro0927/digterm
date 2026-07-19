@@ -6,12 +6,12 @@ import { useClearedNodes, useJourneyWeak } from "@/lib/userStore";
 import { useHasPaidAccess } from "@/lib/plan";
 import {
   flatNodes,
-  totalNodes,
   isUnlocked,
   nextNodeId,
   isChapterAccessible,
   levels,
   type FlatNode,
+  type CourseLevel,
 } from "@/data/journey";
 
 const levelMeta = (level: string) => levels.find((l) => l.level === level);
@@ -22,10 +22,10 @@ function offsetX(globalIndex: number): number {
 }
 
 // 章ごとにノードをまとめる
-function groupByChapter(): { chapter: FlatNode["chapter"]; nodes: FlatNode[] }[] {
+function groupByChapter(nodes: FlatNode[]): { chapter: FlatNode["chapter"]; nodes: FlatNode[] }[] {
   const groups: { chapter: FlatNode["chapter"]; nodes: FlatNode[] }[] = [];
   let cur: { chapter: FlatNode["chapter"]; nodes: FlatNode[] } | null = null;
-  for (const fn of flatNodes) {
+  for (const fn of nodes) {
     if (!cur || cur.chapter.id !== fn.chapter.id) {
       cur = { chapter: fn.chapter, nodes: [] };
       groups.push(cur);
@@ -35,17 +35,32 @@ function groupByChapter(): { chapter: FlatNode["chapter"]; nodes: FlatNode[] }[]
   return groups;
 }
 
-export default function JourneyBoard() {
+// level を渡すとそのコース（初級/中級/上級）のマスだけ表示する。
+export default function JourneyBoard({ level }: { level?: CourseLevel }) {
   const cleared = useClearedNodes();
   const hasPaid = useHasPaidAccess();
   const weak = useJourneyWeak();
   const clearedSet = new Set(cleared);
-  const doneCount = flatNodes.filter((f) => clearedSet.has(f.node.id)).length;
-  const pct = totalNodes > 0 ? Math.round((doneCount / totalNodes) * 100) : 0;
-  const nextId = nextNodeId(cleared);
-  const allDone = nextId === null;
 
-  const chapters = groupByChapter();
+  const boardNodes = level ? flatNodes.filter((f) => f.chapter.level === level) : flatNodes;
+  const boardTotal = boardNodes.length;
+  const doneCount = boardNodes.filter((f) => clearedSet.has(f.node.id)).length;
+  const pct = boardTotal > 0 ? Math.round((doneCount / boardTotal) * 100) : 0;
+
+  const globalNextId = nextNodeId(cleared);
+  // このボード内で「次にやるマス」（未クリアの先頭）
+  const boardNext = boardNodes.find((f) => !clearedSet.has(f.node.id))?.node.id ?? null;
+  const boardNextFn = boardNodes.find((f) => f.node.id === boardNext);
+  const boardNextLocked = boardNextFn ? !isChapterAccessible(boardNextFn.chapter, hasPaid) : false;
+  const continueHref = boardNext ? (boardNextLocked ? "/vip" : `/learn/${boardNext}`) : "/learn";
+  const allDone = boardTotal > 0 && doneCount === boardTotal;
+
+  const jumpToCurrent = () => {
+    if (!boardNext) return;
+    document.getElementById(`node-${boardNext}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  const chapters = groupByChapter(boardNodes);
   let globalIndex = -1;
 
   return (
@@ -61,7 +76,7 @@ export default function JourneyBoard() {
             </p>
           </div>
           <p className="font-display text-sm font-extrabold text-slate-600">
-            {doneCount} <span className="text-slate-300">/ {totalNodes} マス</span>
+            {doneCount} <span className="text-slate-300">/ {boardTotal} マス</span>
           </p>
         </div>
         <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-100">
@@ -77,6 +92,28 @@ export default function JourneyBoard() {
           <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-white ring-2 ring-[#e7ddc8]" />これから</span>
         </div>
       </div>
+
+      {/* 上部アクション：スクロールせずに「今の続き」へ／「現在地」までスクロール */}
+      {boardNext && !allDone && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <Link
+            href={continueHref}
+            className="btn-3d font-display inline-flex items-center gap-1.5 rounded-full bg-brand-500 px-5 py-2.5 text-sm font-extrabold text-white"
+            style={{ ["--edge" as string]: "#12a854" }}
+          >
+            <Icon name={boardNextLocked ? "lock" : "flag"} className="h-4 w-4" />
+            {boardNextLocked ? "VIPで続きを開く" : "つづきから"}
+          </Link>
+          <button
+            type="button"
+            onClick={jumpToCurrent}
+            className="font-display inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-slate-600 ring-2 ring-[#e7ddc8] transition hover:text-brand-600 hover:ring-brand-300"
+          >
+            <Icon name="pointer" className="h-4 w-4 text-brand-500" />
+            現在地へ
+          </button>
+        </div>
+      )}
 
       {/* 弱点復習への導線（間違えた問題があるときだけ） */}
       {weak.length > 0 && (
@@ -100,25 +137,27 @@ export default function JourneyBoard() {
         </Link>
       )}
 
-      {/* レベルジャンプ（長い道のりを素早く移動）＋目次 */}
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-        {levels.map((lm) => (
-          <a
-            key={lm.level}
-            href={`#level-${lm.level}`}
-            className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-slate-600 ring-1 ring-[#e7ddc8] transition hover:text-brand-600 hover:ring-brand-300"
+      {/* レベルジャンプ（全コース表示のときだけ）＋目次 */}
+      {!level && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          {levels.map((lm) => (
+            <a
+              key={lm.level}
+              href={`#level-${lm.level}`}
+              className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-slate-600 ring-1 ring-[#e7ddc8] transition hover:text-brand-600 hover:ring-brand-300"
+            >
+              {lm.label}
+            </a>
+          ))}
+          <Link
+            href="/curriculum"
+            className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1.5 text-[11px] font-bold text-brand-700 ring-1 ring-brand-100 transition hover:bg-brand-100"
           >
-            {lm.label}
-          </a>
-        ))}
-        <Link
-          href="/curriculum"
-          className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1.5 text-[11px] font-bold text-brand-700 ring-1 ring-brand-100 transition hover:bg-brand-100"
-        >
-          <Icon name="book" className="h-3 w-3" />
-          目次
-        </Link>
-      </div>
+            <Icon name="book" className="h-3 w-3" />
+            目次
+          </Link>
+        </div>
+      )}
 
       {/* 道のり */}
       <div className="relative mx-auto mt-8 max-w-md pb-4">
@@ -132,11 +171,11 @@ export default function JourneyBoard() {
           const chapterDone = chap.nodes.every((fn) => clearedSet.has(fn.node.id));
           const chapterLocked = !isChapterAccessible(chap.chapter, hasPaid);
           const prevLevel = ci > 0 ? chapters[ci - 1].chapter.level : null;
-          const showLevelHeader = chap.chapter.level !== prevLevel;
+          const showLevelHeader = !level && chap.chapter.level !== prevLevel;
           const lm = levelMeta(chap.chapter.level);
           return (
             <section key={chap.chapter.id} className="relative">
-              {/* コースレベルの区切り（初級／中級／上級） */}
+              {/* コースレベルの区切り（全コース表示のときだけ） */}
               {showLevelHeader && lm && (
                 <div id={`level-${chap.chapter.level}`} className="relative mx-auto mb-2 mt-12 max-w-md scroll-mt-20 px-2 text-center first:mt-2">
                   <p className="font-display text-[11px] font-bold tracking-widest text-brand-500">{lm.eyebrow}</p>
@@ -179,7 +218,7 @@ export default function JourneyBoard() {
                   const done = clearedSet.has(node.id);
                   const vipLocked = chapterLocked && !done; // VIP章なのに未課金
                   const unlocked = !vipLocked && isUnlocked(node.id, cleared);
-                  const isNext = node.id === nextId;
+                  const isNext = node.id === globalNextId;
                   const isTest = node.type === "test";
 
                   const circle = (
@@ -247,7 +286,8 @@ export default function JourneyBoard() {
                   return (
                     <div
                       key={node.id}
-                      className="animate-pop-in relative"
+                      id={`node-${node.id}`}
+                      className="animate-pop-in relative scroll-mt-24"
                       style={{ transform: `translateX(${offsetX(gi)}px)`, animationDelay: `${gi * 55 + 200}ms` }}
                     >
                       {vipLocked ? (
@@ -272,7 +312,7 @@ export default function JourneyBoard() {
         })}
 
         {/* ゴール */}
-        <div className="animate-pop-in relative mt-10 flex flex-col items-center" style={{ animationDelay: `${totalNodes * 55 + 300}ms` }}>
+        <div className="animate-pop-in relative mt-10 flex flex-col items-center" style={{ animationDelay: `${boardTotal * 55 + 300}ms` }}>
           <span
             className={`flex h-20 w-20 items-center justify-center rounded-full ${
               allDone
@@ -283,12 +323,12 @@ export default function JourneyBoard() {
             <Icon name="trophy" className="h-9 w-9" />
           </span>
           <p className="font-display mt-2 text-sm font-extrabold text-slate-700">
-            {allDone ? "クリア！図鑑デビューだ" : "ゴール：かんたんなサイトへ"}
+            {allDone ? (level ? "このコース制覇！" : "クリア！図鑑デビューだ") : "ゴール：かんたんなサイトへ"}
           </p>
         </div>
       </div>
 
-      {allDone && (
+      {allDone && !level && (
         <div className="mt-6 flex justify-center">
           <Link
             href="/zukan"

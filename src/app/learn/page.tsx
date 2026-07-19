@@ -1,5 +1,5 @@
 import Link from "next/link";
-import JourneyBoard from "@/components/JourneyBoard";
+import LevelHub from "@/components/LevelHub";
 import AwardShelf from "@/components/AwardShelf";
 import StreakBar from "@/components/StreakBar";
 import { MascotFace } from "@/components/MascotTeacher";
@@ -41,9 +41,9 @@ export default function LearnPage() {
         </div>
       </div>
 
-      {/* 道のり（すっきりした線＋コンパクト） */}
+      {/* 目次ハブ：続きから＋初級/中級/上級の入口（各コースは専用ページへ） */}
       <div className="mx-auto mt-8 max-w-2xl px-4">
-        <JourneyBoard />
+        <LevelHub />
       </div>
 
       {/* 腕試し・復習（章末テストの通し受験＋弱点復習） */}
@@ -72,6 +72,23 @@ export default function LearnPage() {
               <span className="font-display block text-sm font-extrabold text-slate-800">弱点復習</span>
               <span className="block text-xs text-slate-400">間違えた問題だけ、もう一度</span>
             </span>
+          </Link>
+        </div>
+        {/* 補助導線 */}
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          <Link
+            href="/curriculum"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-slate-600 ring-1 ring-[#e7ddc8] transition hover:text-brand-600 hover:ring-brand-300"
+          >
+            <Icon name="book" className="h-3.5 w-3.5 text-brand-500" />
+            コース目次（全章）
+          </Link>
+          <Link
+            href="/tools"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-slate-600 ring-1 ring-[#e7ddc8] transition hover:text-brand-600 hover:ring-brand-300"
+          >
+            <Icon name="wrench" className="h-3.5 w-3.5 text-brand-500" />
+            道具とAIガイド
           </Link>
         </div>
       </div>

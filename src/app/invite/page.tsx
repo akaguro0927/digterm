@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { usePlan, setPlan } from "@/lib/plan";
 import { getInviteCode, hasRedeemed, markRedeemed, INVITE_REWARD_DAYS } from "@/lib/invite";
+import FriendsProgress from "@/components/FriendsProgress";
 
 export default function InvitePage() {
   const plan = usePlan();
@@ -120,6 +121,9 @@ export default function InvitePage() {
         )}
         {plan === "vip" && !msg && <p className="mt-2 text-xs font-bold text-amber-600">現在VIP会員です。</p>}
       </div>
+
+      {/* 友達の進捗（どの賞・コースにいるか） */}
+      <FriendsProgress />
 
       <p className="mt-6 rounded-2xl bg-slate-50 px-4 py-3 text-center text-[11px] leading-relaxed text-slate-400 ring-1 ring-slate-200">
         ※これはモックです。本番では、招待された友達が実際に登録したときに、両者へ自動でVIP{INVITE_REWARD_DAYS}日を付与します（不正利用対策つき）。

@@ -10,7 +10,7 @@ import { Icon } from "@/components/icons";
 
 const LEVELS: [MascotLevel, string][] = [
   ["beginner", "初級：ブラウザ窓キャラ"],
-  ["intermediate", "中級：3兄弟ブロック"],
+  ["intermediate", "中級：ロボット"],
   ["advanced", "上級：図形の鳥"],
 ];
 
@@ -148,7 +148,7 @@ export default function MascotPreviewPage() {
       </p>
       <p className="mt-2 inline-flex flex-wrap gap-x-3 gap-y-1 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-500 ring-1 ring-slate-200">
         <span>初級＝ブラウザ窓キャラ</span>
-        <span>中級＝3兄弟ブロック</span>
+        <span>中級＝ロボット</span>
         <span>上級＝図形の鳥</span>
       </p>
 

@@ -84,36 +84,47 @@ function BrowserChar({ offset, reaction }: { offset: { x: number; y: number }; r
   );
 }
 
-// 後ろの兄弟（シンプルな顔つきの角丸ブロック）
-function Buddy({ pos, color, edge, eye }: { pos: string; color: string; edge: string; eye: string }) {
+// ── 中級：かわいいロボット（図形キャラ）。アンテナ光＋ボルト耳＋胴体・腕・足 ──
+function RobotChar({ offset, reaction }: { offset: { x: number; y: number }; reaction: Reaction }) {
+  const light = reaction === "correct" ? "bg-emerald-400" : reaction === "wrong" ? "bg-rose-400" : "bg-amber-400";
+  const armAnim =
+    reaction === "correct" ? "tail-wag 0.4s ease-in-out 3" : reaction === "wrong" ? "shake 0.5s ease-in-out" : "tail-wag 2.2s ease-in-out infinite";
   return (
-    <div className={`absolute ${pos} flex flex-col items-center justify-center rounded-2xl ${color}`} style={{ boxShadow: `0 3px 0 ${edge}` }}>
-      <div className="flex gap-1.5">
-        <span className={`h-1.5 w-1.5 rounded-full ${eye}`} />
-        <span className={`h-1.5 w-1.5 rounded-full ${eye}`} />
-      </div>
-      <svg viewBox="0 0 16 8" className="mt-0.5 h-1.5 w-3" fill="none" aria-hidden>
-        <path d="M2 2 Q8 7 14 2" stroke={eye.includes("sky") ? "#0369a1" : "#0f766e"} strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
-    </div>
-  );
-}
-
-// ── 中級：3兄弟が段々に重なった角丸ブロック（図形キャラ） ──
-function TripletChar({ offset, reaction }: { offset: { x: number; y: number }; reaction: Reaction }) {
-  return (
-    <div className="relative h-[5.5rem] w-[5.5rem]">
-      {/* 後ろの2人（段々に上・右へ） */}
-      <Buddy pos="bottom-12 left-11 h-9 w-9 z-10" color="bg-sky-300" edge="#7dd3fc" eye="bg-sky-700/70" />
-      <Buddy pos="bottom-6 left-6 h-11 w-11 z-20" color="bg-teal-300" edge="#5eead4" eye="bg-teal-800/70" />
-      {/* 前の長男（大きめ・反応する） */}
-      <div className="absolute bottom-0 left-0 z-30 flex h-14 w-14 flex-col items-center justify-center rounded-2xl bg-brand-400 shadow-[0_4px_0_#12a854]">
-        <Eyes offset={offset} reaction={reaction} size="h-3.5 w-3.5" pupil="h-2 w-2" gap="gap-2" />
-        <span className="absolute left-1.5 top-[58%] h-2 w-2.5 rounded-full bg-white/40" />
-        <span className="absolute right-1.5 top-[58%] h-2 w-2.5 rounded-full bg-white/40" />
-        <div className="mt-0.5">
-          <Mouth reaction={reaction} color="text-white" />
+    <div className="relative flex flex-col items-center">
+      {/* 頭 */}
+      <div className="relative z-[2] flex h-[3.1rem] w-[3.7rem] items-center justify-center rounded-2xl bg-gradient-to-b from-slate-100 to-slate-300 ring-2 ring-slate-300 shadow-[0_4px_0_#cbd5e1]">
+        {/* アンテナ */}
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+          <span className="mx-auto block h-3.5 w-0.5 bg-slate-400" />
+          <span className={`absolute -top-1 left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full ${light} transition-colors`} style={{ animation: "antenna-blip 1.2s ease-in-out infinite" }} />
         </div>
+        {/* ボルト耳 */}
+        <span className="absolute -left-1.5 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-slate-200 ring-2 ring-slate-400/70" />
+        <span className="absolute -right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-slate-200 ring-2 ring-slate-400/70" />
+        {/* 画面フェイス */}
+        <div className="flex flex-col items-center justify-center rounded-lg bg-white/85 px-2 py-1 ring-1 ring-slate-200">
+          <Eyes offset={offset} reaction={reaction} size="h-3.5 w-3.5" pupil="h-2 w-2" gap="gap-2" />
+          <div className="mt-0.5">
+            <Mouth reaction={reaction} color="text-slate-500" />
+          </div>
+        </div>
+      </div>
+      {/* 胴体（胸の光＋腕） */}
+      <div className="relative z-[1] -mt-1 flex h-5 w-9 items-center justify-center rounded-lg bg-gradient-to-b from-slate-200 to-slate-300 ring-2 ring-slate-300 shadow-[0_3px_0_#cbd5e1]">
+        <span className={`h-2 w-2 rounded-full ${light} transition-colors`} />
+        <span
+          className="absolute -left-2.5 top-1 h-1.5 w-3.5 rounded-full bg-slate-300"
+          style={{ transformOrigin: "right center", animation: armAnim }}
+        />
+        <span
+          className="absolute -right-2.5 top-1 h-1.5 w-3.5 rounded-full bg-slate-300"
+          style={{ transformOrigin: "left center", animation: armAnim }}
+        />
+      </div>
+      {/* 足 */}
+      <div className="z-0 -mt-0.5 flex gap-2">
+        <span className="h-1.5 w-3 rounded-b-md bg-slate-400" />
+        <span className="h-1.5 w-3 rounded-b-md bg-slate-400" />
       </div>
     </div>
   );
@@ -347,7 +358,7 @@ export default function LevelMascot({
       >
         <div style={gestureStyle}>
           {level === "beginner" && <BrowserChar offset={offset} reaction={reaction} />}
-          {level === "intermediate" && <TripletChar offset={offset} reaction={reaction} />}
+          {level === "intermediate" && <RobotChar offset={offset} reaction={reaction} />}
           {level === "advanced" && <BirdChar offset={offset} reaction={reaction} />}
         </div>
       </div>

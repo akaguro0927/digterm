@@ -5,7 +5,7 @@
 const CODE_KEY = "cocre:invite-code:v1";
 const REDEEMED_KEY = "cocre:invite-redeemed:v1";
 
-export const INVITE_REWARD_DAYS = 7;
+export const INVITE_REWARD_DAYS = 3;
 
 function gen(): string {
   return "COCRE-" + Math.random().toString(36).slice(2, 8).toUpperCase();

@@ -1,35 +1,45 @@
 "use client";
 
 import { Icon, type IconName } from "@/components/icons";
-import { Eye, useEyeTracking } from "@/components/mascotEyes";
+import { Eye, useEyeTracking, usePointerParallax } from "@/components/mascotEyes";
 
 // 紙の図鑑カバー用の「標本プレート」。
 // 図形だけで構成した抽象キャラ（Co-Creくん）＋周囲に浮かぶUI部品の標本＋
 // 「名前を探す」象徴としての虫めがねスイープ。テキストに依存しないので多言語でもそのまま使える。
+// 浮遊アイコンは depth ぶんだけカーソルに合わせて視差移動する（見えてない時は停止）。
 
-const SPECIMENS: { icon: IconName; tint: string; pos: string; delay: string; rot: string }[] = [
-  { icon: "component", tint: "text-violet-500", pos: "left-1 top-4 sm:left-6", delay: "0s", rot: "-6deg" },
-  { icon: "droplet", tint: "text-pink-500", pos: "right-2 top-1 sm:right-8", delay: "1.1s", rot: "5deg" },
-  { icon: "terminal", tint: "text-emerald-500", pos: "left-3 bottom-6 sm:left-10", delay: "2.2s", rot: "7deg" },
-  { icon: "layout", tint: "text-sky-500", pos: "right-3 bottom-3 sm:right-10", delay: "1.6s", rot: "-5deg" },
+const SPECIMENS: { icon: IconName; tint: string; pos: string; delay: string; rot: string; depth: number }[] = [
+  { icon: "component", tint: "text-violet-500", pos: "left-1 top-4 sm:left-6", delay: "0s", rot: "-6deg", depth: 20 },
+  { icon: "droplet", tint: "text-pink-500", pos: "right-2 top-1 sm:right-8", delay: "1.1s", rot: "5deg", depth: -16 },
+  { icon: "terminal", tint: "text-emerald-500", pos: "left-3 bottom-6 sm:left-10", delay: "2.2s", rot: "7deg", depth: 14 },
+  { icon: "layout", tint: "text-sky-500", pos: "right-3 bottom-3 sm:right-10", delay: "1.6s", rot: "-5deg", depth: -22 },
 ];
 
 export default function HeroMascot() {
   const { ref, offset } = useEyeTracking(3);
+  const { ref: plateRef, vec } = usePointerParallax();
   return (
-    <div className="relative mx-auto h-[232px] w-full max-w-md overflow-hidden">
+    <div ref={plateRef} className="relative mx-auto h-[232px] w-full max-w-md overflow-hidden">
       {/* 標本台の影 */}
       <div className="absolute bottom-10 left-1/2 h-4 w-40 -translate-x-1/2 rounded-full bg-slate-900/10 blur-md" />
 
-      {/* 浮かぶUI部品の標本 */}
+      {/* 浮かぶUI部品の標本（外=カーソル視差 / 内=ふわふわ浮遊） */}
       {SPECIMENS.map((s, i) => (
         <span
           key={i}
-          className={`animate-float absolute z-0 flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#ebe4d5] bg-white shadow-[0_4px_0_#ebe4d5] ${s.pos} ${s.tint}`}
-          style={{ ["--float-rotate" as string]: s.rot, animationDelay: s.delay }}
+          className={`absolute z-0 ${s.pos}`}
+          style={{
+            transform: `translate(${vec.x * s.depth}px, ${vec.y * s.depth}px)`,
+            transition: "transform 220ms ease-out",
+          }}
           aria-hidden
         >
-          <Icon name={s.icon} className="h-5 w-5" />
+          <span
+            className={`animate-float flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#ebe4d5] bg-white shadow-[0_4px_0_#ebe4d5] ${s.tint}`}
+            style={{ ["--float-rotate" as string]: s.rot, animationDelay: s.delay }}
+          >
+            <Icon name={s.icon} className="h-5 w-5" />
+          </span>
         </span>
       ))}
 

@@ -164,7 +164,27 @@ const CORRECT_FX: Record<MascotLevel, { icon: IconName; color: string }> = {
 
 const SPARK_POS = ["left-0 top-1", "right-0 top-2", "left-4 -top-2", "right-5 -top-1", "left-1/2 -top-3"];
 
-function EffectLayer({ level, kind, nonce, combo = 0 }: { level: MascotLevel; kind: Reaction; nonce: number; combo?: number }) {
+const SHARD_DIRS = [
+  { sx: "-22px", sr: "-120deg" },
+  { sx: "-10px", sr: "80deg" },
+  { sx: "0px", sr: "160deg" },
+  { sx: "12px", sr: "-70deg" },
+  { sx: "22px", sr: "120deg" },
+];
+
+function EffectLayer({
+  level,
+  kind,
+  nonce,
+  combo = 0,
+  brokeCombo = 0,
+}: {
+  level: MascotLevel;
+  kind: Reaction;
+  nonce: number;
+  combo?: number;
+  brokeCombo?: number;
+}) {
   if (kind === "correct") {
     const fx = CORRECT_FX[level];
     const isCombo = combo >= 3; // 3連続以上で特別演出
@@ -202,6 +222,15 @@ function EffectLayer({ level, kind, nonce, combo = 0 }: { level: MascotLevel; ki
   if (kind === "wrong") {
     return (
       <div key={`w-${nonce}`} className="pointer-events-none absolute inset-0 z-20" aria-hidden>
+        {/* コンボが途切れた瞬間：かけらが飛び散る */}
+        {brokeCombo >= 3 &&
+          SHARD_DIRS.map((d, i) => (
+            <span
+              key={`s${i}`}
+              className={`absolute left-1/2 top-1/2 h-2 w-2 rounded-[1px] ${CORRECT_FX[level].color.replace("text-", "bg-")}`}
+              style={{ ["--sx" as string]: d.sx, ["--sr" as string]: d.sr, animation: `shard 0.7s ease-in ${i * 0.03}s both` }}
+            />
+          ))}
         {level === "beginner" && (
           <span
             className="absolute right-1 top-2 h-3 w-2.5 rounded-full rounded-tl-none bg-sky-300"
@@ -233,12 +262,14 @@ export default function LevelMascot({
   reaction,
   nonce = 0,
   combo = 0,
+  brokeCombo = 0,
   className = "",
 }: {
   level: MascotLevel;
   reaction: Reaction;
   nonce?: number;
   combo?: number;
+  brokeCombo?: number;
   className?: string;
 }) {
   const { ref, offset } = useEyeTracking(2);
@@ -283,7 +314,7 @@ export default function LevelMascot({
 
   return (
     <div ref={ref} className={`relative mx-auto flex h-24 w-full max-w-[10rem] items-end justify-center ${className}`}>
-      <EffectLayer level={level} kind={reaction} nonce={nonce} combo={combo} />
+      <EffectLayer level={level} kind={reaction} nonce={nonce} combo={combo} brokeCombo={brokeCombo} />
       {/* 外=アイドルのふわふわ／反応の動き、内=ときどきのしぐさ */}
       <div
         key={`${reaction}-${nonce}`}
@@ -296,6 +327,18 @@ export default function LevelMascot({
           {level === "advanced" && <RobotChar offset={offset} reaction={reaction} />}
         </div>
       </div>
+
+      {/* 問題を読むときの指さし（新しい問題が出たら下の問題文をぴっと指す） */}
+      {reaction === "idle" && (
+        <span
+          key={`point-${nonce}`}
+          className="pointer-events-none absolute -bottom-1 left-1/2 z-20 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 border-[#ebe4d5] bg-white text-brand-600 shadow-sm"
+          style={{ animation: "point-bounce 0.6s ease-in-out 2" }}
+          aria-hidden
+        >
+          <Icon name="pointer" className="h-3.5 w-3.5 rotate-90" strokeWidth={2.5} />
+        </span>
+      )}
     </div>
   );
 }

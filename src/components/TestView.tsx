@@ -20,6 +20,7 @@ export default function TestView({ node }: { node: TestNode }) {
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
   const [combo, setCombo] = useState(0);
+  const [brokeCombo, setBrokeCombo] = useState(0);
   const [finished, setFinished] = useState(false);
 
   const cleared = useClearedNodes();
@@ -44,8 +45,10 @@ export default function TestView({ node }: { node: TestNode }) {
     if (i === q.answer) {
       setCorrect((c) => c + 1);
       setCombo((c) => c + 1);
+      setBrokeCombo(0);
       resolveJourneyMiss(node.id, idx, true); // 正解したら弱点から消す
     } else {
+      setBrokeCombo(combo >= 3 ? combo : 0); // コンボが途切れたら演出用に記録
       setCombo(0);
       recordJourneyMiss(node.id, idx); // 間違えたら弱点に登録
     }
@@ -62,6 +65,7 @@ export default function TestView({ node }: { node: TestNode }) {
     setPicked(null);
     setCorrect(0);
     setCombo(0);
+    setBrokeCombo(0);
     setFinished(false);
   };
 
@@ -160,6 +164,7 @@ export default function TestView({ node }: { node: TestNode }) {
         reaction={answered ? (picked === q.answer ? "correct" : "wrong") : "idle"}
         nonce={idx}
         combo={combo}
+        brokeCombo={brokeCombo}
         className="mb-3"
       />
 

@@ -42,6 +42,7 @@ export default function QuizRunner({
   const [logs, setLogs] = useState<AnswerLog[]>([]);
   const [picked, setPicked] = useState<string | null>(null); // 選択式の回答（フィードバック表示中）
   const [combo, setCombo] = useState(0); // 連続正解
+  const [brokeCombo, setBrokeCombo] = useState(0); // 途切れたコンボ（演出用）
   const [input, setInput] = useState("");
   const [finished, setFinished] = useState(false);
   const [timeLeft, setTimeLeft] = useState(config.timeLimitSec ?? 0);
@@ -93,6 +94,7 @@ export default function QuizRunner({
     setLogs([]);
     setPicked(null);
     setCombo(0);
+    setBrokeCombo(0);
     setInput("");
     setFinished(false);
     setTimeLeft(config.timeLimitSec ?? 0);
@@ -246,6 +248,7 @@ export default function QuizRunner({
     if (picked !== null) return;
     const correct = q.type === "input" ? isInputCorrect(q.term, given) : given === q.answer;
     setLogs((l) => [...l, { question: q, given, correct }]);
+    setBrokeCombo(!correct && combo >= 3 ? combo : 0);
     setCombo((c) => (correct ? c + 1 : 0));
     setPicked(given);
   };
@@ -270,6 +273,7 @@ export default function QuizRunner({
         reaction={showFeedback ? (isCorrect ? "correct" : "wrong") : "idle"}
         nonce={idx}
         combo={combo}
+        brokeCombo={brokeCombo}
         className="mb-3"
       />
 

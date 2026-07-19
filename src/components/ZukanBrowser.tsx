@@ -7,6 +7,7 @@ import { matchTerm, suggestTerms, matchLesson, type LessonIndexItem } from "@/li
 import { categoryTheme, levelTheme } from "@/lib/categoryTheme";
 import { Icon } from "@/components/icons";
 import FavoriteButton from "@/components/FavoriteButton";
+import MiniMascot from "@/components/MiniMascot";
 import { hasVisual } from "@/data/visualTerms";
 
 type CategoryFilter = Category | "all";
@@ -190,8 +191,10 @@ export default function ZukanBrowser({
               key={t.slug}
               href={`/zukan/${t.slug}`}
               style={{ animationDelay: `${Math.min(i, 11) * 45}ms` }}
-              className="group animate-pop-in card-pop p-5"
+              className="group animate-pop-in card-pop relative p-5"
             >
+              {/* ホバーでひょこっと出るミニキャラ */}
+              <MiniMascot className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
               <div className="flex items-start justify-between">
                 <span
                   className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${th.tile} ${th.tileText}`}

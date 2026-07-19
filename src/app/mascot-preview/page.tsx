@@ -11,7 +11,7 @@ import { Icon } from "@/components/icons";
 const LEVELS: [MascotLevel, string][] = [
   ["beginner", "初級：ブラウザ窓キャラ"],
   ["intermediate", "中級：ネコ"],
-  ["advanced", "上級：ロボット"],
+  ["advanced", "上級：紫のモンスター"],
 ];
 
 // キャラ1体ぶんの操作パネル（ボタンで反応を再生）
@@ -143,7 +143,13 @@ export default function MascotPreviewPage() {
       <p className="font-display mt-4 text-xs font-bold tracking-widest text-brand-500">DEV / MASCOT</p>
       <h1 className="font-display mt-1 text-3xl font-extrabold">キャラ・エフェクト確認</h1>
       <p className="mt-2 text-sm text-slate-500">
+        <strong className="text-slate-700">キャラやエフェクトの変更は、まずこのページで確認します。</strong>
         ボタンを押すと、それぞれの反応・演出が再生されます。気になる箇所を教えてもらえれば、ここを基準に微調整します。
+      </p>
+      <p className="mt-2 inline-flex flex-wrap gap-x-3 gap-y-1 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-500 ring-1 ring-slate-200">
+        <span>初級＝ブラウザ窓キャラ</span>
+        <span>中級＝ネコ</span>
+        <span>上級＝紫のモンスター</span>
       </p>
 
       <h2 className="font-display mt-8 text-lg font-extrabold text-slate-800">レベル別キャラ（クイズ/テスト）</h2>

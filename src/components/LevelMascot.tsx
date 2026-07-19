@@ -84,24 +84,32 @@ function BrowserChar({ offset, reaction }: { offset: { x: number; y: number }; r
   );
 }
 
-// 丸っこくて可愛い耳（外＝オレンジ／内＝ピンク、角丸）
+// 丸っこくて可愛い耳（角丸三角・外＝クリーム／内＝ピンク）
 function CatEar({ side, droop }: { side: "l" | "r"; droop: boolean }) {
-  const base = side === "l" ? -18 : 18;
-  const rot = droop ? (side === "l" ? 34 : -34) : base;
+  const base = side === "l" ? -10 : 10;
+  const rot = droop ? (side === "l" ? 42 : -42) : base;
   return (
     <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6 transition-transform duration-300"
+      viewBox="0 0 28 26"
+      className="h-7 w-7 transition-transform duration-300"
       style={{ transform: `rotate(${rot}deg)`, transformOrigin: "bottom center" }}
       aria-hidden
     >
-      <path d="M12 3 L20 19 L4 19 Z" fill="#fdba74" stroke="#fdba74" strokeWidth="3.5" strokeLinejoin="round" />
-      <path d="M12 9 L16 18 L8 18 Z" fill="#fecdd3" stroke="#fecdd3" strokeWidth="1.5" strokeLinejoin="round" />
+      {/* 外耳：先も付け根も丸い三角 */}
+      <path
+        d="M14 3 Q16 3 17 7 L22 20 Q23 23 20 23 L8 23 Q5 23 6 20 L11 7 Q12 3 14 3 Z"
+        fill="#f4d3ac"
+      />
+      {/* 内耳：ピンク */}
+      <path
+        d="M14 9 Q15 9 15.5 12 L18 19 Q18.5 21 16 21 L12 21 Q9.5 21 10 19 L12.5 12 Q13 9 14 9 Z"
+        fill="#fbcfe8"
+      />
     </svg>
   );
 }
 
-// ── 中級：ネコ（丸くて可愛い版）。尻尾ゆらゆら、まちがえると耳がへたる ──
+// ── 中級：ネコ（一新・まるっと柔らかい版）。尻尾ゆらゆら、まちがえると耳がへたる ──
 function CatChar({ offset, reaction }: { offset: { x: number; y: number }; reaction: Reaction }) {
   const earDroop = reaction === "wrong";
   const tailUp = reaction === "correct";
@@ -109,71 +117,122 @@ function CatChar({ offset, reaction }: { offset: { x: number; y: number }; react
     <div className="relative">
       {/* 尻尾（ゆらゆら／正解でピンと上がる） */}
       <svg
-        viewBox="0 0 24 44"
-        className="absolute -right-4 bottom-0 z-0 h-14 w-8 text-orange-200"
+        viewBox="0 0 24 46"
+        className="absolute -right-4 bottom-0 z-0 h-14 w-8 text-[#f4d3ac]"
         style={{
           transformOrigin: "left bottom",
           animation: tailUp ? "tail-wag 0.5s ease-in-out 2" : "tail-wag 1.8s ease-in-out infinite",
         }}
         aria-hidden
       >
-        <path d="M5 42 C5 24, 20 24, 17 6" stroke="currentColor" strokeWidth="7" fill="none" strokeLinecap="round" />
+        <path d="M6 44 C4 26, 21 26, 16 6" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
+        {/* 尻尾の先の縞 */}
+        <path d="M16 6 C18 9 18 12 16 14" stroke="#e9bd8c" strokeWidth="8" fill="none" strokeLinecap="round" />
       </svg>
       {/* 耳（角丸・内側ピンク） */}
-      <span className="absolute -top-3 left-2 z-10">
+      <span className="absolute -top-3.5 left-1.5 z-10">
         <CatEar side="l" droop={earDroop} />
       </span>
-      <span className="absolute -top-3 right-2 z-10">
+      <span className="absolute -top-3.5 right-1.5 z-10">
         <CatEar side="r" droop={earDroop} />
       </span>
       {/* 顔（やわらかい丸） */}
-      <div className="relative z-[1] flex h-[4.75rem] w-[5.25rem] flex-col items-center justify-center rounded-[50%] border-2 border-orange-200 bg-[#fffaf4] shadow-[0_5px_0_#fed7aa]">
-        <Eyes offset={offset} reaction={reaction} size="h-[1.15rem] w-[1.15rem]" pupil="h-2.5 w-2.5" gap="gap-2.5" />
+      <div className="relative z-[1] flex h-[5rem] w-[5.4rem] flex-col items-center justify-center rounded-[50%] border-[2.5px] border-[#f0cfa4] bg-[#fff7ee] shadow-[0_6px_0_#f6dcb9]">
+        {/* おでこの毛のふさ（キャラ付け） */}
+        <span className="absolute -top-0.5 left-1/2 flex -translate-x-1/2 gap-px" aria-hidden>
+          <span className="h-2 w-1 rounded-full bg-[#f4d3ac]" />
+          <span className="h-2.5 w-1 rounded-full bg-[#f4d3ac]" />
+          <span className="h-2 w-1 rounded-full bg-[#f4d3ac]" />
+        </span>
+        <Eyes offset={offset} reaction={reaction} size="h-5 w-5" pupil="h-3 w-3" gap="gap-2.5" />
         {/* ほっぺ（ぽわっと） */}
-        <span className="absolute left-2.5 top-[54%] h-2.5 w-2.5 rounded-full bg-rose-200/70" />
-        <span className="absolute right-2.5 top-[54%] h-2.5 w-2.5 rounded-full bg-rose-200/70" />
-        {/* 鼻（小さいハート型ドット） */}
-        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-rose-300" />
-        <Mouth reaction={reaction} color="text-orange-400" />
+        <span className="absolute left-2 top-[55%] h-2.5 w-3 rounded-full bg-rose-200/80" />
+        <span className="absolute right-2 top-[55%] h-2.5 w-3 rounded-full bg-rose-200/80" />
+        {/* 鼻（小さな逆三角） */}
+        <svg viewBox="0 0 10 8" className="mt-1 h-1.5 w-2 text-rose-300" aria-hidden>
+          <path d="M1 1 H9 L5 7 Z" fill="currentColor" />
+        </svg>
+        <Mouth reaction={reaction} color="text-[#e5a86a]" />
         {/* ヒゲ（片側2本ずつ・外向き） */}
-        <span className="absolute -left-1 top-[56%] h-px w-3.5 -rotate-6 bg-orange-200" />
-        <span className="absolute -left-1 top-[63%] h-px w-3.5 rotate-6 bg-orange-200" />
-        <span className="absolute -right-1 top-[56%] h-px w-3.5 rotate-6 bg-orange-200" />
-        <span className="absolute -right-1 top-[63%] h-px w-3.5 -rotate-6 bg-orange-200" />
+        <span className="absolute -left-1.5 top-[57%] h-px w-4 -rotate-6 bg-[#e9c79c]" />
+        <span className="absolute -left-1.5 top-[64%] h-px w-4 rotate-6 bg-[#e9c79c]" />
+        <span className="absolute -right-1.5 top-[57%] h-px w-4 rotate-6 bg-[#e9c79c]" />
+        <span className="absolute -right-1.5 top-[64%] h-px w-4 -rotate-6 bg-[#e9c79c]" />
       </div>
     </div>
   );
 }
 
-// ── 上級：ロボット（フクロウ回避）。アンテナ光が点滅／ボルト付きの画面フェイス ──
-function RobotChar({ offset, reaction }: { offset: { x: number; y: number }; reaction: Reaction }) {
-  const screen =
-    reaction === "correct" ? "bg-emerald-50" : reaction === "wrong" ? "bg-rose-50" : "bg-[#eafff3]";
-  const light = reaction === "wrong" ? "bg-rose-400" : "bg-amber-400";
+// モンスターのツノ（角丸コーン・先が光る）
+function MonsterHorn({ side }: { side: "l" | "r" }) {
+  return (
+    <svg
+      viewBox="0 0 18 22"
+      className="h-6 w-5"
+      style={{ transform: side === "l" ? "rotate(-16deg)" : "rotate(16deg)" }}
+      aria-hidden
+    >
+      <path d="M9 1 C11 6 13 12 13 19 Q13 21 9 21 Q5 21 5 19 C5 12 7 6 9 1 Z" fill="#fcd34d" />
+      <path d="M9 1 C10 6 10 10 9 14 C8 10 8 6 9 1 Z" fill="#fbbf24" opacity="0.7" />
+      {/* 先の光 */}
+      <circle cx="9" cy="2.5" r="1.6" fill="#fef3c7" style={{ animation: "antenna-blip 1.4s ease-in-out infinite" }} />
+    </svg>
+  );
+}
+
+// ── 上級：紫のモンスター（ロボット刷新）。ツノが光り、横のトゲがゆれる／キバつき ──
+function MonsterChar({ offset, reaction }: { offset: { x: number; y: number }; reaction: Reaction }) {
+  const body =
+    reaction === "correct"
+      ? "from-violet-400 to-fuchsia-500"
+      : reaction === "wrong"
+        ? "from-violet-500 to-violet-700"
+        : "from-violet-400 to-violet-600";
   return (
     <div className="relative">
-      {/* アンテナ（光が点滅） */}
-      <div className="absolute -top-5 left-1/2 z-10 -translate-x-1/2">
-        <span className="mx-auto block h-4 w-0.5 bg-slate-300" />
-        <span
-          className={`absolute -top-1 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full ${light}`}
-          style={{ animation: "antenna-blip 1.2s ease-in-out infinite" }}
-        />
-      </div>
-      {/* 横のボルト（耳） */}
-      <span className="absolute top-1/2 -left-1.5 z-10 h-3.5 w-3.5 -translate-y-1/2 rounded-full border-2 border-violet-200 bg-white" />
-      <span className="absolute top-1/2 -right-1.5 z-10 h-3.5 w-3.5 -translate-y-1/2 rounded-full border-2 border-violet-200 bg-white" />
-      {/* 頭（四角） */}
-      <div className="relative h-20 w-24 rounded-2xl border-2 border-violet-200 bg-white shadow-[0_5px_0_#ddd6fe]">
-        {/* 画面フェイス */}
-        <div className={`absolute inset-2 flex flex-col items-center justify-center rounded-xl ring-1 ring-violet-100 transition-colors ${screen}`}>
-          <Eyes offset={offset} reaction={reaction} gap="gap-2.5" />
-          {/* ほっぺ（画面のLEDっぽく） */}
-          <span className="absolute left-2 top-[52%] h-1.5 w-2 rounded-full bg-violet-300/70" />
-          <span className="absolute right-2 top-[52%] h-1.5 w-2 rounded-full bg-violet-300/70" />
-          <div className="mt-1">
-            <Mouth reaction={reaction} color="text-violet-500" />
-          </div>
+      {/* ツノ（左右） */}
+      <span className="absolute -top-3.5 left-3 z-10">
+        <MonsterHorn side="l" />
+      </span>
+      <span className="absolute -top-3.5 right-3 z-10">
+        <MonsterHorn side="r" />
+      </span>
+      {/* 横のトゲ（腕っぽく・ゆらゆら） */}
+      <svg
+        viewBox="0 0 16 16"
+        className="absolute top-1/2 -left-3 z-0 h-6 w-6 -translate-y-1/2 text-violet-400"
+        style={{ transformOrigin: "right center", animation: "tail-wag 2.2s ease-in-out infinite" }}
+        aria-hidden
+      >
+        <path d="M15 8 L3 3 Q1 8 3 13 Z" fill="currentColor" />
+      </svg>
+      <svg
+        viewBox="0 0 16 16"
+        className="absolute top-1/2 -right-3 z-0 h-6 w-6 -translate-y-1/2 text-violet-400"
+        style={{ transformOrigin: "left center", animation: "tail-wag 2.2s ease-in-out 0.3s infinite" }}
+        aria-hidden
+      >
+        <path d="M1 8 L13 3 Q15 8 13 13 Z" fill="currentColor" />
+      </svg>
+      {/* 体（まるっと紫） */}
+      <div
+        className={`relative z-[1] flex h-[5rem] w-[5.4rem] flex-col items-center justify-center rounded-[46%] bg-gradient-to-b ring-2 ring-violet-300 shadow-[0_6px_0_#6d28d9] transition-colors ${body}`}
+      >
+        {/* おなかの明るい面 */}
+        <span className="absolute bottom-1.5 left-1/2 h-8 w-11 -translate-x-1/2 rounded-[50%] bg-violet-200/40" />
+        <Eyes offset={offset} reaction={reaction} size="h-5 w-5" pupil="h-3 w-3" gap="gap-2.5" />
+        {/* ほっぺ */}
+        <span className="absolute left-2 top-[56%] h-2.5 w-3.5 rounded-full bg-fuchsia-400/50" />
+        <span className="absolute right-2 top-[56%] h-2.5 w-3.5 rounded-full bg-fuchsia-400/50" />
+        {/* 口＋キバ */}
+        <div className="relative z-[1] mt-1">
+          <Mouth reaction={reaction} color="text-white" />
+          {reaction !== "correct" && (
+            <>
+              <span className="absolute -top-0.5 left-1.5 h-0 w-0 border-l-[3px] border-r-[3px] border-t-[5px] border-l-transparent border-r-transparent border-t-white" />
+              <span className="absolute -top-0.5 right-1.5 h-0 w-0 border-l-[3px] border-r-[3px] border-t-[5px] border-l-transparent border-r-transparent border-t-white" />
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -349,7 +408,7 @@ export default function LevelMascot({
         <div style={gestureStyle}>
           {level === "beginner" && <BrowserChar offset={offset} reaction={reaction} />}
           {level === "intermediate" && <CatChar offset={offset} reaction={reaction} />}
-          {level === "advanced" && <RobotChar offset={offset} reaction={reaction} />}
+          {level === "advanced" && <MonsterChar offset={offset} reaction={reaction} />}
         </div>
       </div>
 

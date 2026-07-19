@@ -4,12 +4,47 @@ import { useState, type ReactNode } from "react";
 import { Icon } from "@/components/icons";
 import { Eye, useEyeTracking } from "@/components/mascotEyes";
 
+export type FaceExpression = "idle" | "happy" | "talk" | "think";
+
+// 表情ごとの口
+function FaceMouth({ expression }: { expression: FaceExpression }) {
+  if (expression === "talk") {
+    return (
+      <svg viewBox="0 0 40 16" className="mt-1.5 h-3 w-9 text-brand-500" aria-hidden>
+        <ellipse cx="20" cy="8" rx="5" ry="4" fill="currentColor" />
+      </svg>
+    );
+  }
+  const d =
+    expression === "happy"
+      ? "M4 3 C10 15, 30 15, 36 3"
+      : expression === "think"
+        ? "M9 8 L31 8"
+        : "M6 5 C11 11, 29 11, 34 5";
+  return (
+    <svg viewBox="0 0 40 16" className="mt-1.5 h-3 w-9 text-brand-500" fill="none" aria-hidden>
+      <path d={d} stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 // ヘッダーで使ったキャラ（ブラウザ窓の顔）。目がカーソルを追う。物語ナレーション用に単体で使う。
-export function MascotFace({ className = "" }: { className?: string }) {
+// expression で表情、nonce が変わるたびに小さくうなずく（レッスン本文で語りに合わせて動く）。
+export function MascotFace({
+  className = "",
+  expression = "idle",
+  nonce = 0,
+}: {
+  className?: string;
+  expression?: FaceExpression;
+  nonce?: number;
+}) {
   const { ref, offset } = useEyeTracking(2.5);
+  const eyeOff = expression === "think" ? { x: 1.5, y: -2 } : offset;
+  const closed = expression === "happy";
   return (
     <div className={`animate-float ${className}`} style={{ ["--float-rotate" as string]: "1deg" }}>
-      <div className="relative h-24 w-32 rounded-[1.4rem] border-2 border-[#ebe4d5] bg-white shadow-[0_5px_0_#ebe4d5]">
+      <div key={nonce} className="relative h-24 w-32 rounded-[1.4rem] border-2 border-[#ebe4d5] bg-white shadow-[0_5px_0_#ebe4d5]" style={{ animation: "nod 0.6s ease-in-out" }}>
         <div className="flex items-center gap-1 rounded-t-[1.2rem] border-b border-slate-100 bg-slate-50/70 px-3 py-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-rose-300" />
           <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
@@ -17,14 +52,12 @@ export function MascotFace({ className = "" }: { className?: string }) {
         </div>
         <div ref={ref} className="relative flex h-[calc(100%-26px)] flex-col items-center justify-center">
           <div className="flex items-end gap-4">
-            <Eye offset={offset} size="h-4 w-4" pupil="h-2.5 w-2.5" />
-            <Eye offset={offset} size="h-4 w-4" pupil="h-2.5 w-2.5" delay="0.05s" />
+            <Eye offset={eyeOff} size="h-4 w-4" pupil="h-2.5 w-2.5" closed={closed} />
+            <Eye offset={eyeOff} size="h-4 w-4" pupil="h-2.5 w-2.5" delay="0.05s" closed={closed} />
           </div>
           <span className="absolute left-4 top-[58%] h-2 w-2 rounded-full bg-brand-200/70" />
           <span className="absolute right-4 top-[58%] h-2 w-2 rounded-full bg-brand-200/70" />
-          <svg viewBox="0 0 40 16" className="mt-1.5 h-3 w-9 text-brand-500" fill="none" aria-hidden>
-            <path d="M4 4 C10 14, 30 14, 36 4" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          </svg>
+          <FaceMouth expression={expression} />
         </div>
       </div>
     </div>
@@ -43,9 +76,12 @@ export default function MascotTeacher({
   const [i, setI] = useState(0);
   const isLast = i >= lines.length - 1;
 
+  // 語りに合わせて表情を変える（最後はにっこり、それ以外は話す→考える→ふつうを巡回）
+  const expression: FaceExpression = isLast ? "happy" : (["talk", "think", "idle"] as const)[i % 3];
+
   return (
     <div className="flex flex-col items-center">
-      <MascotFace />
+      <MascotFace expression={expression} nonce={i} />
 
       {/* ふきだし（キャラのセリフ） */}
       <div key={i} className="animate-pop-in relative mt-5 w-full max-w-md">

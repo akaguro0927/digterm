@@ -19,6 +19,7 @@ export default function TestView({ node }: { node: TestNode }) {
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
+  const [combo, setCombo] = useState(0);
   const [finished, setFinished] = useState(false);
 
   const cleared = useClearedNodes();
@@ -42,8 +43,10 @@ export default function TestView({ node }: { node: TestNode }) {
     setPicked(i);
     if (i === q.answer) {
       setCorrect((c) => c + 1);
+      setCombo((c) => c + 1);
       resolveJourneyMiss(node.id, idx, true); // 正解したら弱点から消す
     } else {
+      setCombo(0);
       recordJourneyMiss(node.id, idx); // 間違えたら弱点に登録
     }
   };
@@ -58,6 +61,7 @@ export default function TestView({ node }: { node: TestNode }) {
     setIdx(0);
     setPicked(null);
     setCorrect(0);
+    setCombo(0);
     setFinished(false);
   };
 
@@ -155,6 +159,7 @@ export default function TestView({ node }: { node: TestNode }) {
         level={level}
         reaction={answered ? (picked === q.answer ? "correct" : "wrong") : "idle"}
         nonce={idx}
+        combo={combo}
         className="mb-3"
       />
 

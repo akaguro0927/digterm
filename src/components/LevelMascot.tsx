@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Icon, type IconName } from "@/components/icons";
 import { Eye, useEyeTracking } from "@/components/mascotEyes";
 
@@ -163,16 +164,34 @@ const CORRECT_FX: Record<MascotLevel, { icon: IconName; color: string }> = {
 
 const SPARK_POS = ["left-0 top-1", "right-0 top-2", "left-4 -top-2", "right-5 -top-1", "left-1/2 -top-3"];
 
-function EffectLayer({ level, kind, nonce }: { level: MascotLevel; kind: Reaction; nonce: number }) {
+function EffectLayer({ level, kind, nonce, combo = 0 }: { level: MascotLevel; kind: Reaction; nonce: number; combo?: number }) {
   if (kind === "correct") {
     const fx = CORRECT_FX[level];
+    const isCombo = combo >= 3; // 3連続以上で特別演出
+    const isBig = combo >= 5;
+    // コンボが伸びるほどキラキラを増やす（言葉は使わずエフェクトだけで盛り上げる）
+    const extra = isBig ? SPARK_POS.length : isCombo ? 3 : 0;
+    const positions = [...SPARK_POS, ...SPARK_POS.slice(0, extra).map((p) => p + " scale-125")];
     return (
       <div key={`c-${nonce}`} className="pointer-events-none absolute inset-0 z-20" aria-hidden>
-        {SPARK_POS.map((pos, i) => (
+        {/* コンボ時：広がる光の輪 */}
+        {isCombo && (
+          <span
+            className={`absolute inset-0 m-auto h-16 w-16 rounded-full border-4 ${isBig ? "border-amber-400" : `border-current ${fx.color}`}`}
+            style={{ animation: "ring-burst 0.7s ease-out both" }}
+          />
+        )}
+        {isBig && (
+          <span
+            className="absolute inset-0 m-auto h-16 w-16 rounded-full border-4 border-brand-400"
+            style={{ animation: "ring-burst 0.7s ease-out 0.15s both" }}
+          />
+        )}
+        {positions.map((pos, i) => (
           <span
             key={i}
             className={`absolute ${pos} ${fx.color}`}
-            style={{ animation: `spark 0.9s ease-out ${i * 0.08}s both` }}
+            style={{ animation: `spark ${isCombo ? 1.1 : 0.9}s ease-out ${i * 0.07}s both` }}
           >
             <Icon name={fx.icon} className="h-3.5 w-3.5" />
           </span>
@@ -213,14 +232,43 @@ export default function LevelMascot({
   level,
   reaction,
   nonce = 0,
+  combo = 0,
   className = "",
 }: {
   level: MascotLevel;
   reaction: Reaction;
   nonce?: number;
+  combo?: number;
   className?: string;
 }) {
   const { ref, offset } = useEyeTracking(2);
+
+  // アイドル中、ときどき「首かしげ」か「のび」のしぐさをする
+  const [gesture, setGesture] = useState<"none" | "tilt" | "stretch">("none");
+  useEffect(() => {
+    if (reaction !== "idle") {
+      setGesture("none");
+      return;
+    }
+    let live = true;
+    let t: ReturnType<typeof setTimeout>;
+    const loop = () => {
+      t = setTimeout(() => {
+        if (!live) return;
+        if (!document.hidden) {
+          setGesture(Math.random() < 0.5 ? "tilt" : "stretch");
+          setTimeout(() => live && setGesture("none"), 800);
+        }
+        loop();
+      }, 3500 + Math.random() * 3500);
+    };
+    loop();
+    return () => {
+      live = false;
+      clearTimeout(t);
+    };
+  }, [reaction]);
+
   const anim =
     reaction === "correct"
       ? "animate-[hop_0.7s_ease-in-out]"
@@ -228,18 +276,25 @@ export default function LevelMascot({
         ? "animate-[shake_0.5s_ease-in-out]"
         : "";
 
+  const gestureStyle =
+    reaction === "idle" && gesture !== "none"
+      ? { animation: `gesture-${gesture} 0.8s ease-in-out`, transformOrigin: "bottom center" as const }
+      : undefined;
+
   return (
     <div ref={ref} className={`relative mx-auto flex h-24 w-full max-w-[10rem] items-end justify-center ${className}`}>
-      <EffectLayer level={level} kind={reaction} nonce={nonce} />
-      {/* idle は hover-bob でふわふわ、reaction 時はその動き */}
+      <EffectLayer level={level} kind={reaction} nonce={nonce} combo={combo} />
+      {/* 外=アイドルのふわふわ／反応の動き、内=ときどきのしぐさ */}
       <div
         key={`${reaction}-${nonce}`}
         className={anim}
         style={reaction === "idle" ? { animation: "hover-bob 3.4s ease-in-out infinite" } : undefined}
       >
-        {level === "beginner" && <BrowserChar offset={offset} reaction={reaction} />}
-        {level === "intermediate" && <CatChar offset={offset} reaction={reaction} />}
-        {level === "advanced" && <RobotChar offset={offset} reaction={reaction} />}
+        <div style={gestureStyle}>
+          {level === "beginner" && <BrowserChar offset={offset} reaction={reaction} />}
+          {level === "intermediate" && <CatChar offset={offset} reaction={reaction} />}
+          {level === "advanced" && <RobotChar offset={offset} reaction={reaction} />}
+        </div>
       </div>
     </div>
   );

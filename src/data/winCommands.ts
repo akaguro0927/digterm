@@ -8,6 +8,7 @@ export type CmdCategory =
   | "network"
   | "system"
   | "dev"
+  | "git"
   | "powershell";
 
 export const CMD_CATEGORY_LABELS: Record<CmdCategory, string> = {
@@ -16,6 +17,7 @@ export const CMD_CATEGORY_LABELS: Record<CmdCategory, string> = {
   network: "ネットワーク",
   system: "システム",
   dev: "開発でよく使う",
+  git: "Git（バージョン管理）",
   powershell: "PowerShell",
 };
 
@@ -354,5 +356,188 @@ export const winCommands: WinCommand[] = [
       "`(Get-Command node).Source` で node の実行ファイルの場所が分かる。パス周りのトラブル調査に。",
     example: "Get-Command node",
     aliases: ["gcm", "which"],
+  },
+
+  // ============ Git（バージョン管理） ============
+  {
+    slug: "git-clone",
+    name: "git clone",
+    reading: "ぎっと くろーん ふくせい だうんろーど",
+    category: "git",
+    shell: "both",
+    summary: "GitHubなどにあるリポジトリを自分のPCに丸ごと持ってくる。",
+    description:
+      "他人の（または自分の）プロジェクトを手元にコピーして開発を始める第一歩。URLを指定して実行する。",
+    example: "git clone https://github.com/user/repo.git",
+    exampleNote: "repo フォルダができ、その中に全ファイルと履歴が入る。",
+  },
+  {
+    slug: "git-add",
+    name: "git add",
+    reading: "ぎっと あど すてーじ ついか",
+    category: "git",
+    shell: "both",
+    summary: "変更したファイルを「コミットする候補」に登録する。",
+    description:
+      "コミット（記録）の前段階。`git add .` で今の変更を全部まとめて登録。特定のファイルだけなら名前を指定する。",
+    example: "git add .",
+    exampleNote: "`.` は「今のフォルダの変更すべて」の意味。",
+  },
+  {
+    slug: "git-commit",
+    name: "git commit",
+    reading: "ぎっと こみっと きろく せーぶ",
+    category: "git",
+    shell: "both",
+    summary: "登録した変更に「メッセージをつけて記録」する。",
+    description:
+      "セーブポイントを作る操作。`-m \"メッセージ\"` で何をしたかを一言残す。あとで履歴として見返せる。",
+    example: "git commit -m \"ログイン画面を追加\"",
+  },
+  {
+    slug: "git-push",
+    name: "git push",
+    reading: "ぎっと ぷっしゅ あっぷろーど そうしん",
+    category: "git",
+    shell: "both",
+    summary: "手元のコミットをGitHubなどのリモートへ送る（アップロード）。",
+    description:
+      "自分のPCに記録した変更を、クラウド上のリポジトリに反映する。これで他の人やデプロイ先と共有できる。",
+    example: "git push origin main",
+    exampleNote: "origin=送り先、main=ブランチ名。",
+  },
+  {
+    slug: "git-pull",
+    name: "git pull",
+    reading: "ぎっと ぷる さいしん とりこみ",
+    category: "git",
+    shell: "both",
+    summary: "リモートの最新の変更を手元に取り込む（ダウンロード＋反映）。",
+    description:
+      "他の人の変更や別PCでの作業を自分の手元に合流させる。作業開始前に `pull` して最新にするのが基本の習慣。",
+    example: "git pull origin main",
+  },
+  {
+    slug: "git-branch",
+    name: "git branch / switch",
+    reading: "ぎっと ぶらんち すいっち えだ",
+    category: "git",
+    shell: "both",
+    summary: "作業を枝分かれさせる「ブランチ」を作る・切り替える。",
+    description:
+      "本流(main)を壊さずに新機能を試すための分岐。`git switch -c 名前` で新しいブランチを作って移動。`git branch` で一覧。",
+    example: "git switch -c feature/login",
+    exampleNote: "古いGitでは `git checkout -b feature/login`。",
+    aliases: ["git checkout"],
+  },
+  {
+    slug: "git-log",
+    name: "git log",
+    reading: "ぎっと ろぐ りれき かくにん",
+    category: "git",
+    shell: "both",
+    summary: "これまでのコミット履歴を一覧表示する。",
+    description:
+      "「誰が・いつ・何を変えたか」をさかのぼれる。`--oneline` で1行ずつ見やすく。`q` で表示を抜ける。",
+    example: "git log --oneline -10",
+    exampleNote: "直近10件を1行ずつ表示。",
+  },
+  {
+    slug: "git-diff",
+    name: "git diff",
+    reading: "ぎっと でぃふ さぶん へんこうてん",
+    category: "git",
+    shell: "both",
+    summary: "前回のコミットから「どこを変えたか」の差分を見る。",
+    description:
+      "コミット前に変更内容を確認する定番。追加行は緑、削除行は赤で表示される。",
+    example: "git diff",
+  },
+
+  // ============ 追加：フォルダ・システム ============
+  {
+    slug: "cd-drive",
+    name: "cd /d",
+    reading: "しーでぃー どらいぶ いどう でぃー",
+    category: "dir",
+    shell: "cmd",
+    summary: "別のドライブ（C:→F:など）へ移動する。",
+    description:
+      "コマンドプロンプトでは `cd` だけだとドライブをまたげない。`/d` を付けると別ドライブへ一発で移動できる。",
+    example: "cd /d F:\\code-zukan",
+    exampleNote: "PowerShell では `cd F:\\code-zukan` だけでOK。",
+  },
+  {
+    slug: "tree",
+    name: "tree",
+    reading: "つりー かいそう こうぞう",
+    category: "dir",
+    shell: "both",
+    summary: "フォルダの中身を「枝分かれの図」で表示する。",
+    description:
+      "プロジェクトの構造をひと目で把握できる。`/f` を付けるとファイルも表示。階層が深いと長くなるので注意。",
+    example: "tree /f",
+  },
+  {
+    slug: "start",
+    name: "start",
+    reading: "すたーと ひらく きどう",
+    category: "system",
+    shell: "cmd",
+    summary: "ファイルやURL・アプリを、関連付けられたソフトで開く。",
+    description:
+      "`start .` で今のフォルダをエクスプローラーで開く。URLを渡せば既定ブラウザで開く。PowerShell は `start`（Start-Process）。",
+    example: "start http://localhost:3000",
+    exampleNote: "開発サーバーの画面をブラウザで開く。`start .` はフォルダを開く。",
+  },
+  {
+    slug: "findstr",
+    name: "findstr",
+    reading: "ふぁいんどすとりんぐ けんさく さがす",
+    category: "system",
+    shell: "cmd",
+    summary: "文字列を含む行を探す（CMD版の grep）。",
+    description:
+      "他のコマンドの出力から必要な行だけ絞り込むのに使う。`|`（パイプ）と組み合わせるのが定番。",
+    example: "netstat -ano | findstr :3000",
+    aliases: ["grep"],
+  },
+  {
+    slug: "set-env",
+    name: "set / $env:",
+    reading: "せっと かんきょうへんすう えんぶ",
+    category: "system",
+    shell: "both",
+    summary: "環境変数を確認・一時的に設定する。",
+    description:
+      "APIキーなどの設定値を見たり、その場だけ有効な変数を作ったりできる。CMDは `set 名前=値`、PowerShellは `$env:名前=\"値\"`。",
+    example: "set NODE_ENV=production",
+    exampleNote: "PowerShell では `$env:NODE_ENV = \"production\"`。",
+  },
+
+  // ============ 追加：開発でよく使う ============
+  {
+    slug: "npm-install",
+    name: "npm install",
+    reading: "えぬぴーえむ いんすとーる どうにゅう",
+    category: "dev",
+    shell: "both",
+    summary: "プロジェクトに必要なライブラリをまとめて入れる。",
+    description:
+      "`package.json` に書かれた依存を一括インストール。クローン直後に必ず実行する。個別追加は `npm install パッケージ名`。略記は `npm i`。",
+    example: "npm install",
+    aliases: ["npm i"],
+  },
+  {
+    slug: "node-v",
+    name: "node -v",
+    reading: "のーど ばーじょん かくにん",
+    category: "dev",
+    shell: "both",
+    summary: "Node.js が入っているか・バージョンを確認する。",
+    description:
+      "「環境が正しく用意できてる？」の最初のチェック。`npm -v` でnpmのバージョンも確認できる。",
+    example: "node -v",
+    exampleNote: "v20.11.0 のように表示されればインストール済み。",
   },
 ];

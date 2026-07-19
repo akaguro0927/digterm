@@ -10,8 +10,8 @@ import { Icon } from "@/components/icons";
 
 const LEVELS: [MascotLevel, string][] = [
   ["beginner", "初級：ブラウザ窓キャラ"],
-  ["intermediate", "中級：ネコ"],
-  ["advanced", "上級：紫のモンスター"],
+  ["intermediate", "中級：3兄弟ブロック"],
+  ["advanced", "上級：図形の鳥"],
 ];
 
 // キャラ1体ぶんの操作パネル（ボタンで反応を再生）
@@ -148,8 +148,8 @@ export default function MascotPreviewPage() {
       </p>
       <p className="mt-2 inline-flex flex-wrap gap-x-3 gap-y-1 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-500 ring-1 ring-slate-200">
         <span>初級＝ブラウザ窓キャラ</span>
-        <span>中級＝ネコ</span>
-        <span>上級＝紫のモンスター</span>
+        <span>中級＝3兄弟ブロック</span>
+        <span>上級＝図形の鳥</span>
       </p>
 
       <h2 className="font-display mt-8 text-lg font-extrabold text-slate-800">レベル別キャラ（クイズ/テスト）</h2>

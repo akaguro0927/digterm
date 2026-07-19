@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
+import LevelMascot from "@/components/LevelMascot";
 import { recordActivity, recordJourneyMiss, resolveJourneyMiss } from "@/lib/userStore";
 import { useHasPaidAccess } from "@/lib/plan";
 import {
@@ -20,6 +21,7 @@ interface MarathonQ {
   qIndex: number;
   chapterTitle: string;
   nodeTitle: string;
+  level: CourseLevel;
   levelLabel: string;
   q: TestQuestion;
 }
@@ -39,6 +41,7 @@ function collectQuestions(scope: Scope, hasPaid: boolean): MarathonQ[] {
         qIndex,
         chapterTitle: f.chapter.title,
         nodeTitle: f.node.title,
+        level: f.chapter.level,
         levelLabel: labelOf(f.chapter.level),
         q,
       });
@@ -179,6 +182,13 @@ export default function MarathonPage() {
     const great = rate >= 80;
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
+        <LevelMascot
+          level={scope === "all" ? "advanced" : scope}
+          reaction={great ? "correct" : "wrong"}
+          combo={great ? 5 : 0}
+          nonce={1}
+          className="mb-2"
+        />
         <span className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl ${great ? "bg-amber-50 text-amber-500" : "bg-brand-50 text-brand-600"}`}>
           <Icon name={great ? "trophy" : "flame"} className="h-8 w-8" />
         </span>
@@ -235,6 +245,14 @@ export default function MarathonPage() {
         <p className="font-display text-xs font-bold tracking-widest text-brand-500">通し復習</p>
         <h1 className="font-display mt-1 text-2xl font-extrabold">章末テストを連続でチャレンジ</h1>
       </div>
+
+      {/* 今の問題のレベルのキャラ（回答で反応） */}
+      <LevelMascot
+        level={current.level}
+        reaction={answered ? (picked === q.answer ? "correct" : "wrong") : "idle"}
+        nonce={idx}
+        className="mt-4"
+      />
 
       {/* 進捗 */}
       <div className="mt-6 flex items-center gap-4">

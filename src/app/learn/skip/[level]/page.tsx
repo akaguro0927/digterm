@@ -83,6 +83,13 @@ export default function SkipTestPage() {
     return (
       <div className="mx-auto max-w-xl px-4 py-12">
         <div className={`card-pop p-6 text-center ${passed ? "" : "opacity-95"}`}>
+          <LevelMascot
+            level={level}
+            reaction={passed ? "correct" : "wrong"}
+            combo={passed ? 5 : 0}
+            nonce={1}
+            className="mb-2"
+          />
           <span
             className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl ${
               passed ? "bg-brand-500 text-white" : "bg-slate-100 text-slate-400"

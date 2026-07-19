@@ -123,10 +123,20 @@ export default function QuizRunner({
         : rate >= 0.5
           ? "あと少し！間違えた用語を図鑑で復習しよう。"
           : "まずは図鑑をながめてから再挑戦してみよう。";
+    const resultLevel: MascotLevel =
+      mode === "intermediate" ? "intermediate" : mode === "advanced" || mode === "exam" ? "advanced" : "beginner";
+    const resultGood = isExam ? passed : rate >= 0.8;
 
     return (
       <div className="animate-pop-in">
         <div className="card-pop p-8 text-center">
+          <LevelMascot
+            level={resultLevel}
+            reaction={resultGood ? "correct" : "wrong"}
+            combo={resultGood ? 5 : 0}
+            nonce={1}
+            className="mb-3"
+          />
           {isExam && (
             <span
               className={`font-display inline-block rounded-full px-4 py-1.5 text-sm font-extrabold ${

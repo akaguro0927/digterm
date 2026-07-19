@@ -73,6 +73,13 @@ export default function TestView({ node }: { node: TestNode }) {
   if (finished) {
     return (
       <div className="animate-pop-in card-pop p-8 text-center">
+        <LevelMascot
+          level={level}
+          reaction={passed ? "correct" : "wrong"}
+          combo={passed ? 5 : 0}
+          nonce={1}
+          className="mb-3"
+        />
         <span
           className={`font-display inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-extrabold ${
             passed ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200" : "bg-amber-50 text-amber-600 ring-1 ring-amber-200"

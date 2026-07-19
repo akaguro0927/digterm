@@ -453,6 +453,64 @@ export const winCommands: WinCommand[] = [
       "コミット前に変更内容を確認する定番。追加行は緑、削除行は赤で表示される。",
     example: "git diff",
   },
+  {
+    slug: "git-init",
+    name: "git init",
+    reading: "ぎっと いにっと しょきか かんりかいし",
+    category: "git",
+    shell: "both",
+    summary: "今のフォルダをGitで管理し始める（最初の1回）。",
+    description:
+      "新規プロジェクトを自分でGit管理にするときの出発点。実行すると隠しフォルダ `.git` ができ、履歴を刻めるようになる。",
+    example: "git init",
+  },
+  {
+    slug: "git-remote",
+    name: "git remote add",
+    reading: "ぎっと りもーと ひもづけ げむはぶ",
+    category: "git",
+    shell: "both",
+    summary: "手元のリポジトリとGitHubの置き場所を結びつける。",
+    description:
+      "自分で作ったリポジトリを初めてGitHubへ上げる前に必要。`origin` という名前でGitHubのURLを登録する。",
+    example: "git remote add origin https://github.com/user/repo.git",
+    exampleNote: "この後 `git push -u origin main` で初回アップロード。",
+  },
+  {
+    slug: "git-stash",
+    name: "git stash",
+    reading: "ぎっと すたっしゅ いちじたいひ",
+    category: "git",
+    shell: "both",
+    summary: "作業中の変更を一時的に棚上げして、きれいな状態に戻す。",
+    description:
+      "「まだコミットしたくないけど、急いで別の作業をしたい」ときに便利。`git stash pop` で棚上げした変更を戻せる。",
+    example: "git stash\n( 別の作業をする )\ngit stash pop",
+  },
+  {
+    slug: "git-restore",
+    name: "git restore",
+    reading: "ぎっと りすとあ もとにもどす とりけし",
+    category: "git",
+    shell: "both",
+    summary: "編集した内容を、直前のコミットの状態に戻す（取り消し）。",
+    description:
+      "「変更をなかったことにしたい」ときに。ファイルを指定して戻す。**戻すと編集内容は消える**ので実行前に確認を。",
+    example: "git restore src/App.tsx",
+    exampleNote: "古いGitでは `git checkout -- ファイル`。",
+  },
+  {
+    slug: "git-merge",
+    name: "git merge",
+    reading: "ぎっと まーじ がっぺい とりこみ",
+    category: "git",
+    shell: "both",
+    summary: "別のブランチの変更を、今いるブランチに合流させる。",
+    description:
+      "機能ブランチで作った変更を main に取り込むときなどに使う。競合（コンフリクト）が出たら手で解決する。",
+    example: "git switch main\ngit merge feature/login",
+    exampleNote: "main に移動してから、取り込みたいブランチ名を指定。",
+  },
 
   // ============ 追加：フォルダ・システム ============
   {
@@ -501,6 +559,39 @@ export const winCommands: WinCommand[] = [
       "他のコマンドの出力から必要な行だけ絞り込むのに使う。`|`（パイプ）と組み合わせるのが定番。",
     example: "netstat -ano | findstr :3000",
     aliases: ["grep"],
+  },
+  {
+    slug: "explorer",
+    name: "explorer .",
+    reading: "えくすぷろーらー ふぉるだをひらく どっと",
+    category: "system",
+    shell: "both",
+    summary: "今いるフォルダをエクスプローラー（ファイル画面）で開く。",
+    description:
+      "ターミナルの「今の場所」をそのままGUIで開ける。`.`（ドット）は今のフォルダの意味。中身を目で見て確認したいときに便利。",
+    example: "explorer .",
+  },
+  {
+    slug: "chcp-utf8",
+    name: "chcp 65001",
+    reading: "ちぇんじこーどぺーじ ゆーてぃーえふ もじばけ",
+    category: "system",
+    shell: "cmd",
+    summary: "コマンドプロンプトの文字コードをUTF-8にして文字化けを防ぐ。",
+    description:
+      "日本語やログが「�」のように文字化けするときの応急処置。`65001` がUTF-8を表す番号。",
+    example: "chcp 65001",
+  },
+  {
+    slug: "ssh",
+    name: "ssh",
+    reading: "えすえすえいち りもーとせつぞく さーばー",
+    category: "network",
+    shell: "both",
+    summary: "離れた場所にあるサーバーへ安全に接続して操作する。",
+    description:
+      "レンタルサーバーやクラウド上のマシンに、手元のターミナルから入って作業できる。GitHubの認証（SSH鍵）でも使う。Windows 10以降は標準搭載。",
+    example: "ssh user@example.com",
   },
   {
     slug: "set-env",

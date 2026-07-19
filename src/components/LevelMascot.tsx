@@ -70,8 +70,11 @@ function BrowserChar({ offset, reaction }: { offset: { x: number; y: number }; r
           <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
         </div>
-        <div className="flex h-[calc(100%-20px)] flex-col items-center justify-center">
+        <div className="relative flex h-[calc(100%-20px)] flex-col items-center justify-center">
           <Eyes offset={offset} reaction={reaction} />
+          {/* ほっぺ */}
+          <span className="absolute left-3 top-[56%] h-2 w-2 rounded-full bg-brand-200/70" />
+          <span className="absolute right-3 top-[56%] h-2 w-2 rounded-full bg-brand-200/70" />
           <div className="mt-1">
             <Mouth reaction={reaction} color="text-brand-500" />
           </div>
@@ -165,6 +168,9 @@ function RobotChar({ offset, reaction }: { offset: { x: number; y: number }; rea
         {/* 画面フェイス */}
         <div className={`absolute inset-2 flex flex-col items-center justify-center rounded-xl ring-1 ring-violet-100 transition-colors ${screen}`}>
           <Eyes offset={offset} reaction={reaction} gap="gap-2.5" />
+          {/* ほっぺ（画面のLEDっぽく） */}
+          <span className="absolute left-2 top-[52%] h-1.5 w-2 rounded-full bg-violet-300/70" />
+          <span className="absolute right-2 top-[52%] h-1.5 w-2 rounded-full bg-violet-300/70" />
           <div className="mt-1">
             <Mouth reaction={reaction} color="text-violet-500" />
           </div>

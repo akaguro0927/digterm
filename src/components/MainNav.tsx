@@ -36,7 +36,20 @@ const LINKS: NavItem[] = [
       { label: "フラッシュカードで暗記", href: "/flashcards" },
     ],
   },
-  { href: "/learn", label: "レッスン", icon: "flag", tour: "nav-learn" },
+  {
+    href: "/learn",
+    label: "レッスン",
+    icon: "flag",
+    tour: "nav-learn",
+    submenu: [
+      { label: "レッスン目次", href: "/learn" },
+      { label: "初級コース", href: "/learn/course/beginner" },
+      { label: "中級コース", href: "/learn/course/intermediate" },
+      { label: "上級コース", href: "/learn/course/advanced" },
+      { label: "コース目次（全章）", href: "/curriculum" },
+      { label: "道具とAIガイド", href: "/tools" },
+    ],
+  },
   { href: "/ai", label: "AI", icon: "zap", tour: "nav-ai", badge: { text: "β", className: "bg-indigo-500" } },
   {
     href: "/quiz",
@@ -119,19 +132,35 @@ function NavLink({ item }: { item: NavItem }) {
     );
   }
 
-  // サブメニュー有り = ホバー／タップでショートカットを開く
+  // サブメニュー有り = 本体クリックでその項目のメインページへ遷移／ホバー・シェブロンで一覧を開く
   return (
-    <div ref={wrapRef} className="relative shrink-0" onMouseEnter={openNow} onMouseLeave={closeSoon}>
-      <button
-        type="button"
-        data-tour={item.tour}
-        aria-expanded={open}
-        onClick={() => (open ? setOpen(false) : openNow())}
-        className={pillCls(active)}
+    <div
+      ref={wrapRef}
+      data-tour={item.tour}
+      className={`relative flex shrink-0 items-center ${pillCls(active)} !px-1.5 !gap-0.5`}
+      onMouseEnter={openNow}
+      onMouseLeave={closeSoon}
+    >
+      <Link
+        href={item.href}
+        aria-current={active ? "page" : undefined}
+        onClick={() => setOpen(false)}
+        className="flex items-center gap-1.5 rounded-full px-1.5"
       >
         <Icon name={item.icon} className={iconCls(active)} />
         <span className="whitespace-nowrap">{item.label}</span>
         {badge}
+      </Link>
+      <button
+        type="button"
+        aria-label={`${item.label}のショートカット`}
+        aria-expanded={open}
+        onClick={(e) => {
+          e.preventDefault();
+          setOpen((o) => !o);
+        }}
+        className="flex h-6 w-5 items-center justify-center rounded-full hover:bg-black/5"
+      >
         <Icon name="chevron-right" className={`h-3 w-3 text-slate-300 transition-transform ${open ? "rotate-[270deg]" : "rotate-90"}`} />
       </button>
       {open && (

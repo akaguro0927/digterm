@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import { Icon, type IconName } from "@/components/icons";
+import AuthMascot from "@/components/AuthMascot";
 
 type Mode = "login" | "signup";
 
@@ -62,6 +63,7 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentEmail, setSentEmail] = useState(false);
+  const [peeking, setPeeking] = useState(false); // パスワード入力中はキャラが目をかくす
 
   const t = THEME[mode];
 
@@ -135,7 +137,29 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[75vh] max-w-md flex-col justify-center px-4 py-10">
+    <div className="mx-auto grid min-h-[80vh] max-w-4xl items-center gap-8 px-4 py-10 md:grid-cols-2">
+      {/* 左：カーソルで動く相棒キャラ（パスワード入力中は目をかくす） */}
+      <div
+        className={`relative order-1 overflow-hidden rounded-3xl border-2 px-6 py-8 text-center transition-colors duration-500 ${
+          mode === "login" ? "border-brand-100 bg-gradient-to-br from-brand-50 to-white" : "border-violet-100 bg-gradient-to-br from-violet-50 to-white"
+        }`}
+      >
+        <div className="bg-dots pointer-events-none absolute inset-0 opacity-[0.06]" aria-hidden />
+        <AuthMascot mode={mode} peeking={peeking} />
+        <h2 className="font-display mt-4 text-xl font-extrabold text-slate-800">
+          {mode === "login" ? "おかえり、まってたよ" : "いっしょに、はじめよう"}
+        </h2>
+        <p className="mt-1 text-sm text-slate-500">
+          {peeking
+            ? "パスワードは のぞかないよ"
+            : mode === "login"
+              ? "つづきから記録を再開しよう"
+              : "アカウントを作れば、記録がずっと残るよ"}
+        </p>
+      </div>
+
+      {/* 右：フォーム */}
+      <div className="order-2 w-full max-w-md justify-self-center md:justify-self-end">
       {/* モード切り替えタブ（大きく・色で区別） */}
       <div className="mb-4 flex rounded-full bg-slate-100 p-1.5">
         <button
@@ -219,6 +243,8 @@ export default function LoginPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setPeeking(true)}
+                onBlur={() => setPeeking(false)}
                 placeholder="6文字以上"
                 autoComplete={mode === "login" ? "current-password" : "new-password"}
                 className={`mt-1 w-full rounded-xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 transition focus:bg-white focus:ring-2 ${
@@ -237,6 +263,8 @@ export default function LoginPage() {
                   minLength={6}
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
+                  onFocus={() => setPeeking(true)}
+                  onBlur={() => setPeeking(false)}
                   placeholder="もう一度入力"
                   autoComplete="new-password"
                   className="mt-1 w-full rounded-xl bg-slate-50 px-4 py-3 text-sm outline-none ring-1 ring-slate-200 transition focus:bg-white focus:ring-2 focus:ring-violet-500"
@@ -289,6 +317,7 @@ export default function LoginPage() {
         <Link href="/" className="font-bold text-brand-600 hover:underline">
           あとで
         </Link>
+      </div>
       </div>
     </div>
   );

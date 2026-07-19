@@ -86,29 +86,38 @@ export function usePointerParallax() {
 }
 
 // 白目＋瞳。瞳がカーソル方向へ動き、まばたきもする。
+// closed=true のときは目を閉じる（弧を描く）。パスワード入力中などの演出に使う。
 export function Eye({
   offset,
   size = "h-4 w-4",
   pupil = "h-2.5 w-2.5",
   delay = "0s",
+  closed = false,
 }: {
   offset: { x: number; y: number };
   size?: string;
   pupil?: string;
   delay?: string;
+  closed?: boolean;
 }) {
   return (
     <span
-      className={`animate-blink relative block origin-center rounded-full bg-white ring-1 ring-slate-200 ${size}`}
+      className={`relative block origin-center rounded-full ${closed ? "bg-transparent" : "animate-blink bg-white ring-1 ring-slate-200"} ${size}`}
       style={{ animationDelay: delay }}
     >
-      <span
-        className={`absolute left-1/2 top-1/2 rounded-full bg-slate-800 ${pupil}`}
-        style={{
-          transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px))`,
-          transition: "transform 90ms linear",
-        }}
-      />
+      {closed ? (
+        <svg viewBox="0 0 24 14" className="absolute inset-0 h-full w-full text-slate-700" fill="none" aria-hidden>
+          <path d="M3 4 C 9 13, 15 13, 21 4" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </svg>
+      ) : (
+        <span
+          className={`absolute left-1/2 top-1/2 rounded-full bg-slate-800 ${pupil}`}
+          style={{
+            transform: `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px))`,
+            transition: "transform 90ms linear",
+          }}
+        />
+      )}
     </span>
   );
 }

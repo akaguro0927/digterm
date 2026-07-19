@@ -81,7 +81,24 @@ function BrowserChar({ offset, reaction }: { offset: { x: number; y: number }; r
   );
 }
 
-// ── 中級：ネコ。尻尾がゆらゆら／耳がぴくっ、まちがえると耳がへたる ──
+// 丸っこくて可愛い耳（外＝オレンジ／内＝ピンク、角丸）
+function CatEar({ side, droop }: { side: "l" | "r"; droop: boolean }) {
+  const base = side === "l" ? -18 : 18;
+  const rot = droop ? (side === "l" ? 34 : -34) : base;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-6 w-6 transition-transform duration-300"
+      style={{ transform: `rotate(${rot}deg)`, transformOrigin: "bottom center" }}
+      aria-hidden
+    >
+      <path d="M12 3 L20 19 L4 19 Z" fill="#fdba74" stroke="#fdba74" strokeWidth="3.5" strokeLinejoin="round" />
+      <path d="M12 9 L16 18 L8 18 Z" fill="#fecdd3" stroke="#fecdd3" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ── 中級：ネコ（丸くて可愛い版）。尻尾ゆらゆら、まちがえると耳がへたる ──
 function CatChar({ offset, reaction }: { offset: { x: number; y: number }; reaction: Reaction }) {
   const earDroop = reaction === "wrong";
   const tailUp = reaction === "correct";
@@ -97,27 +114,29 @@ function CatChar({ offset, reaction }: { offset: { x: number; y: number }; react
         }}
         aria-hidden
       >
-        <path d="M5 42 C5 24, 20 24, 17 6" stroke="currentColor" strokeWidth="6" fill="none" strokeLinecap="round" />
+        <path d="M5 42 C5 24, 20 24, 17 6" stroke="currentColor" strokeWidth="7" fill="none" strokeLinecap="round" />
       </svg>
-      {/* 耳 */}
-      <span
-        className="absolute -top-2 left-1.5 z-10 h-0 w-0 border-b-[16px] border-l-[9px] border-r-[9px] border-b-orange-200 border-l-transparent border-r-transparent transition-transform duration-300"
-        style={{ transform: earDroop ? "rotate(30deg)" : "rotate(-8deg)", transformOrigin: "bottom" }}
-      />
-      <span
-        className="absolute -top-2 right-1.5 z-10 h-0 w-0 border-b-[16px] border-l-[9px] border-r-[9px] border-b-orange-200 border-l-transparent border-r-transparent transition-transform duration-300"
-        style={{ transform: earDroop ? "rotate(-30deg)" : "rotate(8deg)", transformOrigin: "bottom" }}
-      />
-      {/* 顔 */}
-      <div className="relative z-[1] flex h-20 w-20 flex-col items-center justify-center rounded-[46%] border-2 border-orange-200 bg-white shadow-[0_5px_0_#fed7aa]">
-        <Eyes offset={offset} reaction={reaction} />
-        <span className="mt-1 h-0 w-0 border-l-[3px] border-r-[3px] border-t-[4px] border-l-transparent border-r-transparent border-t-rose-300" />
+      {/* 耳（角丸・内側ピンク） */}
+      <span className="absolute -top-3 left-2 z-10">
+        <CatEar side="l" droop={earDroop} />
+      </span>
+      <span className="absolute -top-3 right-2 z-10">
+        <CatEar side="r" droop={earDroop} />
+      </span>
+      {/* 顔（やわらかい丸） */}
+      <div className="relative z-[1] flex h-[4.75rem] w-[5.25rem] flex-col items-center justify-center rounded-[50%] border-2 border-orange-200 bg-[#fffaf4] shadow-[0_5px_0_#fed7aa]">
+        <Eyes offset={offset} reaction={reaction} size="h-[1.15rem] w-[1.15rem]" pupil="h-2.5 w-2.5" gap="gap-2.5" />
+        {/* ほっぺ（ぽわっと） */}
+        <span className="absolute left-2.5 top-[54%] h-2.5 w-2.5 rounded-full bg-rose-200/70" />
+        <span className="absolute right-2.5 top-[54%] h-2.5 w-2.5 rounded-full bg-rose-200/70" />
+        {/* 鼻（小さいハート型ドット） */}
+        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-rose-300" />
         <Mouth reaction={reaction} color="text-orange-400" />
-        {/* ヒゲ */}
-        <span className="absolute left-0 top-[52%] h-px w-4 -rotate-6 bg-slate-200" />
-        <span className="absolute left-0 top-[60%] h-px w-4 rotate-6 bg-slate-200" />
-        <span className="absolute right-0 top-[52%] h-px w-4 rotate-6 bg-slate-200" />
-        <span className="absolute right-0 top-[60%] h-px w-4 -rotate-6 bg-slate-200" />
+        {/* ヒゲ（片側2本ずつ・外向き） */}
+        <span className="absolute -left-1 top-[56%] h-px w-3.5 -rotate-6 bg-orange-200" />
+        <span className="absolute -left-1 top-[63%] h-px w-3.5 rotate-6 bg-orange-200" />
+        <span className="absolute -right-1 top-[56%] h-px w-3.5 rotate-6 bg-orange-200" />
+        <span className="absolute -right-1 top-[63%] h-px w-3.5 -rotate-6 bg-orange-200" />
       </div>
     </div>
   );

@@ -47,6 +47,29 @@ export default function CurriculumPage() {
         <p className="mt-2 text-sm text-slate-500">
           初級から上級まで、全コースの章を一覧で。気になる章から見て、いまの立ち位置を確かめよう。
         </p>
+
+        {/* レベルへジャンプ（初級→中級→上級のショートカット） */}
+        <nav className="mt-4 flex flex-wrap gap-2" aria-label="レベルへジャンプ">
+          {levels.map((lm) => {
+            const accent = LEVEL_ACCENT[lm.level];
+            const lp = progress.find((p) => p.level === lm.level);
+            return (
+              <a
+                key={lm.level}
+                href={`#${lm.level}`}
+                className={`group flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-xs font-bold text-slate-600 ring-2 ring-[#e7ddc8] transition hover:text-slate-900 hover:ring-brand-300`}
+              >
+                <span className={`h-2 w-2 rounded-full ${accent.bar}`} />
+                {lm.label}
+                {lp && (
+                  <span className={`font-display ${lp.pct >= 100 ? "text-amber-500" : "text-slate-400"}`}>
+                    {lp.pct >= 100 ? "制覇" : `${lp.pct}%`}
+                  </span>
+                )}
+              </a>
+            );
+          })}
+        </nav>
       </div>
 
       {/* 全コース制覇の祝福 */}
@@ -94,7 +117,7 @@ export default function CurriculumPage() {
         const chapters = chaptersByLevel(lm.level);
         const lp = progress.find((p) => p.level === lm.level);
         return (
-          <section key={lm.level} className="mt-10">
+          <section key={lm.level} id={lm.level} className="mt-10 scroll-mt-24">
             <div className="flex items-end justify-between">
               <div>
                 <p className={`font-display text-[11px] font-bold tracking-widest ${accent.text}`}>{lm.eyebrow}</p>

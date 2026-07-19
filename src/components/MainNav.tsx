@@ -36,7 +36,20 @@ const LINKS: NavItem[] = [
       { label: "フラッシュカードで暗記", href: "/flashcards" },
     ],
   },
-  { href: "/learn", label: "レッスン", icon: "flag", tour: "nav-learn" },
+  {
+    href: "/learn",
+    label: "レッスン",
+    icon: "flag",
+    tour: "nav-learn",
+    submenu: [
+      { label: "学習の道のり", href: "/learn" },
+      { label: "初級コース", href: "/curriculum#beginner" },
+      { label: "中級コース", href: "/curriculum#intermediate" },
+      { label: "上級コース", href: "/curriculum#advanced" },
+      { label: "コース目次（全章）", href: "/curriculum" },
+      { label: "道具とAIガイド", href: "/tools" },
+    ],
+  },
   { href: "/ai", label: "AI", icon: "zap", tour: "nav-ai", badge: { text: "β", className: "bg-indigo-500" } },
   {
     href: "/quiz",

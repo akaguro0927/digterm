@@ -152,6 +152,14 @@ export const awards: Award[] = [
     earned: (c) => chapterDone("a1", c),
   },
   {
+    id: "server-dev",
+    title: "裏側もわかる",
+    desc: "上級「サーバーとデータベース」をクリア",
+    icon: "database",
+    tint: "bg-cyan-100 text-cyan-600",
+    earned: (c) => chapterDone("a12", c),
+  },
+  {
     id: "ai-buddy",
     title: "AIを使いこなす",
     desc: "上級「AIと組む開発」をクリア",
@@ -165,7 +173,7 @@ export const awards: Award[] = [
     desc: "上級コース（React〜AI）を全クリア",
     icon: "wrench",
     tint: "bg-indigo-100 text-indigo-600",
-    earned: (c) => chaptersDone(["a1", "a2", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a3"], c),
+    earned: (c) => chaptersDone(["a1", "a2", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a12", "a3"], c),
   },
   {
     id: "complete",

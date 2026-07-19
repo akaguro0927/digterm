@@ -522,6 +522,7 @@ export default function MyPage() {
             { icon: "trophy", label: "会員プラン・お支払い", href: "/vip" },
             { icon: "shield", label: "プライバシーポリシー", href: "/legal/privacy" },
             { icon: "book", label: "利用規約", href: "/legal/terms" },
+            { icon: "credit-card", label: "特定商取引法に基づく表記", href: "/legal/tokusho" },
           ].map((it) => (
             <Link
               key={it.label}

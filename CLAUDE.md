@@ -29,7 +29,8 @@ M1（図鑑プロトタイプ）完了。問題集4モード・実力試験・**
 - **旧「図鑑の必修コース(roadmap)」は廃止**し、各レッスン末尾の「図鑑で実物を見る」（`LessonNode.relatedSlugs`）に吸収。図鑑詳細ページ→レッスンの逆リンクは `lessonForSlug()`。`/map` は `/learn` へリダイレクト。
 - 課金は **Stripe のコード土台まで実装済**（サブスク=mode:subscription / 買い切りlifetime=mode:payment を `/api/stripe/checkout` の `plan` で切替、`/api/stripe/webhook` が service-role で `subscriptions`/`purchases` に反映、`PlanSync` がログイン時に実課金状態をプランへ反映）。**キー未設定なら checkout→`{demo:true}` / webhook→`{skipped:true}` で安全動作**。本番“有効化”（実キー・Webhook登録・schema再実行・通し確認）は docs/09 の本番前チェックリスト対象で未実施。
 お気に入り／学習記録／既読は**端末ローカル（localStorage）に先行実装**（キー不要・ローカルファースト。詳細は docs/08）。
-- **図鑑に表示するのは「実物デモがある用語」だけ**（`src/data/visualTerms.ts`）。**現在298語すべてにデモ実装済み＝デモ100%**（2026-07-19）。デモは `LiveExample.tsx` の `demos` レジストリに slug→図解Reactで定義し、`visualTerms.ts` の `VISUAL_SLUGS` に slug を追記して連動させる。新語を足したら両方に追加すること。
+- **図鑑に表示するのは「実物デモがある用語」だけ**（`src/data/visualTerms.ts`）。**現在413語すべてにデモ実装済み＝デモ100%**（2026-07-22。6カテゴリ：UI/レイアウト/HTML・CSS/開発/バックエンド/**コマンド**）。デモは `LiveExample.tsx` の `demos` レジストリに slug→図解Reactで定義し、`visualTerms.ts` の `VISUAL_SLUGS` に slug を追記して連動させる。新語を足したら両方に追加すること。
+  - **コマンドカテゴリ**（cd/git/npm/docker/CLI等115語）は共通の `TerminalDemo`＋`COMMAND_DEMOS`（slug→{cmd,out}）を使う。新コマンドは COMMAND_DEMOS に1行足すだけでデモが付く。※Windows/PowerShell早見表の別ページ `/commands`（`winCommands.ts`）とは別物（役割：図鑑統合版 vs フラット早見表）。
 - 触れる実例（LiveExample）は緑枠＋LIVEバッジで「触れるゾーン」と区別
 - 検索はあいまい一致＋「もしかして？」候補（`src/lib/search.ts`）
 - クイズ結果に「この回の振り返り（全問）」＋♡保存。実力試験は押した瞬間に○×

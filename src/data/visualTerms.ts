@@ -97,6 +97,13 @@ export const VISUAL_SLUGS: readonly string[] = [
   "git-remote", "git-fetch", "git-reset",
   "npm-install", "npm-init", "npm-run", "npm-start", "npm-build", "npx", "node-run",
   "npm-uninstall", "npm-update",
+  // 2026-07-22 コマンド バッチ2（ネットワーク/Docker/プロセス/テキスト処理/Git追加 +43）
+  "ssh", "ping", "scp", "wget", "yarn", "pnpm", "pip-install", "python-run",
+  "docker-run", "docker-ps", "docker-build", "docker-compose",
+  "ps", "kill", "top", "whoami", "history", "sudo", "which", "export-cmd", "alias", "source",
+  "wc", "sort", "uniq", "diff", "tar", "zip-cmd", "unzip", "ln", "tree", "open-cmd",
+  "git-rebase", "git-cherry-pick", "git-tag", "git-config", "git-revert", "git-restore",
+  "pipe", "redirect", "env-cmd", "cron",
 ];
 
 const set = new Set(VISUAL_SLUGS);

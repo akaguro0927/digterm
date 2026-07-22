@@ -109,6 +109,12 @@ export const VISUAL_SLUGS: readonly string[] = [
   "make", "brew", "apt", "choco", "winget", "nvm", "npm-list", "npm-audit",
   "git-clean", "git-blame", "git-show", "git-bisect",
   "netstat", "lsof", "df", "du", "man", "help-cmd", "traceroute",
+  // 2026-07-22 コマンド バッチ4（テキスト処理/エディタ/クラウドCLI/DNS診断/Git・npm追加 +34）
+  "sed", "awk", "cut", "tee", "xargs", "watch", "date", "stat", "file", "chown",
+  "nano", "vim", "npm-ci", "npm-publish", "npm-version", "nodemon", "pm2", "ngrok",
+  "firebase", "netlify", "aws", "gcloud", "heroku",
+  "git-reflog", "git-amend", "git-worktree",
+  "nslookup", "dig", "hostname", "ipconfig",
 ];
 
 const set = new Set(VISUAL_SLUGS);

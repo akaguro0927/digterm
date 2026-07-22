@@ -104,6 +104,11 @@ export const VISUAL_SLUGS: readonly string[] = [
   "wc", "sort", "uniq", "diff", "tar", "zip-cmd", "unzip", "ln", "tree", "open-cmd",
   "git-rebase", "git-cherry-pick", "git-tag", "git-config", "git-revert", "git-restore",
   "pipe", "redirect", "env-cmd", "cron",
+  // 2026-07-22 コマンド バッチ3（開発ツールCLI/パッケージ管理/Git補助/診断 +28）
+  "vercel", "gh", "eslint", "prettier", "tsc-cmd", "vite", "jest", "vitest", "playwright-cmd",
+  "make", "brew", "apt", "choco", "winget", "nvm", "npm-list", "npm-audit",
+  "git-clean", "git-blame", "git-show", "git-bisect",
+  "netstat", "lsof", "df", "du", "man", "help-cmd", "traceroute",
 ];
 
 const set = new Set(VISUAL_SLUGS);

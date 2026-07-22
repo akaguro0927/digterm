@@ -4658,6 +4658,123 @@ const demos: Record<string, () => ReactNode> = {
   ),
 };
 
+// ── コマンド用の共通ターミナルデモ ──
+// 「実行する」を押すと、コマンドの出力が下に現れる（触れるゾーンとして体感できる）。
+function TerminalDemo({ cmd, out, prompt = "$" }: { cmd: string; out: string[]; prompt?: string }) {
+  const [ran, setRan] = useState(false);
+  const lineColor = (l: string) =>
+    l.startsWith("+")
+      ? "text-emerald-400"
+      : l.startsWith("-")
+        ? "text-rose-400"
+        : "text-slate-300";
+  return (
+    <div className="w-full max-w-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-[0_6px_0_#0f172a]">
+        <div className="flex items-center gap-1.5 border-b border-slate-700/70 bg-slate-800 px-3 py-2">
+          <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+          <span className="ml-2 font-mono text-[10px] text-slate-400">ターミナル</span>
+        </div>
+        <div className="min-h-[7.5rem] space-y-1 p-3 font-mono text-[12px] leading-relaxed">
+          <div className="flex gap-2">
+            <span className="shrink-0 text-emerald-400">{prompt}</span>
+            <span className="text-slate-100">{cmd}</span>
+            {!ran && <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-slate-300" />}
+          </div>
+          {ran && (
+            <>
+              {out.map((line, i) => (
+                <div
+                  key={i}
+                  className={`animate-pop-in whitespace-pre-wrap ${lineColor(line)}`}
+                  style={{ animationDelay: `${i * 0.07}s` }}
+                >
+                  {line}
+                </div>
+              ))}
+              <div className="flex gap-2">
+                <span className="shrink-0 text-emerald-400">{prompt}</span>
+                <span className="inline-block h-4 w-1.5 animate-pulse bg-slate-300" />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      <div className="mt-3 flex justify-center gap-2">
+        <button
+          onClick={() => setRan(true)}
+          disabled={ran}
+          className="rounded-full bg-slate-800 px-4 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          実行する
+        </button>
+        <button
+          onClick={() => setRan(false)}
+          className="rounded-full bg-white px-4 py-1.5 text-xs font-bold text-slate-500 ring-1 ring-slate-200 transition hover:ring-slate-300"
+        >
+          リセット
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// slug → { コマンド, 出力 }。ここに足すだけで図鑑のコマンドdemoが増える。
+const COMMAND_DEMOS: Record<string, { cmd: string; out: string[] }> = {
+  cd: { cmd: "cd my-project", out: [] },
+  ls: { cmd: "ls", out: ["index.html  src/  package.json  README.md"] },
+  pwd: { cmd: "pwd", out: ["/Users/you/my-project"] },
+  mkdir: { cmd: "mkdir components", out: [] },
+  rm: { cmd: "rm old.txt", out: [] },
+  cp: { cmd: "cp .env.example .env", out: [] },
+  mv: { cmd: "mv memo.txt docs/", out: [] },
+  cat: { cmd: "cat package.json", out: ["{", '  "name": "my-app",', '  "version": "1.0.0"', "}"] },
+  touch: { cmd: "touch index.html", out: [] },
+  echo: { cmd: 'echo "Hello"', out: ["Hello"] },
+  clear: { cmd: "clear", out: [] },
+  grep: { cmd: 'grep "TODO" app.js', out: ["12:  // TODO: あとで直す", "48:  // TODO: 入力チェック"] },
+  find: { cmd: 'find . -name "*.tsx"', out: ["./src/App.tsx", "./src/Button.tsx"] },
+  head: { cmd: "head -n 3 log.txt", out: ["1 起動", "2 接続OK", "3 リクエスト受信"] },
+  tail: { cmd: "tail -n 2 log.txt", out: ["98 処理完了", "99 サーバー終了"] },
+  less: { cmd: "less huge.log", out: ["（スペースで次ページ / q で終了）"] },
+  chmod: { cmd: "chmod +x deploy.sh", out: [] },
+  curl: { cmd: "curl https://api.example.com/ping", out: ['{"status":"ok"}'] },
+  "code-cmd": { cmd: "code .", out: ["VS Code でフォルダを開きました"] },
+  exit: { cmd: "exit", out: ["セッションを終了しました"] },
+  "git-init": { cmd: "git init", out: ["Initialized empty Git repository in .git/"] },
+  "git-clone": { cmd: "git clone https://github.com/you/repo.git", out: ["Cloning into 'repo'...", "done."] },
+  "git-status": { cmd: "git status", out: ["On branch main", "Changes not staged:", "  modified: index.html"] },
+  "git-add": { cmd: "git add .", out: [] },
+  "git-commit": { cmd: 'git commit -m "add login"', out: ["[main a1b2c3d] add login", " 2 files changed"] },
+  "git-push": { cmd: "git push", out: ["To github.com:you/repo.git", "   a1b2c3d..e4f5g6h  main -> main"] },
+  "git-pull": { cmd: "git pull", out: ["Updating a1b2c3d..e4f5g6h", "Fast-forward"] },
+  "git-branch": { cmd: "git branch", out: ["* main", "  feature-login"] },
+  "git-checkout": { cmd: "git switch feature-x", out: ["Switched to branch 'feature-x'"] },
+  "git-merge": { cmd: "git merge feature-login", out: ["Merge made by the 'ort' strategy.", " 1 file changed"] },
+  "git-log": { cmd: "git log --oneline", out: ["e4f5g6h add login", "a1b2c3d first commit"] },
+  "git-diff": { cmd: "git diff", out: ["- <h1>Hello</h1>", "+ <h1>Hello World</h1>"] },
+  "git-stash": { cmd: "git stash", out: ["Saved working directory and index state"] },
+  "git-remote": { cmd: "git remote -v", out: ["origin  https://github.com/you/repo.git (fetch)", "origin  https://github.com/you/repo.git (push)"] },
+  "git-fetch": { cmd: "git fetch", out: ["From github.com:you/repo", "   a1b2c3d..e4f5g6h  main -> origin/main"] },
+  "git-reset": { cmd: "git reset index.html", out: ["Unstaged changes after reset:", "M  index.html"] },
+  "npm-install": { cmd: "npm install", out: ["added 312 packages in 8s"] },
+  "npm-init": { cmd: "npm init -y", out: ["Wrote to package.json"] },
+  "npm-run": { cmd: "npm run dev", out: ["> dev", "ready on http://localhost:3000"] },
+  "npm-start": { cmd: "npm start", out: ["Starting...", "ready on http://localhost:3000"] },
+  "npm-build": { cmd: "npm run build", out: ["Compiled successfully", "Route /  ...  200"] },
+  npx: { cmd: "npx create-next-app my-app", out: ["Creating a new Next.js app...", "Success!"] },
+  "node-run": { cmd: "node script.js", out: ["Hello from Node"] },
+  "npm-uninstall": { cmd: "npm uninstall lodash", out: ["removed 1 package"] },
+  "npm-update": { cmd: "npm update", out: ["changed 4 packages in 3s"] },
+};
+
+// COMMAND_DEMOS を demos レジストリに流し込む（コマンドは全部この共通デモを使う）
+for (const [slug, d] of Object.entries(COMMAND_DEMOS)) {
+  demos[slug] = () => <TerminalDemo cmd={d.cmd} out={d.out} />;
+}
+
 export default function LiveExample({
   slug,
   nameJa,

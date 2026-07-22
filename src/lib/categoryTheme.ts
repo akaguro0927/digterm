@@ -64,6 +64,16 @@ export const categoryTheme: Record<Category, CategoryTheme> = {
     ring: "hover:ring-indigo-300",
     gradient: "from-indigo-500 to-violet-500",
   },
+  command: {
+    icon: "terminal",
+    label: "コマンド",
+    tile: "bg-slate-100",
+    tileText: "text-slate-700",
+    chip: "bg-slate-200 text-slate-700",
+    text: "text-slate-700",
+    ring: "hover:ring-slate-400",
+    gradient: "from-slate-700 to-slate-900",
+  },
 };
 
 export const levelTheme: Record<number, { label: string; chip: string; dots: string }> = {

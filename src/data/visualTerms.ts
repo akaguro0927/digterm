@@ -89,6 +89,14 @@ export const VISUAL_SLUGS: readonly string[] = [
   "props", "tailwind", "https", "xss", "ci", "seo", "ogp", "debug",
   // 2026-07-19b 残りの概念語（+4）でデモ100%達成
   "class", "framework", "library", "ux",
+  // 2026-07-22 新カテゴリ「コマンド」バッチ1（シェル/Git/npm +45・共通ターミナルデモ）
+  "cd", "ls", "pwd", "mkdir", "rm", "cp", "mv", "cat", "touch", "echo",
+  "clear", "grep", "find", "head", "tail", "less", "chmod", "curl", "code-cmd", "exit",
+  "git-init", "git-clone", "git-status", "git-add", "git-commit", "git-push", "git-pull",
+  "git-branch", "git-checkout", "git-merge", "git-log", "git-diff", "git-stash",
+  "git-remote", "git-fetch", "git-reset",
+  "npm-install", "npm-init", "npm-run", "npm-start", "npm-build", "npx", "node-run",
+  "npm-uninstall", "npm-update",
 ];
 
 const set = new Set(VISUAL_SLUGS);

@@ -1,7 +1,7 @@
 // 用語シードデータ（プロトタイプ用）
 // 本番では Supabase の terms テーブルに移行する（docs/04_データ設計.md 参照）
 
-export type Category = "ui" | "layout" | "htmlcss" | "dev" | "backend";
+export type Category = "ui" | "layout" | "htmlcss" | "dev" | "backend" | "command";
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   ui: "UI部品",
@@ -9,6 +9,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   htmlcss: "HTML/CSS",
   dev: "開発用語",
   backend: "バックエンド",
+  command: "コマンド",
 };
 
 export const LEVEL_LABELS: Record<number, string> = {
@@ -4312,6 +4313,692 @@ const data = await res.json();`,
       "ユーザーの入力をそのまま画面に表示すると、混ぜ込まれた悪意あるスクリプトが動いてしまう——これがXSS。防ぐ基本は“エスケープ”で、記号を無害な文字に変換してコードとして動かないようにする。「入力をそのまま信用しない」が合言葉。",
     useCase: "コメント欄・検索・プロフィールなど、ユーザー入力を表示する所すべて。",
     related: ["validation", "form"],
+  },
+
+  // ============ コマンド（ターミナル / PCコマンド） ============
+  // ── シェル・ファイル操作の基本 ──
+  {
+    slug: "cd",
+    nameJa: "cd（ディレクトリ移動）",
+    nameEn: "cd",
+    reading: "しーでぃー",
+    aliases: ["チェンジディレクトリ", "change directory"],
+    category: "command",
+    level: 1,
+    summary: "ターミナルで「今いるフォルダ」を移動するコマンド。",
+    description:
+      "cd は change directory の略。`cd フォルダ名` でその中へ入り、`cd ..` で一つ上に戻る。`cd` だけ打つとホームに戻る。ターミナル操作の一番の基本で、まずここへ行ってから他のコマンドを打つ、という起点になる。",
+    useCase: "プロジェクトのフォルダへ移動してから npm や git を実行する。",
+    sampleCode: `cd my-project
+cd ..`,
+    related: ["ls", "pwd", "mkdir"],
+  },
+  {
+    slug: "ls",
+    nameJa: "ls（ファイル一覧）",
+    nameEn: "ls",
+    reading: "えるえす",
+    aliases: ["list", "dir"],
+    category: "command",
+    level: 1,
+    summary: "今いるフォルダの中のファイル・フォルダ一覧を表示する。",
+    description:
+      "ls は list の略。今どこに何があるかを確認する定番コマンド。`ls -a` で隠しファイルも、`ls -l` で詳細（サイズ・日付）も見える。PowerShell では dir や Get-ChildItem が同じ役割。",
+    useCase: "cd した先に目的のファイルがあるか確認する。",
+    sampleCode: `ls
+ls -la`,
+    related: ["cd", "pwd", "cat"],
+  },
+  {
+    slug: "pwd",
+    nameJa: "pwd（現在地の表示）",
+    nameEn: "pwd",
+    reading: "ぴーだぶりゅーでぃー",
+    aliases: ["print working directory"],
+    category: "command",
+    level: 1,
+    summary: "今ターミナルがどのフォルダにいるかをフルパスで表示する。",
+    description:
+      "pwd は print working directory の略。「あれ、今どこにいるんだっけ？」を確認するためのコマンド。パスがずれていてコマンドが失敗する、という初心者の詰まりを解消してくれる。",
+    useCase: "コマンドがうまく動かないとき、まず今いる場所を確認する。",
+    sampleCode: `pwd
+# /Users/you/my-project`,
+    related: ["cd", "ls"],
+  },
+  {
+    slug: "mkdir",
+    nameJa: "mkdir（フォルダ作成）",
+    nameEn: "mkdir",
+    reading: "めいくでぃれくとり",
+    aliases: ["make directory"],
+    category: "command",
+    level: 1,
+    summary: "新しいフォルダ（ディレクトリ）を作るコマンド。",
+    description:
+      "mkdir は make directory の略。`mkdir 名前` で空のフォルダを作る。`mkdir -p a/b/c` で入れ子のフォルダを一気に作れる。プロジェクトの置き場所を用意する最初の一歩。",
+    useCase: "新しいプロジェクトや素材用フォルダを作る。",
+    sampleCode: `mkdir my-app
+mkdir -p src/components`,
+    related: ["cd", "touch", "rm"],
+  },
+  {
+    slug: "rm",
+    nameJa: "rm（削除）",
+    nameEn: "rm",
+    reading: "あーるえむ",
+    aliases: ["remove", "del"],
+    category: "command",
+    level: 2,
+    summary: "ファイルやフォルダを削除するコマンド。ゴミ箱を経由しない。",
+    description:
+      "rm は remove の略。`rm ファイル` で削除、`rm -r フォルダ` でフォルダごと削除。ゴミ箱に入らず即消えるので `rm -rf` は特に注意（戻せない）。PowerShell では Remove-Item。",
+    useCase: "いらないファイルや壊れた .next / node_modules を消す。",
+    sampleCode: `rm old.txt
+rm -rf node_modules`,
+    related: ["mkdir", "mv", "cp"],
+  },
+  {
+    slug: "cp",
+    nameJa: "cp（コピー）",
+    nameEn: "cp",
+    reading: "しーぴー",
+    aliases: ["copy"],
+    category: "command",
+    level: 2,
+    summary: "ファイルやフォルダを別の場所へコピーするコマンド。",
+    description:
+      "cp は copy の略。`cp 元 先` でコピー。フォルダごとコピーするときは `cp -r`。元は残したまま複製を作りたいときに使う。PowerShell では Copy-Item。",
+    useCase: "設定ファイルの雛形（.env.example）をコピーして .env を作る。",
+    sampleCode: `cp .env.example .env
+cp -r src backup`,
+    related: ["mv", "rm", "cat"],
+  },
+  {
+    slug: "mv",
+    nameJa: "mv（移動・リネーム）",
+    nameEn: "mv",
+    reading: "むーぶ",
+    aliases: ["move", "rename"],
+    category: "command",
+    level: 2,
+    summary: "ファイルを移動する、または名前を変えるコマンド。",
+    description:
+      "mv は move の略。`mv 元 先フォルダ` で移動、`mv 旧名 新名` で名前変更（同じ場所へ動かす＝リネーム扱い）になる。コピーと違い元は残らない。PowerShell では Move-Item / Rename-Item。",
+    useCase: "ファイルを整理フォルダへ移す、名前を付け直す。",
+    sampleCode: `mv memo.txt docs/
+mv old.js new.js`,
+    related: ["cp", "rm", "mkdir"],
+  },
+  {
+    slug: "cat",
+    nameJa: "cat（中身を表示）",
+    nameEn: "cat",
+    reading: "きゃっと",
+    aliases: ["concatenate", "type"],
+    category: "command",
+    level: 1,
+    summary: "ファイルの中身をターミナルにそのまま表示するコマンド。",
+    description:
+      "cat は concatenate の略だが、日常では「ファイルの中身をぱっと見る」用途が中心。開くほどでもない設定ファイルを確認するのに便利。長いファイルは head / tail や less を使う。PowerShell では Get-Content。",
+    useCase: "package.json や .env の中身をさっと確認する。",
+    sampleCode: `cat package.json`,
+    related: ["head", "tail", "grep"],
+  },
+  {
+    slug: "touch",
+    nameJa: "touch（空ファイル作成）",
+    nameEn: "touch",
+    reading: "たっち",
+    category: "command",
+    level: 1,
+    summary: "中身が空のファイルを新しく作るコマンド。",
+    description:
+      "`touch ファイル名` で空のファイルを1つ作る。すでにある場合は更新日時だけ更新される。エディタを開かずにサッとファイルを用意したいときに使う。PowerShell では New-Item。",
+    useCase: "index.html や .gitignore などの空ファイルを先に用意する。",
+    sampleCode: `touch index.html
+touch .gitignore`,
+    related: ["mkdir", "echo", "cat"],
+  },
+  {
+    slug: "echo",
+    nameJa: "echo（文字を出力）",
+    nameEn: "echo",
+    reading: "えこー",
+    category: "command",
+    level: 1,
+    summary: "指定した文字列をそのまま画面に表示するコマンド。",
+    description:
+      "`echo こんにちは` と打つとそのまま表示される。`>` と組み合わせるとファイルに書き込める（`echo text > file`）。環境変数の中身を確認する（`echo $PATH`）のにもよく使う。",
+    useCase: "環境変数の確認、簡単な内容をファイルへ書き出す。",
+    sampleCode: `echo "Hello"
+echo "node_modules" > .gitignore`,
+    related: ["cat", "touch", "environment-variable"],
+  },
+  {
+    slug: "clear",
+    nameJa: "clear（画面クリア）",
+    nameEn: "clear",
+    reading: "くりあ",
+    aliases: ["cls"],
+    category: "command",
+    level: 1,
+    summary: "ターミナルの表示をまっさらにするコマンド。",
+    description:
+      "コマンドの出力で画面がごちゃごちゃしたときに `clear`（PowerShell/Windows は cls）で表示をリセット。ログが消えるわけではなくスクロールで戻せる。Ctrl+L でも同じことができる。",
+    useCase: "作業の区切りで画面をきれいにして見やすくする。",
+    sampleCode: `clear`,
+    related: ["ls", "exit"],
+  },
+  {
+    slug: "grep",
+    nameJa: "grep（文字で検索）",
+    nameEn: "grep",
+    reading: "ぐれっぷ",
+    aliases: ["search", "select-string"],
+    category: "command",
+    level: 2,
+    summary: "ファイルの中から特定の文字を含む行を探し出すコマンド。",
+    description:
+      "grep は「この文字が入っている行だけ抜き出す」検索コマンド。`grep 語 ファイル` で該当行が出る。`grep -r 語 .` でフォルダ全体を再帰検索。膨大なコードから該当箇所を一瞬で見つけられる。PowerShell では Select-String。",
+    useCase: "コードのどこで関数が使われているかを探す。",
+    sampleCode: `grep "useState" App.js
+grep -rn "TODO" src`,
+    related: ["find", "cat", "tail"],
+  },
+  {
+    slug: "find",
+    nameJa: "find（ファイルを探す）",
+    nameEn: "find",
+    reading: "ふぁいんど",
+    category: "command",
+    level: 2,
+    summary: "名前や条件を指定してファイル・フォルダを探し出すコマンド。",
+    description:
+      "grep が「中身」を探すのに対し、find は「ファイルそのもの」を名前や種類で探す。`find . -name \"*.png\"` でカレント以下の png を全部リストアップ。散らばった素材やファイルの場所を把握するのに便利。",
+    useCase: "プロジェクト内の特定拡張子のファイルを洗い出す。",
+    sampleCode: `find . -name "*.tsx"`,
+    related: ["grep", "ls"],
+  },
+  {
+    slug: "head",
+    nameJa: "head（先頭を表示）",
+    nameEn: "head",
+    reading: "へっど",
+    category: "command",
+    level: 2,
+    summary: "ファイルの先頭の数行だけを表示するコマンド。",
+    description:
+      "長いファイルやログの「最初の方だけ」を見たいときに使う。`head -n 20 file` で先頭20行。全部表示すると流れてしまう大きなファイルの確認に向く。PowerShell では Get-Content -TotalCount。",
+    useCase: "大きなログやCSVの先頭を確認して形式を把握する。",
+    sampleCode: `head -n 10 access.log`,
+    related: ["tail", "cat", "less"],
+  },
+  {
+    slug: "tail",
+    nameJa: "tail（末尾を表示）",
+    nameEn: "tail",
+    reading: "ている",
+    category: "command",
+    level: 2,
+    summary: "ファイルの末尾の数行を表示する。最新ログの監視にも使う。",
+    description:
+      "head の逆で末尾を表示。`tail -n 20 file` で最後の20行。特に `tail -f` は追記をリアルタイムで流し続けるので、サーバーのログを見張るのに定番。PowerShell では Get-Content -Tail / -Wait。",
+    useCase: "起動中サーバーのログを流しっぱなしで監視する。",
+    sampleCode: `tail -n 20 server.log
+tail -f server.log`,
+    related: ["head", "cat", "grep"],
+  },
+  {
+    slug: "less",
+    nameJa: "less（スクロール表示）",
+    nameEn: "less",
+    reading: "れす",
+    category: "command",
+    level: 3,
+    summary: "長いファイルを1画面ずつスクロールして読むための表示コマンド。",
+    description:
+      "cat だと一気に流れてしまう長いファイルを、ページ単位でゆっくり読むためのビューア。矢印やスペースでスクロールし、`/語` で検索、`q` で終了。読むだけで編集はしない。",
+    useCase: "長いログや設定ファイルをじっくり読む。",
+    sampleCode: `less huge.log
+# q で終了`,
+    related: ["head", "tail", "cat"],
+  },
+  {
+    slug: "chmod",
+    nameJa: "chmod（権限の変更）",
+    nameEn: "chmod",
+    reading: "ちぇんじもーど",
+    aliases: ["change mode", "パーミッション"],
+    category: "command",
+    level: 3,
+    summary: "ファイルの「読み・書き・実行」の許可（パーミッション）を変えるコマンド。",
+    description:
+      "Mac/Linux ではファイルごとに読み(r)・書き(w)・実行(x)の権限がある。`chmod +x script.sh` で実行できるようにする、といった使い方。`chmod 755` のような数字指定もある。Windows には無い概念。",
+    useCase: "自作のシェルスクリプトを実行可能にする。",
+    sampleCode: `chmod +x deploy.sh
+./deploy.sh`,
+    related: ["ls", "rm"],
+  },
+  {
+    slug: "curl",
+    nameJa: "curl（URLにアクセス）",
+    nameEn: "curl",
+    reading: "かーる",
+    category: "command",
+    level: 2,
+    summary: "ターミナルからURLにアクセスして中身を取得するコマンド。",
+    description:
+      "ブラウザを開かずにHTTPリクエストを送れるツール。`curl URL` で中身を取得、`-X POST` や `-d` でデータ送信、`-I` でヘッダーだけ確認できる。APIの動作確認やダウンロードに定番。",
+    useCase: "作ったAPIが正しく返すかを手早く確認する。",
+    sampleCode: `curl https://api.example.com/users
+curl -I https://example.com`,
+    related: ["rest-api", "http-status", "request-response"],
+  },
+  {
+    slug: "code-cmd",
+    nameJa: "code（VS Codeで開く）",
+    nameEn: "code",
+    reading: "こーど",
+    aliases: ["code ."],
+    category: "command",
+    level: 1,
+    summary: "ターミナルから今いるフォルダをVS Codeで開くコマンド。",
+    description:
+      "`code .` と打つと、今いるフォルダをまるごとVS Codeで開ける（`.` は現在地の意味）。ターミナルとエディタを行き来せず一気に作業を始められる。VS Codeのインストール時に有効化しておくと使える。",
+    useCase: "cd で移動したプロジェクトをそのままエディタで開く。",
+    sampleCode: `cd my-project
+code .`,
+    related: ["cd", "npm-run", "git-init"],
+  },
+  {
+    slug: "exit",
+    nameJa: "exit（ターミナル終了）",
+    nameEn: "exit",
+    reading: "いぐじっと",
+    category: "command",
+    level: 1,
+    summary: "今のターミナル（シェル）のセッションを終了するコマンド。",
+    description:
+      "`exit` でターミナルを閉じる。SSHで別マシンに入っているときは、そこから抜けて手元に戻る、という意味になる。Ctrl+D でも同じ。動いているプログラムを止めるのは Ctrl+C なので混同しないこと。",
+    useCase: "作業を終えてシェルやSSH接続を閉じる。",
+    sampleCode: `exit`,
+    related: ["clear", "curl"],
+  },
+
+  // ── Git ──
+  {
+    slug: "git-init",
+    nameJa: "git init（リポジトリ作成）",
+    nameEn: "git init",
+    reading: "ぎっといにっと",
+    category: "command",
+    level: 2,
+    summary: "今のフォルダをGitで管理し始めるための最初のコマンド。",
+    description:
+      "`git init` を打つと、そのフォルダに隠しフォルダ .git が作られ、変更履歴を記録できるようになる。プロジェクトを始めるときに一度だけ実行する“Git管理のスタートボタン”。",
+    useCase: "新規プロジェクトでバージョン管理を始める。",
+    sampleCode: `git init
+git add .
+git commit -m "first commit"`,
+    related: ["git-add", "git-commit", "git-clone"],
+  },
+  {
+    slug: "git-clone",
+    nameJa: "git clone（複製して取得）",
+    nameEn: "git clone",
+    reading: "ぎっとくろーん",
+    category: "command",
+    level: 2,
+    summary: "GitHubなどにあるリポジトリを丸ごと自分のPCへコピーするコマンド。",
+    description:
+      "`git clone URL` で、他人や自分のリモートリポジトリを履歴ごとローカルへ複製する。ダウンロードとの違いは「変更履歴もついてくる」「そのまま push で送り返せる」点。共同開発や他人のコードを動かす入り口。",
+    useCase: "GitHubのプロジェクトを手元に落として動かす。",
+    sampleCode: `git clone https://github.com/user/repo.git`,
+    related: ["git-init", "git-pull", "git-remote"],
+  },
+  {
+    slug: "git-status",
+    nameJa: "git status（状態確認）",
+    nameEn: "git status",
+    reading: "ぎっとすてーたす",
+    category: "command",
+    level: 2,
+    summary: "今どのファイルが変更・追加されているかを一覧で確認するコマンド。",
+    description:
+      "コミット前に「何を変えたか」「何がステージ（add済み）か」を教えてくれる。迷ったらまず git status。赤字＝未ステージ、緑字＝ステージ済み、という色で状態がわかる。",
+    useCase: "コミット前に変更内容を確認する、詰まったとき現状把握する。",
+    sampleCode: `git status`,
+    related: ["git-add", "git-diff", "git-commit"],
+  },
+  {
+    slug: "git-add",
+    nameJa: "git add（ステージに追加）",
+    nameEn: "git add",
+    reading: "ぎっとあど",
+    category: "command",
+    level: 2,
+    summary: "コミットに含める変更を選んで“ステージ”に載せるコマンド。",
+    description:
+      "Gitはコミット前に「今回記録する変更」を選ぶ一段階がある。それが add（ステージング）。`git add ファイル` で個別、`git add .` で全部を載せる。ここに載せたものだけが次の commit に入る。",
+    useCase: "変更のうち今回まとめたいものだけを選んで記録準備する。",
+    sampleCode: `git add index.html
+git add .`,
+    related: ["git-status", "git-commit", "git-reset"],
+  },
+  {
+    slug: "git-commit",
+    nameJa: "git commit（変更を記録）",
+    nameEn: "git commit",
+    reading: "ぎっとこみっと",
+    category: "command",
+    level: 2,
+    summary: "ステージした変更を、メッセージ付きで履歴に記録するコマンド。",
+    description:
+      "add で選んだ変更に名前（メッセージ）を付けて“セーブポイント”を作るのが commit。`git commit -m \"メッセージ\"` が定番。良いメッセージは「何をなぜ変えたか」が一目でわかる。あとで戻したり比較する単位になる。",
+    useCase: "きりの良いところで作業をセーブし、履歴に残す。",
+    sampleCode: `git commit -m "ログイン画面を追加"`,
+    related: ["git-add", "git-push", "git-log"],
+  },
+  {
+    slug: "git-push",
+    nameJa: "git push（リモートへ送信）",
+    nameEn: "git push",
+    reading: "ぎっとぷっしゅ",
+    category: "command",
+    level: 2,
+    summary: "手元のコミットをGitHubなどのリモートへアップロードするコマンド。",
+    description:
+      "ローカルで commit した内容を `git push` でリモート（GitHub等）へ反映する。これでチームに共有され、Vercel等の自動デプロイの引き金にもなる。初回は `-u origin main` で送り先を覚えさせる。",
+    useCase: "作業をGitHubに上げてバックアップ・共有・デプロイする。",
+    sampleCode: `git push
+git push -u origin main`,
+    related: ["git-commit", "git-pull", "deploy"],
+  },
+  {
+    slug: "git-pull",
+    nameJa: "git pull（リモートを取り込む）",
+    nameEn: "git pull",
+    reading: "ぎっとぷる",
+    category: "command",
+    level: 2,
+    summary: "リモートの最新の変更を手元に取り込んで合流させるコマンド。",
+    description:
+      "他の人が push した変更や、別端末での作業を `git pull` で自分のローカルに反映する。作業を始める前に pull しておくと、後の衝突（コンフリクト）を減らせる。中身は fetch＋merge。",
+    useCase: "共同作業で最新状態に追いついてから作業を始める。",
+    sampleCode: `git pull`,
+    related: ["git-push", "git-fetch", "git-merge"],
+  },
+  {
+    slug: "git-branch",
+    nameJa: "git branch（枝分かれ）",
+    nameEn: "git branch",
+    reading: "ぎっとぶらんち",
+    category: "command",
+    level: 2,
+    summary: "作業を本流から枝分かれさせて管理するためのコマンド。",
+    description:
+      "ブランチは履歴の“枝”。`git branch 名前` で新しい枝を作り、main を汚さずに機能開発できる。`git branch` だけで一覧表示。完成したら main に merge して合流させる、というのが基本の流れ。",
+    useCase: "新機能や実験を本番用のmainと分けて安全に進める。",
+    sampleCode: `git branch feature-login
+git branch`,
+    related: ["git-checkout", "git-merge", "git-commit"],
+  },
+  {
+    slug: "git-checkout",
+    nameJa: "git checkout / switch（切り替え）",
+    nameEn: "git checkout",
+    reading: "ぎっとちぇっくあうと",
+    aliases: ["git switch"],
+    category: "command",
+    level: 2,
+    summary: "作業するブランチを切り替える（別の枝へ移る）コマンド。",
+    description:
+      "`git checkout ブランチ名` でそのブランチへ移動する。`-b` を付けると作成と同時に移動。新しいGitでは役割を分けた `git switch` が推奨。過去のコミットの状態を見るのにも使える。",
+    useCase: "機能ブランチとmainを行き来しながら開発する。",
+    sampleCode: `git checkout -b feature-x
+git switch main`,
+    related: ["git-branch", "git-merge", "git-stash"],
+  },
+  {
+    slug: "git-merge",
+    nameJa: "git merge（合流）",
+    nameEn: "git merge",
+    reading: "ぎっとまーじ",
+    category: "command",
+    level: 3,
+    summary: "枝分かれしたブランチの変更を、今のブランチに合流させるコマンド。",
+    description:
+      "機能ブランチで完成した変更を `git merge` で main などに取り込む。同じ場所を別々に変えていると“コンフリクト（衝突）”が起き、手で解消してからコミットする。合流でチームの成果が1本にまとまる。",
+    useCase: "完成した機能ブランチをmainに取り込む。",
+    sampleCode: `git switch main
+git merge feature-login`,
+    related: ["git-branch", "git-checkout", "git-pull"],
+  },
+  {
+    slug: "git-log",
+    nameJa: "git log（履歴を見る）",
+    nameEn: "git log",
+    reading: "ぎっとろぐ",
+    category: "command",
+    level: 2,
+    summary: "これまでのコミット履歴を新しい順に一覧表示するコマンド。",
+    description:
+      "誰がいつ何をコミットしたかを時系列で確認できる。`git log --oneline` で1行ずつ簡潔に。各コミットには固有のID（ハッシュ）があり、戻したり比較する目印になる。`q` で表示を抜ける。",
+    useCase: "変更の経緯を追う、戻したいコミットを探す。",
+    sampleCode: `git log --oneline`,
+    related: ["git-commit", "git-diff", "git-reset"],
+  },
+  {
+    slug: "git-diff",
+    nameJa: "git diff（差分を見る）",
+    nameEn: "git diff",
+    reading: "ぎっとでぃふ",
+    category: "command",
+    level: 3,
+    summary: "変更前と後で「どこがどう変わったか」を行単位で表示するコマンド。",
+    description:
+      "追加行は緑(+)、削除行は赤(-)で表示され、コミット前に自分の変更を見直すのに最適。`git diff` は未ステージ分、`git diff --staged` はステージ済み分を見る。レビューや事故防止の基本。",
+    useCase: "コミット前に意図しない変更が混ざっていないか確認する。",
+    sampleCode: `git diff
+git diff --staged`,
+    related: ["git-status", "git-add", "git-log"],
+  },
+  {
+    slug: "git-stash",
+    nameJa: "git stash（一時退避）",
+    nameEn: "git stash",
+    reading: "ぎっとすたっしゅ",
+    category: "command",
+    level: 3,
+    summary: "作業途中の変更を一時的にしまって、作業場所をきれいに戻すコマンド。",
+    description:
+      "コミットするほどでない作業途中の変更を `git stash` で棚上げし、クリーンな状態に戻す。急ぎで別ブランチに切り替えたいときに便利。`git stash pop` で戻す。“いったん退避してあとで戻す”ための道具。",
+    useCase: "作業中に急な別対応が入ったとき、変更を保ったまま切り替える。",
+    sampleCode: `git stash
+git switch main
+git stash pop`,
+    related: ["git-checkout", "git-branch", "git-reset"],
+  },
+  {
+    slug: "git-remote",
+    nameJa: "git remote（送り先の設定）",
+    nameEn: "git remote",
+    reading: "ぎっとりもーと",
+    category: "command",
+    level: 3,
+    summary: "push/pullする相手（GitHub等のリモート）を登録・確認するコマンド。",
+    description:
+      "ローカルとGitHubをつなぐ“住所録”。`git remote add origin URL` で送り先を登録し、`git remote -v` で今の設定を確認する。origin はよく使う既定の名前。ここが正しくないと push できない。",
+    useCase: "作ったローカルリポジトリをGitHubに紐づける。",
+    sampleCode: `git remote add origin https://github.com/you/repo.git
+git remote -v`,
+    related: ["git-push", "git-clone", "git-pull"],
+  },
+  {
+    slug: "git-fetch",
+    nameJa: "git fetch（取得だけ）",
+    nameEn: "git fetch",
+    reading: "ぎっとふぇっち",
+    category: "command",
+    level: 3,
+    summary: "リモートの最新情報を取得するが、まだ合流はしないコマンド。",
+    description:
+      "pull が「取得＋合流」なのに対し、fetch は「取得だけ」。手元の作業に影響を与えずに、リモートで何が起きたかを先に確認できる。中身を見てから自分のタイミングで merge する、慎重派の流れ。",
+    useCase: "いきなり取り込む前に、リモートの変更を確認したい。",
+    sampleCode: `git fetch
+git log origin/main --oneline`,
+    related: ["git-pull", "git-merge", "git-remote"],
+  },
+  {
+    slug: "git-reset",
+    nameJa: "git reset（取り消し・戻す）",
+    nameEn: "git reset",
+    reading: "ぎっとりせっと",
+    category: "command",
+    level: 3,
+    summary: "addやコミットを取り消して、前の状態に戻すコマンド。強力ゆえ注意。",
+    description:
+      "`git reset ファイル` で add を取り消す、`git reset --soft HEAD~1` で直前コミットだけ取り消す、など段階がある。`--hard` は変更ごと消えて戻せないので要注意。“やり直し”の道具だが刃物でもある。",
+    useCase: "間違えて add/commit したものを取り消す。",
+    sampleCode: `git reset index.html
+git reset --soft HEAD~1`,
+    related: ["git-add", "git-commit", "git-stash"],
+  },
+
+  // ── npm / Node.js ──
+  {
+    slug: "npm-install",
+    nameJa: "npm install（依存の導入）",
+    nameEn: "npm install",
+    reading: "えぬぴーえむいんすとーる",
+    aliases: ["npm i"],
+    category: "command",
+    level: 2,
+    summary: "プロジェクトに必要なライブラリ（部品）をまとめて入れるコマンド。",
+    description:
+      "`npm install` を引数なしで打つと package.json に書かれた依存を全部入れ、node_modules に展開する。`npm install ライブラリ名` で新しく追加も。クローン直後にまずこれを打つ、が定番の第一歩。",
+    useCase: "クローンしたプロジェクトを動かす前の準備、ライブラリ追加。",
+    sampleCode: `npm install
+npm install react`,
+    related: ["npm-run", "npm-init", "npx"],
+  },
+  {
+    slug: "npm-init",
+    nameJa: "npm init（プロジェクト作成）",
+    nameEn: "npm init",
+    reading: "えぬぴーえむいにっと",
+    category: "command",
+    level: 2,
+    summary: "新しいNode/npmプロジェクトの土台（package.json）を作るコマンド。",
+    description:
+      "`npm init` で対話形式に答えると、プロジェクトの設定ファイル package.json が生成される。`npm init -y` なら質問を飛ばして即作成。ここが依存やスクリプトを管理する起点になる。",
+    useCase: "ゼロから新しいNodeプロジェクトを始める。",
+    sampleCode: `npm init -y`,
+    related: ["npm-install", "npm-run", "git-init"],
+  },
+  {
+    slug: "npm-run",
+    nameJa: "npm run（スクリプト実行）",
+    nameEn: "npm run",
+    reading: "えぬぴーえむらん",
+    category: "command",
+    level: 2,
+    summary: "package.jsonに登録した自作コマンド（scripts）を実行するコマンド。",
+    description:
+      "開発でよく打つ長いコマンドに短い名前をつけて登録できるのが scripts。`npm run 名前` で実行する。start と test は `run` を省略できる特別扱い。どんな名前があるかは package.json の scripts を見る。",
+    useCase: "開発サーバー起動やビルドなど、定型作業を短い名前で回す。",
+    sampleCode: `npm run dev
+npm run lint`,
+    related: ["npm-start", "npm-build", "npm-install"],
+  },
+  {
+    slug: "npm-start",
+    nameJa: "npm start（起動）",
+    nameEn: "npm start",
+    reading: "えぬぴーえむすたーと",
+    category: "command",
+    level: 1,
+    summary: "アプリを起動する定番コマンド。多くはこれで開発サーバーが立つ。",
+    description:
+      "package.json の scripts の start を実行する。`run` を省ける特別なコマンドで、`npm start` だけでOK。多くのプロジェクトでローカルサーバーが立ち上がり、ブラウザで動作確認できるようになる。",
+    useCase: "作ったアプリをローカルで立ち上げて確認する。",
+    sampleCode: `npm start
+# http://localhost:3000`,
+    related: ["npm-run", "npm-build", "npm-install"],
+  },
+  {
+    slug: "npm-build",
+    nameJa: "npm run build（本番用ビルド）",
+    nameEn: "npm run build",
+    reading: "えぬぴーえむらんびるど",
+    category: "command",
+    level: 2,
+    summary: "公開用に最適化した成果物を書き出すコマンド。",
+    description:
+      "開発中のコードを、本番で速く動くように圧縮・変換してまとめる工程がビルド。`npm run build` で dist や .next などに成果物が生成される。デプロイ前に必ず通し、エラーが無いことを確認する。",
+    useCase: "公開・デプロイの前に本番用ファイルを生成する。",
+    sampleCode: `npm run build`,
+    related: ["bundler", "deploy", "npm-start"],
+  },
+  {
+    slug: "npx",
+    nameJa: "npx（入れずに実行）",
+    nameEn: "npx",
+    reading: "えぬぴーえっくす",
+    category: "command",
+    level: 2,
+    summary: "ライブラリを常設インストールせず、その場で1回だけ実行するコマンド。",
+    description:
+      "`npx ツール名` で、インストール不要のワンショット実行ができる。`npx create-next-app` のような“雛形づくり”ツールで特に活躍。一度きりのコマンドで node_modules を汚さずに済むのが利点。",
+    useCase: "プロジェクトの雛形生成ツールを一回だけ動かす。",
+    sampleCode: `npx create-next-app my-app`,
+    related: ["npm-install", "npm-init", "node-run"],
+  },
+  {
+    slug: "node-run",
+    nameJa: "node（JSファイルを実行）",
+    nameEn: "node",
+    reading: "のーど",
+    aliases: ["node file.js"],
+    category: "command",
+    level: 2,
+    summary: "JavaScriptファイルをブラウザなしで直接実行するコマンド。",
+    description:
+      "`node ファイル.js` でそのJSをその場で走らせる。引数なしの `node` は対話モード（REPL）で、その場でJSを試せる。ブラウザの外でJavaScriptを動かせるのがNode.jsの正体で、その入口がこのコマンド。",
+    useCase: "スクリプトの動作確認、ちょっとした処理をJSで回す。",
+    sampleCode: `node script.js
+node -e "console.log(1+1)"`,
+    related: ["npx", "npm-run", "console"],
+  },
+  {
+    slug: "npm-uninstall",
+    nameJa: "npm uninstall（削除）",
+    nameEn: "npm uninstall",
+    reading: "えぬぴーえむあんいんすとーる",
+    aliases: ["npm remove"],
+    category: "command",
+    level: 2,
+    summary: "入れたライブラリをプロジェクトから取り除くコマンド。",
+    description:
+      "`npm uninstall ライブラリ名` で、そのパッケージを node_modules から消し、package.json の依存一覧からも外す。使わなくなった部品を整理して、依存を軽く保つために使う。",
+    useCase: "不要になったライブラリを片付ける。",
+    sampleCode: `npm uninstall lodash`,
+    related: ["npm-install", "npm-update"],
+  },
+  {
+    slug: "npm-update",
+    nameJa: "npm update（更新）",
+    nameEn: "npm update",
+    reading: "えぬぴーえむあっぷでーと",
+    category: "command",
+    level: 3,
+    summary: "入れているライブラリを、許可された範囲で新しい版に上げるコマンド。",
+    description:
+      "`npm update` で依存を新しめのバージョンへ更新する。どこまで上げてよいかは package.json のバージョン記号（^ など）で決まる。`npm outdated` で古くなった依存を先に確認するのが安全。",
+    useCase: "セキュリティ修正や機能追加のため依存を最新化する。",
+    sampleCode: `npm outdated
+npm update`,
+    related: ["npm-install", "npm-uninstall"],
   },
 ];
 

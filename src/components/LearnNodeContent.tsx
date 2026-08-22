@@ -10,10 +10,11 @@ interface Props {
   node: JourneyNode;
   chapter: Chapter;
   position: ChapterPosition | null;
+  nextHref: string;
 }
 
 /** サーバーで権利確認済みの1マスだけを表示するクライアントUI。 */
-export default function LearnNodeContent({ node, chapter, position }: Props) {
+export default function LearnNodeContent({ node, chapter, position, nextHref }: Props) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <Link
@@ -39,7 +40,11 @@ export default function LearnNodeContent({ node, chapter, position }: Props) {
       <p className="mt-1 text-sm text-slate-400">{node.intro}</p>
 
       <div className="mt-8">
-        {node.type === "lesson" ? <LessonView node={node} /> : <TestView node={node} />}
+        {node.type === "lesson" ? (
+          <LessonView node={node} nextHref={nextHref} />
+        ) : (
+          <TestView node={node} nextHref={nextHref} level={chapter.level} />
+        )}
       </div>
     </div>
   );

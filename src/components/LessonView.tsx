@@ -6,15 +6,9 @@ import MascotTeacher from "@/components/MascotTeacher";
 import CodeBlock from "@/components/CodeBlock";
 import { Icon } from "@/components/icons";
 import { markNodeCleared } from "@/lib/userStore";
-import { flatNodes, type LessonNode, type TestQuestion } from "@/data/journey";
+import type { LessonNode, TestQuestion } from "@/data/journey";
 import { terms } from "@/data/terms";
 import { linkifyStory } from "@/lib/linkify";
-
-function nextHrefAfter(id: string): string {
-  const i = flatNodes.findIndex((f) => f.node.id === id);
-  const next = flatNodes[i + 1];
-  return next ? `/learn/${next.node.id}` : "/learn";
-}
 
 // slug → 用語名（図鑑導線チップの表示用）
 const termNameBySlug = new Map(terms.map((t) => [t.slug, t.nameJa]));
@@ -63,7 +57,7 @@ function MiniPractice({ q }: { q: TestQuestion }) {
   );
 }
 
-export default function LessonView({ node }: { node: LessonNode }) {
+export default function LessonView({ node, nextHref }: { node: LessonNode; nextHref: string }) {
   const [finished, setFinished] = useState(false);
 
   const complete = () => {
@@ -136,7 +130,7 @@ export default function LessonView({ node }: { node: LessonNode }) {
 
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link
-          href={nextHrefAfter(node.id)}
+          href={nextHref}
           className="btn-3d font-display inline-flex items-center gap-1.5 rounded-full bg-brand-500 px-7 py-3 text-sm font-extrabold text-white"
           style={{ ["--edge" as string]: "#12a854" }}
         >

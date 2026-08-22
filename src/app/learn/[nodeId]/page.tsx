@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import LearnNodeContent from "@/components/LearnNodeContent";
-import { getFlatNode, isChapterAccessible, chapterPositionInLevel } from "@/data/journey";
+import { chapterPositionInLevel, flatNodes, getFlatNode, isChapterAccessible } from "@/data/journey";
 import { Icon } from "@/components/icons";
 import { getServerEntitlement } from "@/lib/supabase/server";
 
@@ -53,11 +53,14 @@ export default async function LearnNodePage({ params }: { params: Promise<{ node
 
   const { node, chapter } = found;
   const pos = chapterPositionInLevel(chapter.id);
+  const nodeIndex = flatNodes.findIndex((item) => item.node.id === node.id);
+  const next = flatNodes[nodeIndex + 1];
+  const nextHref = next ? `/learn/${next.node.id}` : "/learn";
   const entitlement = await getServerEntitlement();
 
   if (!isChapterAccessible(chapter, entitlement.hasPaidAccess)) {
     return <VipLocked chapterTitle={chapter.title} needsLogin={!entitlement.user} />;
   }
 
-  return <LearnNodeContent node={node} chapter={chapter} position={pos} />;
+  return <LearnNodeContent node={node} chapter={chapter} position={pos} nextHref={nextHref} />;
 }

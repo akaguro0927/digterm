@@ -1,6 +1,41 @@
 // すごろく学習で獲得できる「賞（アワード）」。クリアしたノードに応じて達成判定する。
 import type { IconName } from "@/components/icons";
-import { nodesByChapter, flatNodes } from "@/data/journey";
+
+// 進捗判定に必要なのはノードIDだけ。本文・設問を含む journey.ts をクライアントへ
+// 巻き込まないよう、賞の判定用メタデータはここに固定する。
+const CHAPTER_NODE_IDS: Record<string, readonly string[]> = {
+  c1: ["c1-l1", "c1-l2", "c1-l3", "c1-test"],
+  c2: ["c2-l1", "c2-l2", "c2-test"],
+  c3: ["c3-l1", "c3-l2", "c3-l3", "c3-test"],
+  c4: ["c4-l1", "c4-l2", "c4-l3", "c4-test"],
+  c5: ["c5-l1", "c5-l2", "c5-l3", "c5-test"],
+  c6: ["c6-l1", "c6-l2", "c6-l3", "c6-test"],
+  b1: ["b1-l1", "b1-l2", "b1-l3", "b1-test"],
+  m1: ["m1-l1", "m1-l2", "m1-l3", "m1-test"],
+  m2: ["m2-l1", "m2-l2", "m2-l3", "m2-test"],
+  m3: ["m3-l1", "m3-l2", "m3-l3", "m3-test"],
+  m9: ["m9-l1", "m9-l2", "m9-l3", "m9-test"],
+  m4: ["m4-l1", "m4-l2", "m4-l3", "m4-test"],
+  m10: ["m10-l1", "m10-l2", "m10-l3", "m10-test"],
+  m5: ["m5-l1", "m5-l2", "m5-l3", "m5-test"],
+  m6: ["m6-l1", "m6-l2", "m6-l3", "m6-test"],
+  m11: ["m11-l1", "m11-l2", "m11-l3", "m11-test"],
+  m7: ["m7-l1", "m7-l2", "m7-l3", "m7-test"],
+  m8: ["m8-l1", "m8-l2", "m8-l3", "m8-test"],
+  a1: ["a1-l1", "a1-l2", "a1-l3", "a1-test"],
+  a2: ["a2-l1", "a2-l2", "a2-l3", "a2-test"],
+  a4: ["a4-l1", "a4-l2", "a4-l3", "a4-test"],
+  a5: ["a5-l1", "a5-l2", "a5-l3", "a5-test"],
+  a6: ["a6-l1", "a6-l2", "a6-l3", "a6-test"],
+  a7: ["a7-l1", "a7-l2", "a7-l3", "a7-test"],
+  a8: ["a8-l1", "a8-l2", "a8-l3", "a8-test"],
+  a9: ["a9-l1", "a9-l2", "a9-l3", "a9-test"],
+  a10: ["a10-l1", "a10-l2", "a10-l3", "a10-test"],
+  a11: ["a11-l1", "a11-l2", "a11-l3", "a11-test"],
+  a12: ["a12-l1", "a12-l2", "a12-l3", "a12-test"],
+  a3: ["a3-l1", "a3-l2", "a3-l3", "a3-test"],
+};
+const ALL_NODE_IDS = Object.values(CHAPTER_NODE_IDS).flat();
 
 export interface Award {
   id: string;
@@ -12,8 +47,8 @@ export interface Award {
 }
 
 function chapterDone(chapterId: string, cleared: readonly string[]): boolean {
-  const ns = nodesByChapter[chapterId] ?? [];
-  return ns.length > 0 && ns.every((n) => cleared.includes(n.id));
+  const ids = CHAPTER_NODE_IDS[chapterId] ?? [];
+  return ids.length > 0 && ids.every((id) => cleared.includes(id));
 }
 
 function chaptersDone(ids: string[], cleared: readonly string[]): boolean {
@@ -181,7 +216,7 @@ export const awards: Award[] = [
     desc: "すべてのマスをクリア（初級〜上級）",
     icon: "trophy",
     tint: "bg-brand-100 text-brand-600",
-    earned: (c) => flatNodes.length > 0 && flatNodes.every((f) => c.includes(f.node.id)),
+    earned: (c) => ALL_NODE_IDS.length > 0 && ALL_NODE_IDS.every((id) => c.includes(id)),
   },
 ];
 

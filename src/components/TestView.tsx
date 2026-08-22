@@ -4,18 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { markNodeCleared, useClearedNodes, recordJourneyMiss, resolveJourneyMiss } from "@/lib/userStore";
-import { flatNodes, type TestNode } from "@/data/journey";
+import type { CourseLevel, TestNode } from "@/data/journey";
 import { awards } from "@/data/awards";
 import LevelMascot from "@/components/LevelMascot";
 import { playCorrect, playWrong } from "@/lib/sfx";
 
-function nextHrefAfter(id: string): string {
-  const i = flatNodes.findIndex((f) => f.node.id === id);
-  const next = flatNodes[i + 1];
-  return next ? `/learn/${next.node.id}` : "/learn";
-}
-
-export default function TestView({ node }: { node: TestNode }) {
+export default function TestView({ node, nextHref, level }: { node: TestNode; nextHref: string; level: CourseLevel }) {
   const qs = node.questions;
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -25,7 +19,6 @@ export default function TestView({ node }: { node: TestNode }) {
   const [finished, setFinished] = useState(false);
 
   const cleared = useClearedNodes();
-  const level = flatNodes.find((f) => f.node.id === node.id)?.chapter.level ?? "beginner";
   const q = qs[idx];
   const answered = picked !== null;
   const rate = correct / qs.length;
@@ -137,7 +130,7 @@ export default function TestView({ node }: { node: TestNode }) {
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           {passed ? (
             <Link
-              href={nextHrefAfter(node.id)}
+              href={nextHref}
               className="btn-3d font-display inline-flex items-center gap-1.5 rounded-full bg-brand-500 px-7 py-2.5 text-sm font-extrabold text-white"
               style={{ ["--edge" as string]: "#12a854" }}
             >

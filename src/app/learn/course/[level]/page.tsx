@@ -1,18 +1,18 @@
-"use client";
-
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import JourneyBoard from "@/components/JourneyBoard";
 import { Icon } from "@/components/icons";
-import { levels, chaptersByLevel, isChapterAccessible, type CourseLevel } from "@/data/journey";
-import { useHasPaidAccess } from "@/lib/plan";
+import { getPublicJourney } from "@/lib/journey/public";
+import { isPublicChapterAccessible, publicChaptersForLevel } from "@/lib/journey/client";
+import type { PublicCourseLevel } from "@/lib/journey/types";
+import { getServerEntitlement } from "@/lib/supabase/server";
 
-const VALID: CourseLevel[] = ["beginner", "intermediate", "advanced"];
+const VALID: PublicCourseLevel[] = ["beginner", "intermediate", "advanced"];
 
-export default function LevelBoardPage() {
-  const params = useParams<{ level: string }>();
-  const hasPaid = useHasPaidAccess();
-  const level = params.level as CourseLevel;
+export default async function LevelBoardPage({ params }: { params: Promise<{ level: string }> }) {
+  const { level: rawLevel } = await params;
+  const journey = getPublicJourney();
+  const { hasPaidAccess: hasPaid } = await getServerEntitlement();
+  const level = rawLevel as PublicCourseLevel;
 
   if (!VALID.includes(level)) {
     return (
@@ -26,9 +26,9 @@ export default function LevelBoardPage() {
     );
   }
 
-  const lm = levels.find((l) => l.level === level)!;
-  const chaps = chaptersByLevel(level);
-  const allLocked = chaps.length > 0 && chaps.every((c) => !isChapterAccessible(c, hasPaid));
+  const lm = journey.levels.find((item) => item.level === level)!;
+  const chaps = publicChaptersForLevel(journey, level);
+  const allLocked = chaps.length > 0 && chaps.every((chapter) => !isPublicChapterAccessible(chapter, hasPaid));
 
   return (
     <div className="py-10">
@@ -50,7 +50,7 @@ export default function LevelBoardPage() {
             <Icon name="zap" className="h-3.5 w-3.5" />
             飛び級テスト（このコースをスキップ）
           </Link>
-          {levels
+          {journey.levels
             .filter((l) => l.level !== level)
             .map((l) => (
               <Link
@@ -81,7 +81,7 @@ export default function LevelBoardPage() {
       </div>
 
       <div className="mx-auto mt-6 max-w-2xl px-4">
-        <JourneyBoard level={level} />
+        <JourneyBoard journey={journey} level={level} />
       </div>
     </div>
   );

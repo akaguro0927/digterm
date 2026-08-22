@@ -4,17 +4,10 @@ import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { useClearedNodes } from "@/lib/userStore";
 import { useHasPaidAccess } from "@/lib/plan";
-import {
-  levels,
-  chaptersByLevel,
-  isChapterAccessible,
-  levelProgressList,
-  nextNodeId,
-  getFlatNode,
-  type CourseLevel,
-} from "@/data/journey";
+import { isPublicChapterAccessible, nextPublicNodeId, publicChaptersForLevel, publicLevelProgress } from "@/lib/journey/client";
+import type { PublicCourseLevel, PublicJourney } from "@/lib/journey/types";
 
-const ACCENT: Record<CourseLevel, { bar: string; text: string; ring: string }> = {
+const ACCENT: Record<PublicCourseLevel, { bar: string; text: string; ring: string }> = {
   beginner: { bar: "bg-emerald-500", text: "text-emerald-600", ring: "ring-emerald-200" },
   intermediate: { bar: "bg-sky-500", text: "text-sky-600", ring: "ring-sky-200" },
   advanced: { bar: "bg-violet-500", text: "text-violet-600", ring: "ring-violet-200" },
@@ -22,14 +15,14 @@ const ACCENT: Record<CourseLevel, { bar: string; text: string; ring: string }> =
 
 // レッスンの「目次ハブ」。続きから再開＋初級/中級/上級の入口カード。
 // 長い1画面スクロールをやめ、各レベルは専用ページ（/learn/course/[level]）に分ける。
-export default function LevelHub() {
+export default function LevelHub({ journey }: { journey: PublicJourney }) {
   const cleared = useClearedNodes();
   const hasPaid = useHasPaidAccess();
-  const progress = levelProgressList(cleared);
+  const progress = publicLevelProgress(journey, cleared);
 
-  const nextId = nextNodeId(cleared);
-  const nextFlat = nextId ? getFlatNode(nextId) : undefined;
-  const nextLocked = nextFlat ? !isChapterAccessible(nextFlat.chapter, hasPaid) : false;
+  const nextId = nextPublicNodeId(journey.flatNodes, cleared);
+  const nextFlat = nextId ? journey.flatNodes.find((item) => item.node.id === nextId) : undefined;
+  const nextLocked = nextFlat ? !isPublicChapterAccessible(nextFlat.chapter, hasPaid) : false;
   const started = cleared.length > 0;
 
   return (
@@ -63,11 +56,11 @@ export default function LevelHub() {
 
       {/* レベルの入口カード（それぞれ専用ページへ画面遷移） */}
       <div className="mt-4 grid gap-3">
-        {levels.map((lm) => {
+        {journey.levels.map((lm) => {
           const accent = ACCENT[lm.level];
           const lp = progress.find((p) => p.level === lm.level);
-          const chaps = chaptersByLevel(lm.level);
-          const locked = chaps.length > 0 && chaps.every((c) => !isChapterAccessible(c, hasPaid));
+          const chaps = publicChaptersForLevel(journey, lm.level);
+          const locked = chaps.length > 0 && chaps.every((c) => !isPublicChapterAccessible(c, hasPaid));
           const done = lp?.pct === 100;
           return (
             <Link

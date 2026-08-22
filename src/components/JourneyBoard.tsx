@@ -4,17 +4,10 @@ import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { useClearedNodes, useJourneyWeak } from "@/lib/userStore";
 import { useHasPaidAccess } from "@/lib/plan";
-import {
-  flatNodes,
-  isUnlocked,
-  nextNodeId,
-  isChapterAccessible,
-  levels,
-  type FlatNode,
-  type CourseLevel,
-} from "@/data/journey";
+import { isPublicChapterAccessible, nextPublicNodeId, publicNodeIsUnlocked } from "@/lib/journey/client";
+import type { PublicCourseLevel, PublicFlatNode, PublicJourney } from "@/lib/journey/types";
 
-const levelMeta = (level: string) => levels.find((l) => l.level === level);
+const levelMeta = (journey: PublicJourney, level: string) => journey.levels.find((l) => l.level === level);
 
 // 前回の学習マップ（LearningMap）と同じUI：中央の点線スパイン＋左右にゆれるノード。
 function offsetX(globalIndex: number): number {
@@ -22,9 +15,9 @@ function offsetX(globalIndex: number): number {
 }
 
 // 章ごとにノードをまとめる
-function groupByChapter(nodes: FlatNode[]): { chapter: FlatNode["chapter"]; nodes: FlatNode[] }[] {
-  const groups: { chapter: FlatNode["chapter"]; nodes: FlatNode[] }[] = [];
-  let cur: { chapter: FlatNode["chapter"]; nodes: FlatNode[] } | null = null;
+function groupByChapter(nodes: PublicFlatNode[]): { chapter: PublicFlatNode["chapter"]; nodes: PublicFlatNode[] }[] {
+  const groups: { chapter: PublicFlatNode["chapter"]; nodes: PublicFlatNode[] }[] = [];
+  let cur: { chapter: PublicFlatNode["chapter"]; nodes: PublicFlatNode[] } | null = null;
   for (const fn of nodes) {
     if (!cur || cur.chapter.id !== fn.chapter.id) {
       cur = { chapter: fn.chapter, nodes: [] };
@@ -36,22 +29,24 @@ function groupByChapter(nodes: FlatNode[]): { chapter: FlatNode["chapter"]; node
 }
 
 // level を渡すとそのコース（初級/中級/上級）のマスだけ表示する。
-export default function JourneyBoard({ level }: { level?: CourseLevel }) {
+// 道のりの中身はサーバーが絞った journey（PublicJourney）だけを受け取る。
+// 本文・設問・正解は journey.ts 側に置いたままで、ここへは渡ってこない。
+export default function JourneyBoard({ journey, level }: { journey: PublicJourney; level?: PublicCourseLevel }) {
   const cleared = useClearedNodes();
   const hasPaid = useHasPaidAccess();
   const weak = useJourneyWeak();
   const clearedSet = new Set(cleared);
 
-  const boardNodes = level ? flatNodes.filter((f) => f.chapter.level === level) : flatNodes;
+  const boardNodes = level ? journey.flatNodes.filter((f) => f.chapter.level === level) : journey.flatNodes;
   const boardTotal = boardNodes.length;
   const doneCount = boardNodes.filter((f) => clearedSet.has(f.node.id)).length;
   const pct = boardTotal > 0 ? Math.round((doneCount / boardTotal) * 100) : 0;
 
-  const globalNextId = nextNodeId(cleared);
+  const globalNextId = nextPublicNodeId(journey.flatNodes, cleared);
   // このボード内で「次にやるマス」（未クリアの先頭）
   const boardNext = boardNodes.find((f) => !clearedSet.has(f.node.id))?.node.id ?? null;
   const boardNextFn = boardNodes.find((f) => f.node.id === boardNext);
-  const boardNextLocked = boardNextFn ? !isChapterAccessible(boardNextFn.chapter, hasPaid) : false;
+  const boardNextLocked = boardNextFn ? !isPublicChapterAccessible(boardNextFn.chapter, hasPaid) : false;
   const continueHref = boardNext ? (boardNextLocked ? "/vip" : `/learn/${boardNext}`) : "/learn";
   const allDone = boardTotal > 0 && doneCount === boardTotal;
 
@@ -140,7 +135,7 @@ export default function JourneyBoard({ level }: { level?: CourseLevel }) {
       {/* レベルジャンプ（全コース表示のときだけ）＋目次 */}
       {!level && (
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          {levels.map((lm) => (
+          {journey.levels.map((lm) => (
             <a
               key={lm.level}
               href={`#level-${lm.level}`}
@@ -169,10 +164,10 @@ export default function JourneyBoard({ level }: { level?: CourseLevel }) {
 
         {chapters.map((chap, ci) => {
           const chapterDone = chap.nodes.every((fn) => clearedSet.has(fn.node.id));
-          const chapterLocked = !isChapterAccessible(chap.chapter, hasPaid);
+          const chapterLocked = !isPublicChapterAccessible(chap.chapter, hasPaid);
           const prevLevel = ci > 0 ? chapters[ci - 1].chapter.level : null;
           const showLevelHeader = !level && chap.chapter.level !== prevLevel;
-          const lm = levelMeta(chap.chapter.level);
+          const lm = levelMeta(journey, chap.chapter.level);
           return (
             <section key={chap.chapter.id} className="relative">
               {/* コースレベルの区切り（全コース表示のときだけ） */}
@@ -217,7 +212,7 @@ export default function JourneyBoard({ level }: { level?: CourseLevel }) {
                   const node = fn.node;
                   const done = clearedSet.has(node.id);
                   const vipLocked = chapterLocked && !done; // VIP章なのに未課金
-                  const unlocked = !vipLocked && isUnlocked(node.id, cleared);
+                  const unlocked = !vipLocked && publicNodeIsUnlocked(journey.flatNodes, node.id, cleared);
                   const isNext = node.id === globalNextId;
                   const isTest = node.type === "test";
 

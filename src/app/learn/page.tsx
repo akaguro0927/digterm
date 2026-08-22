@@ -4,9 +4,10 @@ import AwardShelf from "@/components/AwardShelf";
 import StreakBar from "@/components/StreakBar";
 import { MascotFace } from "@/components/MascotTeacher";
 import { Icon } from "@/components/icons";
-import { chapters, totalNodes } from "@/data/journey";
+import { getPublicJourney } from "@/lib/journey/public";
 
 export default function LearnPage() {
+  const journey = getPublicJourney();
   return (
     <div className="py-10">
       {/* 導入（狭い列） */}
@@ -23,8 +24,8 @@ export default function LearnPage() {
             用語が身について「かんたんなサイト」が作れるようになるよ。
           </p>
           <p className="mt-2 font-display text-xs font-bold text-slate-400">
-            全 <span className="text-brand-600">{chapters.length}</span> 章・
-            <span className="text-brand-600">{totalNodes}</span> マス（初級〜上級）
+            全 <span className="text-brand-600">{journey.chapters.length}</span> 章・
+            <span className="text-brand-600">{journey.flatNodes.length}</span> マス（初級〜上級）
           </p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] font-bold">
             <span className="rounded-full bg-brand-50 px-3 py-1 text-brand-700 ring-1 ring-brand-100">初級：無料</span>
@@ -43,7 +44,7 @@ export default function LearnPage() {
 
       {/* 目次ハブ：続きから＋初級/中級/上級の入口（各コースは専用ページへ） */}
       <div className="mx-auto mt-8 max-w-2xl px-4">
-        <LevelHub />
+        <LevelHub journey={journey} />
       </div>
 
       {/* 腕試し・復習（章末テストの通し受験＋弱点復習） */}

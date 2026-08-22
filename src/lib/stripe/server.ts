@@ -30,4 +30,19 @@ export function checkoutModeForPlan(plan: "vip" | "lifetime"): "subscription" | 
   return plan === "lifetime" ? "payment" : "subscription";
 }
 
+/**
+ * Stripeから戻す先は、公開時に固定したアプリURLだけを使う。
+ * Host/Originヘッダーを信じると攻撃者のURLへCheckout完了後を飛ばせるため、本番では未設定を拒否する。
+ */
+export function appOrigin(requestUrl: string): string {
+  const configured = process.env.APP_URL;
+  if (configured) {
+    const origin = new URL(configured).origin;
+    if (origin === "null") throw new Error("invalid_app_url");
+    return origin;
+  }
+  if (process.env.NODE_ENV === "production") throw new Error("app_url_required");
+  return new URL(requestUrl).origin;
+}
+
 export const VIP_PRICE_LABEL = "月額 ¥480（予定）";

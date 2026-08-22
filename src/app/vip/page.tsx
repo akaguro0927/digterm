@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
 import { usePlan, setPlan, useHasPaidAccess } from "@/lib/plan";
-import { useAuth } from "@/lib/supabase/AuthProvider";
 
 // 価格（案・変更容易）。詳細と根拠は docs/05。
 const PRICE = {
@@ -38,28 +37,38 @@ export default function VipPage() {
   const isVip = plan === "vip";
   const isLifetime = plan === "lifetime";
   const hasPaid = useHasPaidAccess();
-  const { user } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   // 申し込み: Stripe が設定済みなら Checkout へ、未設定ならデモ切替。
   // plan="vip"（サブスク）/ "lifetime"（買い切り）で商品とモードを切り替える。
   const startCheckout = async (targetPlan: "vip" | "lifetime") => {
     setBusy(true);
+    setCheckoutError(null);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user?.email, userId: user?.id, plan: targetPlan }),
+        // 本人の特定はCookieセッションをサーバー側で検証する。ブラウザ申告のIDは送らない。
+        body: JSON.stringify({ plan: targetPlan }),
       });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url as string;
         return;
       }
-      // 未設定（demo）＝ローカルでプランを有効化して体験
-      setPlan(targetPlan);
+      if (data.error === "login_required") {
+        window.location.href = "/login";
+        return;
+      }
+      // キー未設定のローカル開発時だけ、画面の体験用に切り替える。
+      if (data.demo) {
+        setPlan(targetPlan);
+        return;
+      }
+      setCheckoutError("申し込みを始められませんでした。時間をおいてもう一度お試しください。");
     } catch {
-      setPlan(targetPlan);
+      setCheckoutError("通信に失敗しました。接続を確認してもう一度お試しください。");
     } finally {
       setBusy(false);
     }
@@ -112,6 +121,11 @@ export default function VipPage() {
 
       {/* 料金・申し込み（いまはデモ切替） */}
       <div className="mt-8">
+        {checkoutError && (
+          <p className="mb-4 rounded-2xl bg-rose-50 px-4 py-3 text-center text-sm font-medium text-rose-700 ring-1 ring-rose-200">
+            {checkoutError}
+          </p>
+        )}
         {!hasPaid ? (
           <div className="grid gap-4 sm:grid-cols-2">
             {/* サブスク（VIP） */}

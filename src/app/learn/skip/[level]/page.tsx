@@ -1,16 +1,19 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Icon } from "@/components/icons";
 import LevelMascot from "@/components/LevelMascot";
-import { levels, type CourseLevel } from "@/data/journey";
+import { levels } from "@/data/journeyPublic";
+import type { PublicCourseLevel as CourseLevel } from "@/lib/journey/types";
 import { markNodeCleared } from "@/lib/userStore";
-import { levelNodeIds, levelTestQuestions, shuffle, SKIP_PASS, SKIP_COUNT } from "@/lib/skipTest";
 import { playCorrect, playWrong } from "@/lib/sfx";
 
 const VALID: CourseLevel[] = ["beginner", "intermediate", "advanced"];
+const SKIP_PASS = 0.9;
+interface ServedQuestion { nodeId: string; prompt: string; choices: string[]; answer: number; explain: string; }
+const shuffle = <T,>(items: readonly T[]) => [...items].sort(() => Math.random() - 0.5);
 
 export default function SkipTestPage() {
   const params = useParams<{ level: string }>();
@@ -20,11 +23,17 @@ export default function SkipTestPage() {
   const lm = levels.find((l) => l.level === level);
   const nextLevel = ok ? levels[levels.findIndex((l) => l.level === level) + 1] : undefined;
 
-  // 出題（レベル横断からランダムに SKIP_COUNT 問）
-  const questions = useMemo(
-    () => (ok ? shuffle(levelTestQuestions(level)).slice(0, SKIP_COUNT) : []),
-    [level, ok]
-  );
+  const [questions, setQuestions] = useState<ServedQuestion[]>([]);
+  const [nodeIds, setNodeIds] = useState<string[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!ok) return;
+    fetch(`/api/learn/skip?level=${level}`, { cache: "no-store" }).then(async (res) => {
+      if (!res.ok) throw new Error(res.status === 403 ? "この飛び級テストはVIP限定です。" : "問題を読み込めませんでした。");
+      return res.json();
+    }).then((data: { nodeIds: string[]; questions: ServedQuestion[] }) => { setNodeIds(data.nodeIds); setQuestions(shuffle(data.questions).slice(0, 10)); }).catch((error: unknown) => setLoadError(error instanceof Error ? error.message : "問題を読み込めませんでした。"));
+  }, [level, ok]);
 
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -40,9 +49,9 @@ export default function SkipTestPage() {
   // 合格したら、そのレベルのマスをまとめてクリア扱いに
   useEffect(() => {
     if (done && passed && ok) {
-      for (const id of levelNodeIds(level)) markNodeCleared(id);
+      for (const id of nodeIds) markNodeCleared(id);
     }
-  }, [done, passed, ok, level]);
+  }, [done, passed, ok, nodeIds]);
 
   if (!ok) {
     return (
@@ -55,6 +64,8 @@ export default function SkipTestPage() {
       </div>
     );
   }
+
+  if (loadError || questions.length === 0) return <div className="mx-auto max-w-xl px-4 py-16 text-center text-sm text-slate-500">{loadError ?? "問題を準備中…"}</div>;
 
   const q = questions[i];
 

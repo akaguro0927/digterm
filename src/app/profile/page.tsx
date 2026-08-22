@@ -7,7 +7,7 @@ import { useProfile, saveProfile, type Profile } from "@/lib/profile";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import { useSeen, useClearedNodes, useQuizAttempts, useFavorites } from "@/lib/userStore";
 import { computeXp, levelInfo } from "@/lib/level";
-import { levelProgressList } from "@/data/journey";
+import { levelProgressList } from "@/data/journeyPublic";
 
 const CERT_SAMPLES = ["基本情報技術者", "応用情報技術者", "ITパスポート", "AWS SAA", "ウェブデザイン技能士"];
 

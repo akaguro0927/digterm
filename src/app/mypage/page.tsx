@@ -25,7 +25,7 @@ import {
   computeWeakSlugs,
   clearAllUserData,
 } from "@/lib/userStore";
-import { levelProgressList } from "@/data/journey";
+import { levelProgressList } from "@/data/journeyPublic";
 import { awards } from "@/data/awards";
 
 const MODE_META: Record<QuizMode, { icon: IconName; tile: string; bar: string }> = {

@@ -1,4 +1,5 @@
-import { flatNodes, levels, type CourseLevel } from "@/data/journey";
+import { flatNodes, levels } from "@/data/journeyPublic";
+import type { PublicCourseLevel as CourseLevel } from "@/lib/journey/types";
 
 // ⚠️ モック（ダミーの友達）。本番では Supabase の friends/referrals ＋ 相手の進捗を読む。
 export interface MockFriend {

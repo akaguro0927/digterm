@@ -12,7 +12,7 @@ import {
   levelProgressList,
   nextNodeId,
   getFlatNode,
-} from "@/data/journey";
+} from "@/data/journeyPublic";
 
 // レベル別の色（バー・見出し）
 const LEVEL_ACCENT: Record<string, { bar: string; ring: string; text: string }> = {

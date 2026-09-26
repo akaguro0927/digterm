@@ -79,7 +79,7 @@ export default function ZukanBrowser({
   return (
     <div>
       {/* 検索バー */}
-      <div className="group mt-6 flex items-center gap-3 rounded-full bg-white px-6 py-4 shadow-md shadow-slate-200/70 ring-1 ring-slate-200 transition-all duration-300 focus-within:-translate-y-0.5 focus-within:shadow-lg focus-within:shadow-brand-100 focus-within:ring-2 focus-within:ring-brand-500">
+      <div className="group mt-6 flex items-center gap-3 rounded-full bg-white px-6 py-4 shadow-md shadow-slate-200/70 ring-1 ring-slate-200 transition duration-300 focus-within:-translate-y-0.5 focus-within:shadow-lg focus-within:shadow-brand-100 focus-within:ring-2 focus-within:ring-brand-500">
         <Icon
           name="search"
           className="h-5 w-5 text-slate-300 transition-colors duration-300 group-focus-within:text-brand-500"
@@ -87,6 +87,9 @@ export default function ZukanBrowser({
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          type="search"
+          aria-label="用語を探す"
+          autoComplete="off"
           placeholder="例: もーだる、toast、三本線、くるくる …"
           className="w-full bg-transparent text-[15px] outline-none placeholder:text-slate-300"
         />
@@ -105,7 +108,7 @@ export default function ZukanBrowser({
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <button
           onClick={() => setCategory("all")}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+          className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
             category === "all"
               ? "scale-105 bg-slate-800 font-bold text-white shadow-md"
               : "bg-white text-slate-600 ring-1 ring-slate-200 hover:-translate-y-0.5 hover:shadow-sm"
@@ -120,7 +123,7 @@ export default function ZukanBrowser({
             <button
               key={c}
               onClick={() => setCategory(c)}
-              className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition duration-200 ${
                 category === c
                   ? `scale-105 bg-gradient-to-r font-bold text-white shadow-md ${th.gradient}`
                   : "bg-white text-slate-600 ring-1 ring-slate-200 hover:-translate-y-0.5 hover:shadow-sm"
@@ -136,7 +139,7 @@ export default function ZukanBrowser({
           <button
             key={lv}
             onClick={() => setLevel(lv)}
-            className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
+            className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition duration-200 ${
               level === lv
                 ? "bg-brand-600 font-bold text-white shadow-md"
                 : "bg-white text-slate-500 ring-1 ring-slate-200 hover:-translate-y-0.5"
@@ -194,7 +197,7 @@ export default function ZukanBrowser({
               className="group animate-pop-in card-pop relative p-5"
             >
               {/* ホバーでひょこっと出るミニキャラ */}
-              <MiniMascot className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+              <MiniMascot className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 translate-y-2 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
               <div className="flex items-start justify-between">
                 <span
                   className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${th.tile} ${th.tileText}`}
@@ -228,7 +231,7 @@ export default function ZukanBrowser({
               </h2>
               <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">{t.nameEn}</p>
               <p className="protected mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">{t.summary}</p>
-              <p className="mt-3 flex items-center justify-end gap-1 text-xs font-bold text-brand-500 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+              <p className="mt-3 flex items-center justify-end gap-1 text-xs font-bold text-brand-500 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
                 実例を見る
                 <Icon name="arrow-right" className="h-3.5 w-3.5" strokeWidth={2.5} />
               </p>

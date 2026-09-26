@@ -86,6 +86,14 @@ export default function GuidedTour() {
     return () => window.removeEventListener(OPEN_TOUR_EVENT, open);
   }, [start]);
 
+  // Esc でいつでも抜けられる（キーボードだけの人が閉じ込められない。WCAG 2.1.2）
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") finishTour(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, finishTour]);
+
   // ステップが変わったら対象へスクロールして位置を計測
   useEffect(() => {
     if (!active) return;
@@ -166,7 +174,7 @@ export default function GuidedTour() {
       {/* スポットライト（対象以外を暗転） */}
       {holeStyle && (
         <div
-          className="pointer-events-none absolute rounded-2xl ring-4 ring-brand-400 transition-all duration-300"
+          className={/* ui-ok: 光枠の位置と大きさ(top/left/width/height)を一緒に動かすため all */ "pointer-events-none absolute rounded-2xl ring-4 ring-brand-400 transition-all duration-300"}
           style={{ ...holeStyle, boxShadow: "0 0 0 9999px rgba(15, 23, 42, 0.68)" }}
         />
       )}
@@ -175,6 +183,10 @@ export default function GuidedTour() {
 
       {/* 吹き出し */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tour-title"
+        aria-describedby="tour-body"
         className="animate-pop-in absolute rounded-2xl border-2 border-[#ebe4d5] bg-white p-4 shadow-2xl"
         style={tipStyle}
       >
@@ -193,7 +205,7 @@ export default function GuidedTour() {
         )}
 
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-base font-extrabold text-slate-800">{step.title}</h3>
+          <h2 id="tour-title" className="font-display text-base font-extrabold text-slate-800">{step.title}</h2>
           <button
             onClick={finishTour}
             className="shrink-0 rounded-full px-2 py-0.5 text-xs font-bold text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
@@ -201,7 +213,7 @@ export default function GuidedTour() {
             スキップ
           </button>
         </div>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{step.body}</p>
+        <p id="tour-body" className="mt-1.5 text-sm leading-relaxed text-slate-500">{step.body}</p>
 
         {/* 進捗ドット */}
         <div className="mt-3 flex gap-1.5">

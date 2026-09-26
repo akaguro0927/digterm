@@ -58,12 +58,12 @@ export default function StudyCalendar() {
   return (
     <div className="card-pop p-5">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-display flex items-center gap-2 text-sm font-extrabold text-slate-800">
+        <h2 className="font-display flex items-center gap-2 text-sm font-extrabold text-slate-800">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
             <Icon name="flame" className="h-4 w-4" />
           </span>
           学習カレンダー
-        </h3>
+        </h2>
         <span className="text-xs font-bold text-slate-400">
           のべ <span className="text-brand-600">{studiedDays}</span> 日
         </span>

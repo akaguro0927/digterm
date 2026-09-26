@@ -98,13 +98,13 @@ function CarouselDemo() {
         スライド {i + 1}
       </div>
       <div className="mt-2 flex items-center justify-center gap-3">
-        <button onClick={() => setI((i + slides.length - 1) % slides.length)} className="rounded-full bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300">←</button>
+        <button aria-label="前のスライド" onClick={() => setI((i + slides.length - 1) % slides.length)} className="rounded-full bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300">←</button>
         <div className="flex gap-1.5">
           {slides.map((_, d) => (
             <span key={d} className={`h-2 w-2 rounded-full ${d === i ? "bg-blue-600" : "bg-slate-300"}`} />
           ))}
         </div>
-        <button onClick={() => setI((i + 1) % slides.length)} className="rounded-full bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300">→</button>
+        <button aria-label="次のスライド" onClick={() => setI((i + 1) % slides.length)} className="rounded-full bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300">→</button>
       </div>
     </div>
   );
@@ -242,9 +242,9 @@ function StepperDemo() {
     <div className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200">
       <span className="text-sm text-slate-600">数量</span>
       <div className="flex items-center overflow-hidden rounded-lg ring-1 ring-slate-300">
-        <button onClick={() => setN((v) => Math.max(0, v - 1))} className="px-3 py-1.5 text-lg leading-none text-slate-600 hover:bg-slate-100">−</button>
+        <button aria-label="1つ減らす" onClick={() => setN((v) => Math.max(0, v - 1))} className="px-3 py-1.5 text-lg leading-none text-slate-600 hover:bg-slate-100">−</button>
         <span className="w-10 text-center text-sm font-bold">{n}</span>
-        <button onClick={() => setN((v) => v + 1)} className="px-3 py-1.5 text-lg leading-none text-slate-600 hover:bg-slate-100">＋</button>
+        <button aria-label="1つ増やす" onClick={() => setN((v) => v + 1)} className="px-3 py-1.5 text-lg leading-none text-slate-600 hover:bg-slate-100">＋</button>
       </div>
     </div>
   );
@@ -361,7 +361,7 @@ function LightboxDemo() {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative flex h-44 w-full max-w-xs items-center justify-center overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200">
-      <button onClick={() => setOpen(true)} className="flex h-16 w-24 items-center justify-center rounded-lg bg-gradient-to-br from-sky-300 to-blue-400 text-white shadow">
+      <button aria-label="画像を拡大する" onClick={() => setOpen(true)} className="flex h-16 w-24 items-center justify-center rounded-lg bg-gradient-to-br from-sky-300 to-blue-400 text-white shadow">
         <Icon name="image" className="h-6 w-6" />
       </button>
       <p className="absolute bottom-2 text-[10px] text-slate-400">サムネをクリックで拡大</p>
@@ -759,7 +759,7 @@ function ChipDemo() {
         {chips.map((c) => (
           <span key={c} className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100">
             {c}
-            <button onClick={() => setChips(chips.filter((x) => x !== c))} className="text-blue-400 hover:text-blue-600">
+            <button aria-label={`${c} を外す`} onClick={() => setChips(chips.filter((x) => x !== c))} className="text-blue-400 hover:text-blue-600">
               <Icon name="x" className="h-3 w-3" strokeWidth={3} />
             </button>
           </span>
@@ -856,9 +856,9 @@ function DropdownMenuDemo() {
         {open && (
           <div className="absolute left-1/2 z-10 mt-1 w-32 -translate-x-1/2 rounded-lg bg-white py-1 text-left shadow-lg ring-1 ring-slate-200">
             {["編集", "複製", "削除"].map((o) => (
-              <div key={o} onClick={() => setOpen(false)} className="cursor-pointer px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50">
+              <button type="button" key={o} onClick={() => setOpen(false)} className="block w-full cursor-pointer px-3 py-1.5 text-left text-xs text-slate-600 hover:bg-slate-50">
                 {o}
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -948,9 +948,9 @@ function SortDemo() {
         {open && (
           <div className="absolute left-0 z-10 mt-1 w-36 rounded-lg bg-white py-1 text-left shadow-lg ring-1 ring-slate-200">
             {opts.map((o) => (
-              <div key={o} onClick={() => { setSel(o); setOpen(false); }} className={`cursor-pointer px-3 py-1.5 text-xs hover:bg-slate-50 ${o === sel ? "font-bold text-brand-600" : "text-slate-600"}`}>
+              <button type="button" key={o} onClick={() => { setSel(o); setOpen(false); }} className={`block w-full cursor-pointer px-3 py-1.5 text-left text-xs hover:bg-slate-50 ${o === sel ? "font-bold text-brand-600" : "text-slate-600"}`}>
                 {o}
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -1028,7 +1028,7 @@ function PasswordToggleDemo() {
     <div className="w-full max-w-xs">
       <div className="flex items-center rounded-lg bg-white ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-blue-500">
         <input type={show ? "text" : "password"} defaultValue="himitsu123" className="w-full bg-transparent px-3 py-2 text-sm outline-none" />
-        <button onClick={() => setShow(!show)} className="px-3 text-slate-400 hover:text-slate-600">
+        <button aria-label={show ? "パスワードを隠す" : "パスワードを表示"} aria-pressed={show} onClick={() => setShow(!show)} className="px-3 text-slate-400 hover:text-slate-600">
           <Icon name="eye" className="h-4 w-4" />
         </button>
       </div>
@@ -1167,9 +1167,9 @@ function QuantityDemo() {
   return (
     <div className="text-center">
       <div className="inline-flex items-center rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
-        <button onClick={() => setN(Math.max(1, n - 1))} className="px-3 py-2 text-lg font-bold text-slate-500 hover:bg-slate-50">−</button>
+        <button aria-label="1つ減らす" onClick={() => setN(Math.max(1, n - 1))} className="px-3 py-2 text-lg font-bold text-slate-500 hover:bg-slate-50">−</button>
         <span className="font-display w-10 text-center font-extrabold text-slate-800">{n}</span>
-        <button onClick={() => setN(n + 1)} className="px-3 py-2 text-lg font-bold text-slate-500 hover:bg-slate-50">＋</button>
+        <button aria-label="1つ増やす" onClick={() => setN(n + 1)} className="px-3 py-2 text-lg font-bold text-slate-500 hover:bg-slate-50">＋</button>
       </div>
       <p className="mt-2 text-[10px] text-slate-400">−と＋で個数を増減＝数量ステッパー</p>
     </div>
@@ -1509,9 +1509,9 @@ function ConceptFunctionDemo() {
           <div key={label} className="flex flex-col items-center gap-1">
             <span className="font-mono text-[10px] text-slate-400">{label}</span>
             <div className="flex items-center gap-1">
-              <button onClick={() => { set(clamp(value - 1)); setResult(null); }} className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">−</button>
+              <button aria-label="1つ減らす" onClick={() => { set(clamp(value - 1)); setResult(null); }} className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">−</button>
               <span className="w-7 rounded-md bg-white py-1 text-center font-mono text-xs font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">{value}</span>
-              <button onClick={() => { set(clamp(value + 1)); setResult(null); }} className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">+</button>
+              <button aria-label="1つ増やす" onClick={() => { set(clamp(value + 1)); setResult(null); }} className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">+</button>
             </div>
           </div>
         ))}
@@ -1608,9 +1608,9 @@ function ConceptComponentDemo() {
         ))}
       </div>
       <div className="mt-3 flex items-center justify-center gap-2">
-        <button onClick={() => setN((v) => Math.max(1, v - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">−</button>
+        <button aria-label="1つ減らす" onClick={() => setN((v) => Math.max(1, v - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-base font-bold text-slate-600 hover:bg-slate-200">−</button>
         <span className="w-16 font-mono text-xs text-slate-500">×{n} 個</span>
-        <button onClick={() => setN((v) => Math.min(6, v + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700">+</button>
+        <button aria-label="1つ増やす" onClick={() => setN((v) => Math.min(6, v + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700">+</button>
       </div>
       <p className="mt-2 text-[10px] text-slate-400">1回つくった部品（Button）を、何度でも置ける</p>
     </div>
@@ -2793,7 +2793,7 @@ const demos: Record<string, () => ReactNode> = {
   "transition-effect": () => (
     <div className="text-center">
       <div className="mx-auto w-40 cursor-pointer overflow-hidden rounded-full bg-slate-100 p-1">
-        <div className="h-6 w-1/3 rounded-full bg-brand-500 transition-all duration-500 hover:w-full" />
+        <div className={/* ui-ok: 「transition」の用語デモ。幅が伸びる様子を見せるのが目的 */ "h-6 w-1/3 rounded-full bg-brand-500 transition-all duration-500 hover:w-full"} />
       </div>
       <p className="mt-3 text-[10px] text-slate-400">なめらかに変化させる＝トランジション（乗せてみて）</p>
     </div>
@@ -2878,7 +2878,7 @@ const demos: Record<string, () => ReactNode> = {
   "close-button": () => (
     <div className="text-center">
       <div className="relative mx-auto w-40 rounded-lg bg-white p-4 shadow-sm ring-1 ring-slate-200">
-        <button className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100">
+        <button aria-label="閉じる" className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100">
           <Icon name="x" className="h-4 w-4" strokeWidth={2.5} />
         </button>
         <p className="text-xs text-slate-500">お知らせの内容…</p>
@@ -2987,8 +2987,8 @@ const demos: Record<string, () => ReactNode> = {
           <button key={t} className={`h-7 w-7 rounded text-sm text-slate-600 hover:bg-slate-100 ${cls}`}>{t}</button>
         ))}
         <span className="mx-1 h-5 w-px bg-slate-200" />
-        <button className="flex h-7 w-7 items-center justify-center rounded text-slate-600 hover:bg-slate-100"><Icon name="image" className="h-4 w-4" /></button>
-        <button className="flex h-7 w-7 items-center justify-center rounded text-slate-600 hover:bg-slate-100"><Icon name="trash" className="h-4 w-4" /></button>
+        <button aria-label="画像を入れる" className="flex h-7 w-7 items-center justify-center rounded text-slate-600 hover:bg-slate-100"><Icon name="image" className="h-4 w-4" /></button>
+        <button aria-label="削除" className="flex h-7 w-7 items-center justify-center rounded text-slate-600 hover:bg-slate-100"><Icon name="trash" className="h-4 w-4" /></button>
       </div>
       <p className="mt-2 text-[10px] text-slate-400">操作ボタンを並べた帯＝ツールバー</p>
     </div>
@@ -3126,7 +3126,7 @@ const demos: Record<string, () => ReactNode> = {
             <div key={i} className="h-2 rounded bg-slate-100" style={{ width: `${90 - i * 8}%` }} />
           ))}
         </div>
-        <button className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg">↑</button>
+        <button aria-label="トップへ戻る" className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg">↑</button>
       </div>
       <p className="mt-2 text-center text-[10px] text-slate-400">押すと先頭へ戻る＝トップへ戻るボタン</p>
     </div>
@@ -4324,21 +4324,21 @@ const demos: Record<string, () => ReactNode> = {
   ),
   pagination: () => (
     <div className="flex items-center gap-1.5">
-      <button className="rounded-md px-2.5 py-1.5 text-sm text-slate-500 hover:bg-slate-100">←</button>
+      <button aria-label="前のページ" className="rounded-md px-2.5 py-1.5 text-sm text-slate-500 hover:bg-slate-100">←</button>
       {[1, 2, 3].map((n) => (
         <button key={n} className={`rounded-md px-3 py-1.5 text-sm ${n === 2 ? "bg-blue-600 text-white" : "hover:bg-slate-100"}`}>{n}</button>
       ))}
       <span className="px-1 text-slate-400">…</span>
       <button className="rounded-md px-3 py-1.5 text-sm hover:bg-slate-100">12</button>
-      <button className="rounded-md px-2.5 py-1.5 text-sm text-slate-500 hover:bg-slate-100">→</button>
+      <button aria-label="次のページ" className="rounded-md px-2.5 py-1.5 text-sm text-slate-500 hover:bg-slate-100">→</button>
     </div>
   ),
   tooltip: () => (
     <div className="group relative">
-      <button className="rounded-lg bg-white p-3 text-slate-500 shadow-sm ring-1 ring-slate-200">
+      <button aria-label="設定を開く" className="rounded-lg bg-white p-3 text-slate-500 shadow-sm ring-1 ring-slate-200">
         <Icon name="sliders" className="h-5 w-5" />
       </button>
-      <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-800 px-2.5 py-1 text-xs text-white opacity-0 transition group-hover:opacity-100">
+      <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-800 px-2.5 py-1 text-xs text-white opacity-0 transition group-hover:opacity-100 group-focus-within:opacity-100" aria-hidden="true">
         設定を開く
       </span>
       <p className="mt-2 text-xs text-slate-400">↑ マウスを乗せてみて</p>
@@ -4393,7 +4393,7 @@ const demos: Record<string, () => ReactNode> = {
   fab: () => (
     <div className="relative h-40 w-full max-w-xs rounded-lg bg-slate-100 ring-1 ring-slate-200">
       <p className="p-3 text-xs text-slate-400">コンテンツ…</p>
-      <button className="absolute bottom-3 right-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-2xl text-white shadow-lg hover:bg-blue-700">＋</button>
+      <button aria-label="新しく作る" className="absolute bottom-3 right-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-2xl text-white shadow-lg hover:bg-blue-700">＋</button>
     </div>
   ),
   avatar: () => (
@@ -4533,7 +4533,7 @@ const demos: Record<string, () => ReactNode> = {
   padding: () => <BoxModelDemo highlight="padding" />,
   hover: () => (
     <div className="flex flex-col items-center gap-2">
-      <button className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg">
+      <button className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg">
         マウスを乗せてみて
       </button>
     </div>
@@ -4564,7 +4564,7 @@ const demos: Record<string, () => ReactNode> = {
   transition: () => (
     <div className="flex gap-4">
       <button className="rounded-lg bg-slate-200 px-4 py-2 text-xs hover:bg-blue-500 hover:text-white">変化が一瞬（なし）</button>
-      <button className="rounded-lg bg-slate-200 px-4 py-2 text-xs transition-all duration-500 hover:bg-blue-500 hover:text-white">ふわっと変化（あり）</button>
+      <button className="rounded-lg bg-slate-200 px-4 py-2 text-xs transition duration-500 hover:bg-blue-500 hover:text-white">ふわっと変化（あり）</button>
     </div>
   ),
   responsive: () => (

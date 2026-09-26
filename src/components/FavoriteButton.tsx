@@ -58,7 +58,7 @@ export default function FavoriteButton({
       aria-pressed={isFav}
       aria-label={label}
       title={label}
-      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-90 ${
+      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition duration-200 hover:scale-110 active:scale-90 ${
         isFav
           ? "bg-rose-50 text-rose-500 ring-1 ring-rose-200"
           : "bg-white/70 text-slate-300 ring-1 ring-slate-200 hover:text-rose-400"

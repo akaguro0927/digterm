@@ -160,7 +160,7 @@ export default function AiPage() {
       {/* ===== 画像でしらべる ===== */}
       {tab === "image" && (
         <div className="mt-5">
-          <input ref={fileRef} type="file" accept="image/*" onChange={onPick} className="hidden" />
+          <input ref={fileRef} type="file" accept="image/*" onChange={onPick} className="hidden" aria-label="質問に添える画像" />
           <button
             onClick={() => fileRef.current?.click()}
             className="flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-slate-300 bg-white/60 px-4 py-10 text-center transition hover:border-indigo-300 hover:bg-indigo-50/40"
@@ -246,6 +246,8 @@ export default function AiPage() {
             <input
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              aria-label="用語について質問"
+              autoComplete="off"
               placeholder="用語について質問（例: モーダルって何？）"
               className="w-full rounded-full bg-slate-50 px-5 py-3 text-sm outline-none ring-1 ring-slate-200 transition focus:bg-white focus:ring-2 focus:ring-indigo-500"
             />

@@ -21,6 +21,14 @@
   --color-accent-400: #fbbf24;
   --color-accent-500: #f59e0b;
 
+  /* 補足文の灰色を読める濃さに上書き（2026-09-27）。
+     既定の slate-400 (#90a1b9) は白地で 2.6:1 しかなく、axe-core で12画面・約490箇所が
+     WCAG 1.4.3（本文4.5:1）を割っていた。530箇所が文字色で使っているので、1つずつでなくここで直す。
+     青みは保ったまま、紙の地(#faf8f2)・白・#f1f5f9 のどれでも 4.5:1 を超える値にした。
+     濃淡の順は保つ: 400(4.7:1) < 500(5.6:1) < 600(7.1:1)。枠線・背景での利用は9箇所だけ */
+  --color-slate-400: #5f7089;
+  --color-slate-500: #556479;
+
   /* アニメーション */
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-pop-in: pop-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -180,6 +188,17 @@ body {
   font-feature-settings: "palt";
 }
 
+/* 見出しは文節で折り返す（Chrome 119+ 内蔵の BudouX。未対応ブラウザは今まで通り）。
+   「フロントエン/ド」のように語の途中で割れて最後の行に1〜2文字だけ残るのを防ぐ。
+   balance は見出しだけ（本文に使うと段落が不揃いに痩せる）。本文は pretty で最後の1文字残りだけ避ける */
+h1, h2, h3, h4 {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+p, li, dd {
+  text-wrap: pretty;
+}
+
 /* 見出し用フォント */
 .font-display {
   font-family: var(--font-display);
@@ -216,7 +235,7 @@ button.card-pop:hover:not(:disabled) {
 .btn-3d {
   box-shadow: 0 4px 0 var(--edge, #14663a);
   transition:
-    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), /* ui-ok: 押した手応えの跳ね（UI_07で可） */
     box-shadow 0.12s ease,
     filter 0.15s ease;
 }

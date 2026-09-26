@@ -140,7 +140,7 @@ export default function CurriculumPage() {
             {lp && (
               <div className={`mt-2 h-2 overflow-hidden rounded-full bg-slate-100 ${lp.pct >= 100 ? "ring-2 ring-amber-200" : ""}`}>
                 <div
-                  className={`h-full rounded-full transition-all duration-700 ${lp.pct >= 100 ? "bg-gradient-to-r from-amber-400 to-amber-500" : accent.bar}`}
+                  className={`h-full rounded-full transition-[width] duration-700 ${lp.pct >= 100 ? "bg-gradient-to-r from-amber-400 to-amber-500" : accent.bar}`}
                   style={{ width: `${lp.pct}%` }}
                 />
               </div>

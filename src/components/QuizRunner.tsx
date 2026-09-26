@@ -158,7 +158,7 @@ export default function QuizRunner({
           {/* スコアバー */}
           <div className="mx-auto mt-4 h-2.5 max-w-xs overflow-hidden rounded-full bg-slate-100">
             <div
-              className={`h-full rounded-full transition-all duration-1000 ${
+              className={`h-full rounded-full transition-[width] duration-1000 ${
                 rate >= 0.8 ? "bg-emerald-500" : rate >= 0.5 ? "bg-amber-500" : "bg-rose-500"
               }`}
               style={{ width: `${rate * 100}%` }}
@@ -294,7 +294,7 @@ export default function QuizRunner({
       <div className="flex items-center gap-4">
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-[width] duration-500"
             style={{ width: `${(idx / questions.length) * 100}%` }}
           />
         </div>
@@ -351,7 +351,7 @@ export default function QuizRunner({
                   key={c}
                   onClick={() => submit(c)}
                   disabled={showFeedback}
-                  className={`protected rounded-2xl border-2 p-4 text-left text-sm font-medium leading-relaxed transition-all duration-150 ${style}`}
+                  className={`protected rounded-2xl border-2 p-4 text-left text-sm font-medium leading-relaxed transition duration-150 ${style}`}
                 >
                   {c}
                   {showFeedback && isAnswer && (

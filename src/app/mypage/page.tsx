@@ -206,7 +206,7 @@ export default function MyPage() {
                   </span>
                 </div>
                 <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-slate-100">
-                  <div className={`h-full rounded-full ${bar} transition-all duration-700`} style={{ width: `${p.pct}%` }} />
+                  <div className={`h-full rounded-full ${bar} transition-[width] duration-700`} style={{ width: `${p.pct}%` }} />
                 </div>
               </div>
             );

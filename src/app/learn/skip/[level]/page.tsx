@@ -176,7 +176,7 @@ export default function SkipTestPage() {
         </p>
       </div>
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full rounded-full bg-amber-400 transition-all" style={{ width: `${((i) / total) * 100}%` }} />
+        <div className="h-full rounded-full bg-amber-400 transition-[width]" style={{ width: `${((i) / total) * 100}%` }} />
       </div>
       <p className="mt-1 text-right text-[11px] text-slate-400">合格ライン：{need} / {total} 問（9割）</p>
 

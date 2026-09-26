@@ -76,7 +76,7 @@ export default function JourneyBoard({ journey, level }: { journey: PublicJourne
         </div>
         <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-100">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-all duration-700"
+            className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-[width] duration-700"
             style={{ width: `${pct}%` }}
           />
         </div>

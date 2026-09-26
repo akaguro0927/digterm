@@ -106,6 +106,10 @@ export default function InvitePage() {
               setInput(e.target.value);
               setMsg(null);
             }}
+            aria-label="招待コード"
+            autoComplete="off"
+            autoCapitalize="characters"
+            spellCheck={false}
             placeholder="COCRE-AB12CD"
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm uppercase tracking-widest outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />

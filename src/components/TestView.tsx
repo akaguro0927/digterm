@@ -175,7 +175,7 @@ export default function TestView({ node, nextHref, level }: { node: TestNode; ne
       <div className="flex items-center gap-4">
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-[width] duration-500"
             style={{ width: `${(idx / qs.length) * 100}%` }}
           />
         </div>
@@ -215,7 +215,7 @@ export default function TestView({ node, nextHref, level }: { node: TestNode; ne
                 key={c}
                 onClick={() => pick(i)}
                 disabled={answered}
-                className={`rounded-2xl border-2 p-4 text-left text-sm font-medium leading-relaxed transition-all duration-150 ${style}`}
+                className={`rounded-2xl border-2 p-4 text-left text-sm font-medium leading-relaxed transition duration-150 ${style}`}
               >
                 {c}
                 {answered && isAnswer && <Icon name="check" className="ml-1.5 inline h-4 w-4 text-emerald-500" strokeWidth={3} />}

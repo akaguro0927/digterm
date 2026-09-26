@@ -368,7 +368,7 @@ export default function LevelMascot({
         <span
           key={`point-${nonce}`}
           className="pointer-events-none absolute -bottom-1 left-1/2 z-20 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border-2 border-[#ebe4d5] bg-white text-brand-600 shadow-sm"
-          style={{ animation: "point-bounce 0.6s ease-in-out 2" }}
+          style={{ animation: "point-bounce 0.6s ease-in-out 2" /* ui-ok: 4pxの指さしを2回だけ（強い跳ねではない） */ }}
           aria-hidden
         >
           <Icon name="pointer" className="h-3.5 w-3.5 rotate-90" strokeWidth={2.5} />

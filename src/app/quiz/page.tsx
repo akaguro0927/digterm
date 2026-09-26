@@ -76,7 +76,7 @@ export default function QuizTopPage() {
       {/* 実力試験 */}
       <Link
         href="/quiz/exam"
-        className="group animate-pop-in relative mt-6 block overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-950 via-brand-900 to-slate-950 p-8 text-white shadow-xl shadow-brand-900/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:p-10"
+        className="group animate-pop-in relative mt-6 block overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-950 via-brand-900 to-slate-950 p-8 text-white shadow-xl shadow-brand-900/20 transition duration-300 hover:-translate-y-1 hover:shadow-2xl sm:p-10"
         style={{ animationDelay: "280ms" }}
       >
         <div className="bg-dots pointer-events-none absolute inset-0 opacity-[0.07]" aria-hidden />
@@ -93,7 +93,7 @@ export default function QuizTopPage() {
               <span className="rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">1問ごとに正誤表示</span>
             </div>
           </div>
-          <span className="font-display flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-extrabold text-brand-700 shadow-lg transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-xl">
+          <span className="font-display flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-extrabold text-brand-700 shadow-lg transition duration-300 group-hover:-translate-y-0.5 group-hover:shadow-xl">
             試験にいどむ
             <Icon name="arrow-right" className="h-4 w-4" strokeWidth={2.5} />
           </span>

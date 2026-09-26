@@ -31,7 +31,7 @@ export default function LevelCard() {
         </span>
       </div>
       <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-all duration-700" style={{ width: `${info.pct}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-[width] duration-700" style={{ width: `${info.pct}%` }} />
       </div>
       <p className="mt-1.5 text-right text-[11px] text-slate-400">次のレベルまで あと {info.toNext} XP</p>
     </div>

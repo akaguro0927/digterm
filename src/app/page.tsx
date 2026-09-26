@@ -298,7 +298,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/quiz/exam"
-                className="font-display inline-flex items-center gap-2 rounded-full px-9 py-3.5 font-extrabold text-white ring-1 ring-white/40 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
+                className="font-display inline-flex items-center gap-2 rounded-full px-9 py-3.5 font-extrabold text-white ring-1 ring-white/40 transition duration-300 hover:-translate-y-1 hover:bg-white/10"
               >
                 実力試験にいどむ
               </Link>

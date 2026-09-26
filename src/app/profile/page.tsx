@@ -108,7 +108,7 @@ export default function ProfilePage() {
         <div className="card-pop p-5">
           <label className="block">
             <span className="font-display text-xs font-bold text-slate-500">表示名（ニックネーム）</span>
-            <input value={form.displayName} onChange={(e) => set("displayName", e.target.value)} placeholder="例: あかぐろ" className={inputCls} />
+            <input value={form.displayName} onChange={(e) => set("displayName", e.target.value)} autoComplete="nickname" placeholder="例: あかぐろ" className={inputCls} />
           </label>
           <label className="mt-4 block">
             <span className="font-display text-xs font-bold text-slate-500">ひとこと（自己紹介）</span>
@@ -117,7 +117,7 @@ export default function ProfilePage() {
           <label className="mt-4 block">
             <span className="font-display text-xs font-bold text-slate-500">IT実務の経験年数</span>
             <div className="mt-1.5 flex items-center gap-2">
-              <input type="number" min={0} max={60} value={form.experienceYears} onChange={(e) => set("experienceYears", e.target.value)} placeholder="0" className={`${inputCls} mt-0 w-28`} />
+              <input type="number" inputMode="numeric" min={0} max={60} value={form.experienceYears} onChange={(e) => set("experienceYears", e.target.value)} placeholder="0" className={`${inputCls} mt-0 w-28`} />
               <span className="text-sm text-slate-500">年</span>
             </div>
           </label>
@@ -128,7 +128,7 @@ export default function ProfilePage() {
             <Icon name="trophy" className="h-3.5 w-3.5 text-amber-500" />
             保有資格
           </span>
-          <input value={form.certifications} onChange={(e) => set("certifications", e.target.value)} placeholder="例: 基本情報技術者, ITパスポート" className={inputCls} />
+          <input value={form.certifications} onChange={(e) => set("certifications", e.target.value)} aria-label="保有資格" autoComplete="off" placeholder="例: 基本情報技術者, ITパスポート" className={inputCls} />
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             {CERT_SAMPLES.map((c) => (
               <button key={c} type="button" onClick={() => addCert(c)} className="rounded-full bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:text-brand-600">

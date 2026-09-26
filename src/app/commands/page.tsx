@@ -57,11 +57,14 @@ export default function CommandsPage() {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          type="search"
+          aria-label="コマンドを探す"
+          autoComplete="off"
           placeholder="コマンド名・やりたいこと（例: ファイル 削除 / ぴんぐ）"
           className="w-full bg-transparent text-sm font-medium outline-none placeholder:text-slate-300"
         />
         {q && (
-          <button type="button" onClick={() => setQ("")} className="text-slate-300 hover:text-slate-500">
+          <button type="button" onClick={() => setQ("")} aria-label="検索語を消す" className="text-slate-300 hover:text-slate-500">
             <Icon name="x" className="h-4 w-4" />
           </button>
         )}

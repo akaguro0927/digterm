@@ -76,11 +76,11 @@ export default function ContactPage() {
       <form onSubmit={submit} className="card-pop space-y-4 p-6 sm:p-7">
         <label className="block">
           <span className="text-xs font-bold text-slate-500">お名前（任意）</span>
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="例: あかぐろ" className={inputCls} />
+          <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" placeholder="例: あかぐろ" className={inputCls} />
         </label>
         <label className="block">
           <span className="text-xs font-bold text-slate-500">返信先メール（任意）</span>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" spellCheck={false} placeholder="you@example.com" className={inputCls} />
         </label>
         <label className="block">
           <span className="text-xs font-bold text-slate-500">種別</span>

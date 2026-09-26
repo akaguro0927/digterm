@@ -67,6 +67,14 @@ export default function ShareButton() {
   const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Esc で閉じる（ダイアログはキーボードだけでも抜けられること。WCAG 2.1.2）
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   useEffect(() => {
     if (!open || !canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -137,10 +145,10 @@ export default function ShareButton() {
 
       {open && (
         <div className="animate-fade-up fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm" onClick={() => setOpen(false)}>
-          <div className="animate-pop-in card-pop w-full max-w-md p-5" onClick={(e) => e.stopPropagation()}>
+          <div className="animate-pop-in card-pop w-full max-w-md p-5" role="dialog" aria-modal="true" aria-labelledby="share-title" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-display text-lg font-extrabold">成果をシェア</h2>
-              <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-600">
+              <h2 id="share-title" className="font-display text-lg font-extrabold">成果をシェア</h2>
+              <button onClick={() => setOpen(false)} aria-label="閉じる" className="text-slate-400 hover:text-slate-600">
                 <Icon name="x" className="h-5 w-5" strokeWidth={2.5} />
               </button>
             </div>

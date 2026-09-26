@@ -145,7 +145,7 @@ export default function FlashcardsPage() {
           </p>
           <p className="mt-1 text-sm text-slate-400">覚えた（{rate}%）・デッキ: {deckLabel}</p>
           <div className="mx-auto mt-4 h-2.5 max-w-xs overflow-hidden rounded-full bg-slate-100">
-            <div className="h-full rounded-full bg-brand-500 transition-all duration-1000" style={{ width: `${rate}%` }} />
+            <div className="h-full rounded-full bg-brand-500 transition-[width] duration-1000" style={{ width: `${rate}%` }} />
           </div>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             {notKnown.length > 0 && (
@@ -180,7 +180,7 @@ export default function FlashcardsPage() {
       <div className="mb-5 flex items-center gap-3">
         <button onClick={() => setPhase("setup")} className="text-xs font-bold text-slate-400 hover:text-brand-600">やめる</button>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200">
-          <div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-all" style={{ width: `${(idx / deck.length) * 100}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-[width]" style={{ width: `${(idx / deck.length) * 100}%` }} />
         </div>
         <span className="font-display text-sm font-extrabold text-slate-500">
           {idx + 1} <span className="text-slate-300">/ {deck.length}</span>
